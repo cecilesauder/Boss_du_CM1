@@ -3,998 +3,1776 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mon Espace Devoirs CM1 🚀</title>
+    <title>Mon Espace CM1 🚀</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Quicksand', sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        h1, h2, h3, .font-heading {
-            font-family: 'Fredoka', cursive;
-        }
-        .flip-card {
-            perspective: 1000px;
-            width: 100%;
-            max-width: 260px;
-            aspect-ratio: 4/3;
-            margin: 0 auto;
-        }
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
-            transform-style: preserve-3d;
-        }
-        .flip-card.flipped .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 1.25rem;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
-            padding: 1rem;
-        }
-        .flip-card-front {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            color: #1e293b;
-            border: 3px solid #e2e8f0;
-        }
-        .flip-card-back {
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-            color: white;
-            transform: rotateY(180deg);
-        }
-        @keyframes pulse-fast {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        .animate-pulse-fast {
-            animation: pulse-fast 0.8s infinite;
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-6px); }
-            40%, 80% { transform: translateX(6px); }
-        }
-        .animate-shake {
-            animation: shake 0.4s ease-in-out;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
+        body { font-family: 'Quicksand', sans-serif; user-select: none; -webkit-user-select: none; }
+        h1, h2, h3, .font-heading { font-family: 'Fredoka', cursive; }
+
+        /* ── Carte flip (mémorisation dictée) ─────────────────── */
+        .flip-card { perspective: 1000px; width: 100%; max-width: 280px; aspect-ratio: 4/3; margin: 0 auto; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(.4,.2,.2,1); transform-style: preserve-3d; }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 1.25rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,.08); padding: 1rem; }
+        .flip-card-front { background: linear-gradient(135deg,#fff 0%,#f8fafc 100%); color: #1e293b; border: 3px solid #e2e8f0; }
+        .flip-card-back  { background: linear-gradient(135deg,#6366f1 0%,#4f46e5 100%); color: #fff; transform: rotateY(180deg); }
+
+        /* ── Animations ───────────────────────────────────────── */
+        @keyframes pulse-fast { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+        .animate-pulse-fast { animation: pulse-fast .8s infinite; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+        .animate-shake { animation: shake .4s ease-in-out; }
+        @keyframes pop-in { 0%{transform:scale(.3);opacity:0} 60%{transform:scale(1.06)} 100%{transform:scale(1);opacity:1} }
+        .animate-pop-in { animation: pop-in .45s cubic-bezier(.34,1.56,.64,1) both; }
+        @keyframes slide-up { 0%{transform:translateY(20px);opacity:0} 100%{transform:translateY(0);opacity:1} }
+        .animate-slide-up { animation: slide-up .3s ease both; }
+
+        /* ── Scrollbar ────────────────────────────────────────── */
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* ── Fraction SVG ─────────────────────────────────────── */
+        .fraction-btn { min-height: 56px; }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen pb-20 selection:bg-indigo-200">
+<body class="bg-slate-100 min-h-screen pb-20">
 
-    <div id="app" class="max-w-md mx-auto min-h-screen bg-slate-50 flex flex-col shadow-2xl relative">
+<div id="app" class="max-w-md mx-auto min-h-screen bg-slate-50 flex flex-col shadow-2xl relative">
 
-        <!-- Top Profile & Timer Header -->
-        <header class="bg-indigo-600 text-white p-4 rounded-b-3xl shadow-md sticky top-0 z-30">
-            <div class="flex justify-between items-center">
-                <button onclick="openProfileModal()" class="flex items-center space-x-2 bg-indigo-700 hover:bg-indigo-800 transition py-1.5 px-3 rounded-full text-sm font-semibold">
-                    <span id="header-avatar" class="text-xl">🦊</span>
-                    <span id="header-name" class="max-w-[100px] truncate">Élève CM1</span>
-                    <span class="text-xs bg-yellow-400 text-indigo-950 px-2 py-0.5 rounded-full font-bold">Changer</span>
-                </button>
-                
-                <div class="flex items-center space-x-3">
-                    <div class="flex items-center bg-indigo-800/80 px-3 py-1 rounded-full text-xs font-bold text-amber-300">
-                        ⏱️ <span id="work-timer" class="ml-1 font-mono">00:00</span>
-                    </div>
-                    <div class="flex items-center bg-yellow-400 text-indigo-950 px-3 py-1 rounded-full text-xs font-bold">
-                        🏆 <span id="header-score" class="ml-1">0 pts</span>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Main Content Views Container -->
-        <main class="flex-1 p-4 overflow-y-auto">
-
-            <!-- VUE 1 : ACCUEIL & PARCOURS SEMAINE PAR SEMAINE -->
-            <section id="view-home" class="space-y-6">
-                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-3xl p-5 text-white shadow-lg relative overflow-hidden">
-                    <div class="relative z-10">
-                        <span class="bg-white/20 text-xs uppercase px-3 py-1 rounded-full font-bold tracking-wider">Programme CM1</span>
-                        <h2 class="text-2xl font-bold mt-2 font-heading">En route pour la réussite ! 🌟</h2>
-                        <p class="text-indigo-100 text-sm mt-1">Fais tes devoirs, bats tes chronos et gagne des badges d'expert !</p>
-                    </div>
-                </div>
-
-                <!-- Statistiques rapides -->
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-3">
-                        <div class="text-3xl">⏱️</div>
-                        <div>
-                            <div class="text-xs text-slate-500 font-bold">Temps Total</div>
-                            <div id="stat-total-time" class="text-base font-extrabold text-indigo-600">0 min</div>
-                        </div>
-                    </div>
-                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-3">
-                        <div class="text-3xl">🎖️</div>
-                        <div>
-                            <div class="text-xs text-slate-500 font-bold">Badges Aquis</div>
-                            <div id="stat-total-badges" class="text-base font-extrabold text-amber-500">0 / 15</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Choix rapide d'activités -->
-                <div>
-                    <h3 class="text-lg font-bold text-slate-700 mb-3 font-heading">Que veux-tu réviser ?</h3>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="switchTab('maths')" class="bg-gradient-to-br from-emerald-400 to-teal-600 text-white p-4 rounded-2xl shadow-md text-left transition transform active:scale-95 flex flex-col justify-between h-28">
-                            <span class="text-3xl">✖️</span>
-                            <div>
-                                <div class="font-bold font-heading text-lg">Maths Flash</div>
-                                <div class="text-xs opacity-90">Tables de multiplication</div>
-                            </div>
-                        </button>
-                        <button onclick="switchTab('dictee')" class="bg-gradient-to-br from-indigo-500 to-indigo-700 text-white p-4 rounded-2xl shadow-md text-left transition transform active:scale-95 flex flex-col justify-between h-28">
-                            <span class="text-3xl">✍️</span>
-                            <div>
-                                <div class="font-bold font-heading text-lg">Dictées CM1</div>
-                                <div class="text-xs opacity-90">Mots de la semaine</div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Progression des Semaines CM1 -->
-                <div>
-                    <h3 class="text-lg font-bold text-slate-700 mb-3 font-heading">Parcours des Semaines</h3>
-                    <div id="weekly-roadmap" class="space-y-3">
-                        <!-- Généré dynamiquement en JS -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- VUE 2 : MATHS - QUIZ TABLES DE MULTIPLICATION -->
-            <section id="view-maths" class="hidden space-y-6">
-                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
-                    <h2 class="text-xl font-bold text-slate-800 font-heading mb-1">⚡ Défis Tables de Multiplication</h2>
-                    <p class="text-xs text-slate-500">
-                        Objectif : Pour valider une table, réponds au moins <strong class="text-indigo-600">3 fois en moins d'1 seconde</strong> à toutes ses questions !
-                    </p>
-                </div>
-
-                <!-- Sélecteur de Table -->
-                <div id="math-table-selector" class="grid grid-cols-2 sm:grid-cols-5 gap-2">
-                    <!-- Les boutons de tables 1 à 10 seront générés ici -->
-                </div>
-
-                <!-- Zone de Quiz Actif -->
-                <div id="math-quiz-container" class="hidden bg-white p-6 rounded-3xl shadow-lg border border-slate-200 text-center space-y-6">
-                    <div class="flex justify-between items-center text-sm font-bold text-slate-400">
-                        <span id="quiz-table-title" class="text-indigo-600 font-heading text-lg">Table du 7</span>
-                        <button onclick="closeMathQuiz()" class="text-slate-400 hover:text-slate-600 text-lg">✕</button>
-                    </div>
-
-                    <!-- Question & Chrono -->
-                    <div class="space-y-2">
-                        <div id="math-question" class="text-4xl font-extrabold text-slate-800 tracking-wider font-heading">7 × 8 = ?</div>
-                        <div id="speed-feedback" class="h-6 text-sm font-bold text-amber-500">Prêt ?</div>
-                    </div>
-
-                    <!-- 4 Réponses sous forme de boutons -->
-                    <div id="math-options" class="grid grid-cols-2 gap-3">
-                        <!-- 4 boutons dynamiques -->
-                    </div>
-
-                    <!-- Indicateur de progression de vitesse -->
-                    <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 text-xs space-y-1">
-                        <div class="flex justify-between text-slate-600 font-bold">
-                            <span>Statut de ce calcul :</span>
-                            <span id="fact-status" class="text-indigo-600">0/3 sous 1.0s</span>
-                        </div>
-                        <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                            <div id="fact-progress-bar" class="bg-emerald-500 h-full w-0% transition-all"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Grille de Maîtrise de la Table Sélectionnée -->
-                <div id="table-mastery-grid" class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
-                    <h3 class="text-sm font-bold text-slate-700 font-heading">Grille de Maîtrise <span id="mastery-table-num" class="text-indigo-600"></span></h3>
-                    <div id="mastery-items" class="grid grid-cols-2 gap-2 text-xs">
-                        <!-- Reçoit la liste des 10 calculs avec leur statut sous 1s -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- VUE 3 : DICTÉE CM1 -->
-            <section id="view-dictee" class="hidden space-y-6">
-                <!-- Sélecteur de Thème de Dictée -->
-                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
-                    <h2 class="text-xl font-bold text-slate-800 font-heading mb-1">✍️ Dictées Révision CM1</h2>
-                    <p class="text-xs text-slate-500">Choisis une semaine et entraîne-toi sur tes mots de dictée.</p>
-                </div>
-
-                <div id="dictee-weeks-list" class="space-y-3">
-                    <!-- Liste des dictées générée dynamiquement -->
-                </div>
-
-                <!-- Zone de Jeu Dictée -->
-                <div id="dictee-game-container" class="hidden space-y-6">
-                    <div class="flex justify-between items-center">
-                        <button onclick="exitDicteeGame()" class="text-xs bg-slate-200 font-bold px-3 py-1.5 rounded-full text-slate-600">← Retour aux thèmes</button>
-                        <span id="dictee-word-progress" class="text-xs font-bold bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full">Mot 1/10</span>
-                    </div>
-
-                    <!-- Step 1: Mémorisation -->
-                    <div id="dictee-step-memo" class="text-center space-y-6">
-                        <h3 id="dictee-instruction" class="text-xl font-bold text-slate-700 font-heading">Mémorise bien ce mot !</h3>
-                        
-                        <div class="flip-card" id="dictee-card">
-                            <div class="flip-card-inner">
-                                <div class="flip-card-front font-extrabold text-2xl text-indigo-600 flex flex-col items-center justify-center space-y-2">
-                                    <span id="card-word-text">le siècle</span>
-                                    <button onclick="speakWord()" class="text-xs bg-indigo-50 text-indigo-600 font-bold px-3 py-1 rounded-full border border-indigo-200">🔊 Écouter</button>
-                                </div>
-                                <div class="flip-card-back font-bold text-4xl">
-                                    ❓
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
-                            <div id="dictee-timer-bar" class="bg-indigo-500 h-full w-full"></div>
-                        </div>
-                    </div>
-
-                    <!-- Step 2: Saisie de l'orthographe -->
-                    <div id="dictee-step-input" class="hidden bg-white p-5 rounded-3xl shadow-md border border-slate-200 space-y-4 text-center">
-                        <h3 class="text-lg font-bold text-slate-700 font-heading">Écris le mot caché :</h3>
-                        
-                        <div id="dictee-clue-display" class="flex justify-center gap-1.5 text-2xl font-bold my-2">
-                            <!-- Indice visuel -->
-                        </div>
-
-                        <form onsubmit="validateWordInput(event)" class="space-y-3">
-                            <input type="text" id="dictee-input" class="w-full py-3 px-4 rounded-xl border-2 border-slate-300 text-center font-bold text-xl outline-none focus:border-indigo-500" placeholder="Tape le mot..." autocomplete="off" spellcheck="false">
-                            <button type="submit" id="btn-validate-word" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-xl shadow-md hover:bg-indigo-700">Valider</button>
-                        </form>
-                    </div>
-
-                    <!-- Step 3: Nature Grammaticale -->
-                    <div id="dictee-step-nature" class="hidden bg-white p-5 rounded-3xl shadow-md border border-slate-200 space-y-4 text-center">
-                        <h3 class="text-lg font-bold text-slate-700 font-heading">Quelle est la nature de ce mot ?</h3>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button onclick="checkGrammarNature('noms')" class="grammar-btn p-3 rounded-xl border-2 border-slate-200 font-bold text-slate-700 hover:border-indigo-500">Nom</button>
-                            <button onclick="checkGrammarNature('verbes')" class="grammar-btn p-3 rounded-xl border-2 border-slate-200 font-bold text-slate-700 hover:border-indigo-500">Verbe</button>
-                            <button onclick="checkGrammarNature('adjectifs')" class="grammar-btn p-3 rounded-xl border-2 border-slate-200 font-bold text-slate-700 hover:border-indigo-500">Adjectif</button>
-                            <button onclick="checkGrammarNature('invariables')" class="grammar-btn p-3 rounded-xl border-2 border-slate-200 font-bold text-slate-700 hover:border-indigo-500">Invariable</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- VUE 4 : TROPHÉES & BADGES -->
-            <section id="view-trophies" class="hidden space-y-6">
-                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
-                    <h2 class="text-xl font-bold text-slate-800 font-heading mb-1">🏆 Ta Galerie de Badges</h2>
-                    <p class="text-xs text-slate-500">Débloque des badges en pratiquant régulièrement et en réussissant les défis !</p>
-                </div>
-
-                <div id="badges-grid" class="grid grid-cols-2 gap-3">
-                    <!-- Badges débloqués ou verrouillés -->
-                </div>
-            </section>
-
-            <!-- VUE 5 : EVAR (Éducation à la Vie Affective et Relationnelle) -->
-            <section id="view-evar" class="hidden space-y-6">
-                <div class="bg-gradient-to-br from-rose-400 to-pink-600 rounded-3xl p-6 text-white text-center space-y-3 shadow-lg">
-                    <div class="text-5xl">🌱</div>
-                    <h2 class="text-2xl font-bold font-heading">Vie de classe & Relationnel</h2>
-                    <p class="text-sm opacity-90">Un espace dédié à la coopération, à l'empathie et au bien-être ensemble à l'école.</p>
-                    <div class="inline-block bg-white/20 px-4 py-2 rounded-full font-bold text-xs uppercase tracking-wider">
-                        🔒 Prochainement disponible
-                    </div>
-                </div>
-            </section>
-
-        </main>
-
-        <!-- Bottom Fixed Navigation Bar -->
-        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-slate-200 py-2 px-3 flex justify-around items-center z-40">
-            <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-indigo-600 font-bold text-xs">
-                <span class="text-xl">🏠</span>
-                <span>Accueil</span>
+    <!-- ═══════════════════════════════════════════════════════════
+         HEADER : profil · chrono · score · streak
+    ═══════════════════════════════════════════════════════════ -->
+    <header class="bg-indigo-600 text-white p-4 rounded-b-3xl shadow-lg sticky top-0 z-30">
+        <div class="flex justify-between items-center">
+            <button onclick="openProfileModal()"
+                    class="flex items-center space-x-2 bg-indigo-700 hover:bg-indigo-800 transition py-1.5 px-3 rounded-full text-sm font-semibold">
+                <span id="header-avatar" class="text-xl">🦊</span>
+                <span id="header-name"   class="max-w-[85px] truncate">Élève CM1</span>
+                <span id="header-streak" class="text-xs bg-orange-400 text-white px-2 py-0.5 rounded-full font-bold hidden">🔥</span>
             </button>
-            <button onclick="switchTab('maths')" id="nav-maths" class="flex flex-col items-center text-slate-400 font-bold text-xs">
-                <span class="text-xl">✖️</span>
-                <span>Maths</span>
-            </button>
-            <button onclick="switchTab('dictee')" id="nav-dictee" class="flex flex-col items-center text-slate-400 font-bold text-xs">
-                <span class="text-xl">✍️</span>
-                <span>Dictées</span>
-            </button>
-            <button onclick="switchTab('trophies')" id="nav-trophies" class="flex flex-col items-center text-slate-400 font-bold text-xs">
-                <span class="text-xl">🏆</span>
-                <span>Badges</span>
-            </button>
-            <button onclick="switchTab('evar')" id="nav-evar" class="flex flex-col items-center text-slate-400 font-bold text-xs">
-                <span class="text-xl">🌱</span>
-                <span>EVAR</span>
-            </button>
-        </nav>
-
-        <!-- Modal Changement de Profil -->
-        <div id="profile-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-            <div class="bg-white rounded-3xl p-6 w-full max-w-sm space-y-4">
-                <h3 class="text-xl font-bold text-slate-800 font-heading text-center">Profils d'Élèves</h3>
-                <div id="profiles-list" class="space-y-2 max-h-48 overflow-y-auto">
-                    <!-- Liste des profils -->
+            <div class="flex items-center space-x-2">
+                <div class="flex items-center bg-indigo-800/70 px-3 py-1 rounded-full text-xs font-bold text-amber-300">
+                    ⏱️ <span id="work-timer" class="ml-1 font-mono">00:00</span>
                 </div>
-                
-                <div class="border-t pt-3 space-y-2">
-                    <input type="text" id="new-profile-name" placeholder="Prénom de l'élève..." class="w-full p-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-indigo-500">
-                    <button onclick="createNewProfile()" class="w-full bg-indigo-600 text-white font-bold py-2.5 rounded-xl text-sm">Ajouter un profil</button>
+                <div class="flex items-center bg-yellow-400 text-indigo-950 px-3 py-1 rounded-full text-xs font-bold">
+                    ⭐ <span id="header-score" class="ml-1">0 pts</span>
                 </div>
-                <button onclick="closeProfileModal()" class="w-full text-center text-xs text-slate-400 font-bold pt-2">Fermer</button>
             </div>
         </div>
+    </header>
 
+    <!-- ═══════════════════════════════════════════════════════════
+         CONTENU PRINCIPAL
+    ═══════════════════════════════════════════════════════════ -->
+    <main class="flex-1 p-4 overflow-y-auto custom-scrollbar">
+
+        <!-- ╔══════════════════════════════╗
+             ║  VUE 1 · ACCUEIL             ║
+             ╚══════════════════════════════╝ -->
+        <section id="view-home" class="space-y-5">
+
+            <!-- Bannière motivante -->
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-3xl p-5 text-white shadow-lg relative overflow-hidden">
+                <div class="absolute right-4 top-3 text-7xl opacity-10 select-none">🚀</div>
+                <div class="relative z-10">
+                    <span class="bg-white/20 text-xs uppercase px-3 py-1 rounded-full font-bold tracking-wide">Programme CM1</span>
+                    <h2 class="text-2xl font-bold mt-2 font-heading">En route pour la réussite ! 🌟</h2>
+                    <p class="text-indigo-100 text-sm mt-1">Travaille chaque jour, bats tes records et débloque des badges !</p>
+                    <div class="mt-3 flex items-center gap-2">
+                        <div class="bg-white/20 rounded-full px-3 py-1 text-xs font-bold">
+                            🔥 <span id="home-streak">Bienvenue !</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistiques rapides -->
+            <div class="grid grid-cols-3 gap-2">
+                <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm text-center">
+                    <div class="text-2xl">⏱️</div>
+                    <div id="stat-total-time"   class="text-base font-extrabold text-indigo-600">0 min</div>
+                    <div class="text-[10px] text-slate-400 font-bold">Temps</div>
+                </div>
+                <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm text-center">
+                    <div class="text-2xl">🎖️</div>
+                    <div id="stat-total-badges" class="text-base font-extrabold text-amber-500">0</div>
+                    <div class="text-[10px] text-slate-400 font-bold">Badges</div>
+                </div>
+                <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm text-center">
+                    <div class="text-2xl">⭐</div>
+                    <div id="stat-total-points" class="text-base font-extrabold text-purple-600">0</div>
+                    <div class="text-[10px] text-slate-400 font-bold">Points</div>
+                </div>
+            </div>
+
+            <!-- Choix rapide d'activités -->
+            <div>
+                <h3 class="text-lg font-bold text-slate-700 mb-3 font-heading">Que veux-tu faire ? 🎯</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="switchTab('maths'); switchMathsSubView('multiplications')"
+                            class="bg-gradient-to-br from-emerald-400 to-teal-600 text-white p-4 rounded-2xl shadow-md text-left transition transform active:scale-95 flex flex-col justify-between h-28">
+                        <span class="text-3xl">✖️</span>
+                        <div><div class="font-bold font-heading text-lg">Tables de ×</div><div class="text-xs opacity-90">Défis chrono</div></div>
+                    </button>
+                    <button onclick="switchTab('maths'); switchMathsSubView('fractions')"
+                            class="bg-gradient-to-br from-orange-400 to-amber-500 text-white p-4 rounded-2xl shadow-md text-left transition transform active:scale-95 flex flex-col justify-between h-28">
+                        <span class="text-3xl">🍕</span>
+                        <div><div class="font-bold font-heading text-lg">Fractions</div><div class="text-xs opacity-90">Quiz visuel</div></div>
+                    </button>
+                    <button onclick="switchTab('dictee')"
+                            class="bg-gradient-to-br from-indigo-500 to-indigo-700 text-white p-4 rounded-2xl shadow-md text-left transition transform active:scale-95 flex flex-col justify-between h-28">
+                        <span class="text-3xl">✍️</span>
+                        <div><div class="font-bold font-heading text-lg">Dictées</div><div class="text-xs opacity-90">26 thèmes CM1</div></div>
+                    </button>
+                    <button onclick="switchTab('fluence')"
+                            class="bg-gradient-to-br from-rose-400 to-pink-600 text-white p-4 rounded-2xl shadow-md text-left transition transform active:scale-95 flex flex-col justify-between h-28">
+                        <span class="text-3xl">📖</span>
+                        <div><div class="font-bold font-heading text-lg">Fluence</div><div class="text-xs opacity-90">Lecture chronométrée</div></div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Parcours des 26 semaines -->
+            <div>
+                <h3 class="text-lg font-bold text-slate-700 mb-3 font-heading">Parcours des 26 semaines 🗺️</h3>
+                <div id="weekly-roadmap" class="space-y-2"></div>
+            </div>
+        </section>
+
+        <!-- ╔══════════════════════════════╗
+             ║  VUE 2 · MATHS               ║
+             ╚══════════════════════════════╝ -->
+        <section id="view-maths" class="hidden space-y-5">
+
+            <!-- Sous-onglets : Tables · Fractions -->
+            <div class="bg-white rounded-2xl p-1.5 border border-slate-200 flex gap-1.5">
+                <button id="tab-mult" onclick="switchMathsSubView('multiplications')"
+                        class="flex-1 py-2 rounded-xl font-bold text-sm bg-emerald-500 text-white transition">
+                    ✖️ Tables de ×
+                </button>
+                <button id="tab-frac" onclick="switchMathsSubView('fractions')"
+                        class="flex-1 py-2 rounded-xl font-bold text-sm text-slate-500 hover:bg-slate-50 transition">
+                    🍕 Fractions
+                </button>
+                <!-- Placeholder pour conjugaison / grammaire (à venir) -->
+                <!-- <button class="flex-1 py-2 rounded-xl font-bold text-sm text-slate-300 cursor-not-allowed">🔒 Conjugaison</button> -->
+                <!-- <button class="flex-1 py-2 rounded-xl font-bold text-sm text-slate-300 cursor-not-allowed">🔒 Grammaire</button>  -->
+            </div>
+
+            <!-- ── Sous-vue : MULTIPLICATIONS ──────────────────────── -->
+            <div id="maths-multiplications" class="space-y-5">
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
+                    <h2 class="text-xl font-bold text-slate-800 font-heading mb-1">⚡ Défis Tables de Multiplication</h2>
+                    <p class="text-xs text-slate-500">Objectif : répondre juste <strong class="text-indigo-600">3 fois en moins de 2 secondes</strong> pour valider un calcul !</p>
+                </div>
+
+                <!-- Sélecteur de table (1 à 10) -->
+                <div id="math-table-selector" class="grid grid-cols-5 gap-2"></div>
+
+                <!-- Zone de quiz multiplication -->
+                <div id="math-quiz-container" class="hidden bg-white p-6 rounded-3xl shadow-lg border border-slate-200 text-center space-y-5">
+                    <div class="flex justify-between items-center">
+                        <span id="quiz-table-title" class="text-indigo-600 font-heading text-xl font-bold">Table du 7</span>
+                        <button onclick="closeMathQuiz()" class="text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
+                    </div>
+                    <div class="space-y-2">
+                        <div id="math-question" class="text-5xl font-extrabold text-slate-800 font-heading tracking-wide">7 × 8 = ?</div>
+                        <div id="speed-feedback" class="text-sm font-bold text-slate-400 min-h-[1.5rem]">Réponds vite ! ⚡</div>
+                    </div>
+                    <!-- 4 boutons-réponses -->
+                    <div id="math-options" class="grid grid-cols-2 gap-3"></div>
+                    <!-- Statut du calcul en cours -->
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-xs space-y-1">
+                        <div class="flex justify-between font-bold text-slate-600">
+                            <span id="fact-status">0 / 3 en &lt;2s</span>
+                            <span id="best-time-display" class="text-emerald-600"></span>
+                        </div>
+                        <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                            <div id="fact-progress-bar" class="bg-emerald-500 h-full transition-all duration-300" style="width:0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grille de maîtrise de la table sélectionnée -->
+                <div id="table-mastery-grid" class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
+                    <h3 class="text-sm font-bold text-slate-700 font-heading">
+                        Grille de maîtrise <span id="mastery-table-num" class="text-indigo-600"></span>
+                    </h3>
+                    <div id="mastery-items" class="grid grid-cols-2 gap-2 text-xs"></div>
+                </div>
+            </div>
+
+            <!-- ── Sous-vue : FRACTIONS ────────────────────────────── -->
+            <div id="maths-fractions" class="hidden space-y-5">
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
+                    <h2 class="text-xl font-bold text-slate-800 font-heading mb-1">🍕 Quiz Fractions</h2>
+                    <p class="text-xs text-slate-500">Regarde la partie colorée et choisis la fraction qui correspond !</p>
+                </div>
+
+                <!-- Score fractions -->
+                <div class="grid grid-cols-3 gap-2 text-center">
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2">
+                        <div id="frac-correct" class="text-2xl font-extrabold text-emerald-600">0</div>
+                        <div class="text-[10px] text-slate-400 font-bold">✅ Bonnes</div>
+                    </div>
+                    <div class="bg-rose-50 border border-rose-200 rounded-xl p-2">
+                        <div id="frac-wrong"   class="text-2xl font-extrabold text-rose-500">0</div>
+                        <div class="text-[10px] text-slate-400 font-bold">❌ Ratées</div>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-2">
+                        <div id="frac-series"  class="text-2xl font-extrabold text-amber-600">0</div>
+                        <div class="text-[10px] text-slate-400 font-bold">🔥 Série</div>
+                    </div>
+                </div>
+
+                <!-- Zone de jeu -->
+                <div class="bg-white p-6 rounded-3xl shadow-lg border border-slate-200 text-center space-y-5">
+                    <p class="text-sm font-bold text-slate-500">Quelle fraction est coloriée ?</p>
+                    <div id="fraction-shape-container" class="flex justify-center items-center min-h-[160px]"></div>
+                    <div id="fraction-feedback" class="min-h-[2rem] text-sm font-bold flex items-center justify-center text-slate-400"></div>
+                    <div id="fraction-choices" class="grid grid-cols-2 gap-3"></div>
+                    <button id="btn-next-fraction" onclick="generateFractionQuestion()"
+                            class="hidden w-full bg-indigo-600 text-white font-bold py-3 rounded-xl transition active:scale-95">
+                        Question suivante ➡️
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ╔══════════════════════════════╗
+             ║  VUE 3 · DICTÉES             ║
+             ╚══════════════════════════════╝ -->
+        <section id="view-dictee" class="hidden space-y-5">
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-800 font-heading mb-1">✍️ Dictées Révision CM1</h2>
+                <p class="text-xs text-slate-500">26 thèmes · Mémorise les mots et identifie leur nature grammaticale</p>
+            </div>
+
+            <!-- Liste des 26 thèmes -->
+            <div id="dictee-weeks-list" class="space-y-3"></div>
+
+            <!-- Zone de jeu dictée -->
+            <div id="dictee-game-container" class="hidden space-y-5">
+                <div class="flex justify-between items-center">
+                    <button onclick="exitDicteeGame()"
+                            class="text-xs bg-slate-200 font-bold px-3 py-1.5 rounded-full text-slate-600 transition active:scale-95">
+                        ← Retour
+                    </button>
+                    <span id="dictee-word-progress"
+                          class="text-xs font-bold bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full">Mot 1/10</span>
+                </div>
+
+                <!-- Leçon d'orthographe associée au thème -->
+                <div class="text-center">
+                    <span id="dictee-lecon-badge"
+                          class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5 rounded-full border border-amber-200">
+                    </span>
+                </div>
+
+                <!-- ÉTAPE 1 : mémorisation (carte flip) -->
+                <div id="dictee-step-memo" class="text-center space-y-5">
+                    <h3 class="text-xl font-bold text-slate-700 font-heading">Mémorise bien ce mot ! 🧠</h3>
+                    <div class="flip-card" id="dictee-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front flex flex-col items-center justify-center space-y-3">
+                                <span id="card-word-text" class="font-extrabold text-2xl text-indigo-600"></span>
+                                <button onclick="speakWord()"
+                                        class="text-xs bg-indigo-50 text-indigo-600 font-bold px-3 py-1 rounded-full border border-indigo-200">
+                                    🔊 Écouter
+                                </button>
+                            </div>
+                            <div class="flip-card-back font-bold text-5xl">❓</div>
+                        </div>
+                    </div>
+                    <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
+                        <div id="dictee-timer-bar" class="bg-indigo-500 h-full w-full"></div>
+                    </div>
+                </div>
+
+                <!-- ÉTAPE 2 : saisie du mot -->
+                <div id="dictee-step-input" class="hidden bg-white p-5 rounded-3xl shadow-md border border-slate-200 space-y-4 text-center">
+                    <h3 class="text-lg font-bold text-slate-700 font-heading">Écris le mot caché ✍️</h3>
+                    <div id="dictee-clue-display" class="flex justify-center flex-wrap gap-1 text-2xl font-bold my-2 min-h-[2.5rem]"></div>
+                    <form onsubmit="validateWordInput(event)" class="space-y-3">
+                        <input type="text" id="dictee-input"
+                               class="w-full py-3 px-4 rounded-xl border-2 border-slate-300 text-center font-bold text-xl outline-none focus:border-indigo-500 transition"
+                               placeholder="Tape le mot…" autocomplete="off" spellcheck="false">
+                        <button type="submit"
+                                class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-xl shadow-md hover:bg-indigo-700 transition active:scale-95">
+                            Valider ✓
+                        </button>
+                    </form>
+                </div>
+
+                <!-- ÉTAPE 3 : nature grammaticale -->
+                <div id="dictee-step-nature" class="hidden bg-white p-5 rounded-3xl shadow-md border border-slate-200 space-y-4 text-center">
+                    <h3 class="text-lg font-bold text-slate-700 font-heading">Quelle est la nature de ce mot ? 🧩</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="checkGrammarNature('noms')"
+                                class="grammar-btn p-4 rounded-xl border-2 border-slate-200 font-bold text-slate-700 hover:border-indigo-400 hover:bg-indigo-50 transition active:scale-95">
+                            📦 Nom
+                        </button>
+                        <button onclick="checkGrammarNature('verbes')"
+                                class="grammar-btn p-4 rounded-xl border-2 border-slate-200 font-bold text-slate-700 hover:border-purple-400 hover:bg-purple-50 transition active:scale-95">
+                            🏃 Verbe
+                        </button>
+                        <button onclick="checkGrammarNature('adjectifs')"
+                                class="grammar-btn p-4 rounded-xl border-2 border-slate-200 font-bold text-slate-700 hover:border-emerald-400 hover:bg-emerald-50 transition active:scale-95">
+                            🌈 Adjectif
+                        </button>
+                        <button onclick="checkGrammarNature('invariables')"
+                                class="grammar-btn p-4 rounded-xl border-2 border-slate-200 font-bold text-slate-700 hover:border-amber-400 hover:bg-amber-50 transition active:scale-95">
+                            🔒 Invariable
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ╔══════════════════════════════╗
+             ║  VUE 4 · FLUENCE             ║
+             ╚══════════════════════════════╝ -->
+        <section id="view-fluence" class="hidden space-y-5">
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-800 font-heading mb-1">📖 Lecture Fluence</h2>
+                <p class="text-xs text-slate-500">Lis le texte à voix haute. Un adulte démarre le chrono — fais-le diminuer à chaque lecture !</p>
+            </div>
+
+            <!-- Liste des 26 textes -->
+            <div id="fluence-weeks-list" class="space-y-3"></div>
+
+            <!-- Zone de lecture -->
+            <div id="fluence-game-container" class="hidden space-y-5">
+                <div class="flex justify-between items-center">
+                    <button onclick="exitFluenceGame()"
+                            class="text-xs bg-slate-200 font-bold px-3 py-1.5 rounded-full text-slate-600 transition active:scale-95">
+                        ← Retour
+                    </button>
+                    <span id="fluence-theme-badge"
+                          class="text-xs font-bold bg-rose-100 text-rose-700 px-3 py-1.5 rounded-full">Thème 1</span>
+                </div>
+
+                <!-- État PRÊT -->
+                <div id="fluence-state-ready" class="text-center space-y-5">
+                    <div id="fluence-icon-big" class="text-6xl">🗼</div>
+                    <h3 id="fluence-title-display" class="text-2xl font-bold text-slate-800 font-heading"></h3>
+                    <div class="bg-rose-50 border border-rose-200 rounded-2xl p-4 text-sm font-bold text-rose-800 space-y-1">
+                        <p>📜 Ce texte contient <span id="fluence-word-count" class="text-xl font-extrabold">?</span> mots</p>
+                        <p class="text-xs font-normal text-rose-500 mt-1">Un adulte clique « Commencer » quand l'enfant est prêt !</p>
+                    </div>
+                    <button onclick="startFluenceTimer()"
+                            class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-4 rounded-2xl text-xl shadow-lg transition active:scale-95">
+                        🚀 Commencer !
+                    </button>
+                    <div id="fluence-history-box" class="space-y-2"></div>
+                </div>
+
+                <!-- État EN COURS -->
+                <div id="fluence-state-reading" class="hidden text-center space-y-5">
+                    <div class="bg-rose-600 text-white rounded-3xl p-5 space-y-1">
+                        <p class="text-xs font-bold opacity-70 uppercase tracking-wide">Temps écoulé</p>
+                        <div id="fluence-timer-display" class="text-6xl font-mono font-extrabold font-heading">0:00</div>
+                    </div>
+                    <!-- Texte à lire (grande police, lisible) -->
+                    <div id="fluence-text-display"
+                         class="bg-white border-2 border-slate-200 rounded-2xl p-5 text-left text-lg leading-loose text-slate-700 font-medium shadow-inner max-h-72 overflow-y-auto custom-scrollbar">
+                    </div>
+                    <button onclick="stopFluenceTimer()"
+                            class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-2xl text-xl shadow-lg transition active:scale-95">
+                        ✅ J'ai fini !
+                    </button>
+                </div>
+
+                <!-- État RÉSULTAT -->
+                <div id="fluence-state-result" class="hidden text-center space-y-5 animate-slide-up">
+                    <div class="text-5xl">🎉</div>
+                    <h3 class="text-2xl font-bold text-slate-800 font-heading">Lecture terminée !</h3>
+                    <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-5 space-y-2">
+                        <div id="fluence-result-time" class="text-4xl font-extrabold font-heading text-indigo-700">0:00</div>
+                        <div class="text-xs text-slate-500 font-bold">Temps de lecture</div>
+                        <div id="fluence-result-wpm"  class="text-2xl font-extrabold text-emerald-600 mt-2">—</div>
+                        <div class="text-xs text-slate-500">mots par minute</div>
+                    </div>
+                    <!-- Mini-graphe de progression -->
+                    <div id="fluence-chart-box" class="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
+                        <h4 class="text-sm font-bold text-slate-600 font-heading">📈 Ta progression</h4>
+                        <div class="flex items-end justify-center gap-2 h-20" id="fluence-chart-bars"></div>
+                        <div class="flex justify-center gap-2" id="fluence-chart-labels"></div>
+                        <p class="text-[10px] text-slate-400">Les barres diminuent quand tu lis plus vite !</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="startFluenceTimer()"
+                                class="bg-rose-500 text-white font-bold py-3 rounded-xl text-sm transition active:scale-95">
+                            🔄 Relire
+                        </button>
+                        <button onclick="exitFluenceGame()"
+                                class="bg-slate-200 text-slate-700 font-bold py-3 rounded-xl text-sm transition active:scale-95">
+                            ← Retour
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ╔══════════════════════════════╗
+             ║  VUE 5 · TROPHÉES            ║
+             ╚══════════════════════════════╝ -->
+        <section id="view-trophies" class="hidden space-y-5">
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-800 font-heading mb-1">🏆 Ta Galerie de Badges</h2>
+                <div id="trophy-summary" class="text-xs text-indigo-600 font-bold"></div>
+            </div>
+            <!-- Filtres par catégorie -->
+            <div class="flex gap-2 flex-wrap">
+                <button onclick="filterBadges('all',this)"
+                        class="badge-filter bg-indigo-600 text-white text-xs font-bold px-3 py-1.5 rounded-full transition">Tous</button>
+                <button onclick="filterBadges('time',this)"
+                        class="badge-filter bg-slate-100 text-slate-500 text-xs font-bold px-3 py-1.5 rounded-full transition">⏱️ Temps</button>
+                <button onclick="filterBadges('maths',this)"
+                        class="badge-filter bg-slate-100 text-slate-500 text-xs font-bold px-3 py-1.5 rounded-full transition">✖️ Maths</button>
+                <button onclick="filterBadges('dictee',this)"
+                        class="badge-filter bg-slate-100 text-slate-500 text-xs font-bold px-3 py-1.5 rounded-full transition">✍️ Dictées</button>
+                <button onclick="filterBadges('fluence',this)"
+                        class="badge-filter bg-slate-100 text-slate-500 text-xs font-bold px-3 py-1.5 rounded-full transition">📖 Fluence</button>
+                <button onclick="filterBadges('fractions',this)"
+                        class="badge-filter bg-slate-100 text-slate-500 text-xs font-bold px-3 py-1.5 rounded-full transition">🍕 Fractions</button>
+            </div>
+            <div id="badges-grid" class="grid grid-cols-2 gap-3"></div>
+        </section>
+
+    </main><!-- /main -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         BARRE DE NAVIGATION DU BAS (fixe)
+    ═══════════════════════════════════════════════════════════ -->
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-slate-200 py-2 px-3 flex justify-around items-center z-40 shadow-lg">
+        <button onclick="switchTab('home')"     id="nav-home"     class="flex flex-col items-center text-indigo-600 font-bold text-xs"><span class="text-xl">🏠</span><span>Accueil</span></button>
+        <button onclick="switchTab('maths')"    id="nav-maths"    class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">✖️</span><span>Maths</span></button>
+        <button onclick="switchTab('dictee')"   id="nav-dictee"   class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">✍️</span><span>Dictées</span></button>
+        <button onclick="switchTab('fluence')"  id="nav-fluence"  class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">📖</span><span>Fluence</span></button>
+        <button onclick="switchTab('trophies')" id="nav-trophies" class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">🏆</span><span>Badges</span></button>
+        <!-- À VENIR : conjugaison, grammaire -->
+        <!-- <button class="flex flex-col items-center text-slate-300 font-bold text-xs cursor-not-allowed"><span class="text-xl">🔒</span><span>Conjugaison</span></button> -->
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         MODAL : GESTION DES PROFILS
+    ═══════════════════════════════════════════════════════════ -->
+    <div id="profile-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm space-y-4">
+            <h3 class="text-xl font-bold text-slate-800 font-heading text-center">👤 Profils d'Élèves</h3>
+            <div id="profiles-list" class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar"></div>
+            <div class="border-t pt-3 space-y-2">
+                <input type="text" id="new-profile-name" placeholder="Prénom de l'élève…"
+                       class="w-full p-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-indigo-500">
+                <button onclick="createNewProfile()"
+                        class="w-full bg-indigo-600 text-white font-bold py-2.5 rounded-xl text-sm transition active:scale-95">
+                    + Ajouter un profil
+                </button>
+            </div>
+            <button onclick="closeProfileModal()" class="w-full text-center text-xs text-slate-400 font-bold">Fermer</button>
+        </div>
     </div>
 
-    <script>
-        // =========================================================================
-        // BANQUE DE DONNÉES : DICTÉES CM1 SEMAINE PAR SEMAINE
-        // =========================================================================
-        const DICTEE_WEEKS = [
-            {
-                id: "semaine1",
-                title: "Semaine 1 : La Tour Eiffel",
-                description: "Le célèbre monument parisien et ses chiffres impressionnants.",
-                words: [
-                    { word: "la construction", nature: "noms" },
-                    { word: "la tour", nature: "noms" },
-                    { word: "le fer", nature: "noms" },
-                    { word: "le sommet", nature: "noms" },
-                    { word: "le monument", nature: "noms" },
-                    { word: "nécessiter", nature: "verbes" },
-                    { word: "briller", nature: "verbes" },
-                    { word: "célèbre", nature: "adjectifs" },
-                    { word: "au-dessus", nature: "invariables" },
-                    { word: "ainsi", nature: "invariables" }
-                ]
-            },
-            {
-                id: "semaine2",
-                title: "Semaine 2 : L'amphithéâtre de Nîmes",
-                description: "Les vestiges romains en Gaule et les combats de gladiateurs.",
-                words: [
-                    { word: "le siècle", nature: "noms" },
-                    { word: "une époque", nature: "noms" },
-                    { word: "la Gaule", nature: "noms" },
-                    { word: "le spectateur", nature: "noms" },
-                    { word: "le gladiateur", nature: "noms" },
-                    { word: "accueillir", nature: "verbes" },
-                    { word: "assister", nature: "verbes" },
-                    { word: "violent", nature: "adjectifs" },
-                    { word: "jusqu'à", nature: "invariables" },
-                    { word: "grâce", nature: "invariables" }
-                ]
-            },
-            {
-                id: "semaine3",
-                title: "Semaine 3 : Le Système Solaire",
-                description: "Les planètes, la Terre et les étoiles de notre galaxie.",
-                words: [
-                    { word: "une planète", nature: "noms" },
-                    { word: "le soleil", nature: "noms" },
-                    { word: "une étoile", nature: "noms" },
-                    { word: "l'espace", nature: "noms" },
-                    { word: "tourner", nature: "verbes" },
-                    { word: "éclairer", nature: "verbes" },
-                    { word: "lumineux", nature: "adjectifs" },
-                    { word: "gigantesque", nature: "adjectifs" },
-                    { word: "partout", nature: "invariables" },
-                    { word: "autour", nature: "invariables" }
-                ]
-            }
-        ];
-
-        // =========================================================================
-        // GESTION DU PROFIL & DE LA SAUVEGARDE LOCALE
-        // =========================================================================
-        const AVATARS = ["🦊", "🦁", "🐼", "🦄", "🤖", "🚀", "🐱", "🐶"];
-        
-        let appData = JSON.parse(localStorage.getItem('cm1DevoirsData')) || {
-            activeProfileId: "p1",
-            profiles: [
-                {
-                    id: "p1",
-                    name: "Élève CM1",
-                    avatar: "🦊",
-                    totalSeconds: 0,
-                    points: 0,
-                    mathStats: {}, // { "7x8": { fastCount: 0, totalCorrect: 0 } }
-                    dicteeStats: {}, // { "le siècle": 3 }
-                    badges: []
-                }
-            ]
-        };
-
-        function getCurrentProfile() {
-            let p = appData.profiles.find(x => x.id === appData.activeProfileId);
-            if (!p) {
-                p = appData.profiles[0];
-                appData.activeProfileId = p.id;
-            }
-            return p;
-        }
-
-        function saveData() {
-            localStorage.setItem('cm1DevoirsData', JSON.stringify(appData));
-            updateUIHeader();
-        }
-
-        // =========================================================================
-        // MINUTEUR D'EFFORT (Chronomètre)
-        // =========================================================================
-        let timerInterval = null;
-
-        function startWorkTimer() {
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                let p = getCurrentProfile();
-                p.totalSeconds++;
-                saveData();
-                checkTimeBadges();
-            }, 1000);
-        }
-
-        function formatTime(seconds) {
-            let m = Math.floor(seconds / 60);
-            let s = seconds % 60;
-            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        }
-
-        // =========================================================================
-        // LOGIQUE MATHS - QUIZ MULTIPLICATION (VALIDE SI >= 3 REPOSES EN < 1 SEC)
-        // =========================================================================
-        let currentMathTable = 7;
-        let currentFactObj = null;
-        let questionStartTime = 0;
-
-        function generateMathTableButtons() {
-            const container = document.getElementById('math-table-selector');
-            container.innerHTML = '';
-            let p = getCurrentProfile();
-
-            for (let i = 1; i <= 10; i++) {
-                let isTableMastered = checkTableMastery(i);
-                let btn = document.createElement('button');
-                btn.className = `p-3 rounded-2xl font-bold flex flex-col items-center justify-center space-y-1 transition transform active:scale-95 border-2 ${
-                    isTableMastered 
-                    ? 'bg-emerald-50 border-emerald-400 text-emerald-700' 
-                    : 'bg-white border-slate-200 text-slate-700 hover:border-indigo-300'
-                }`;
-                btn.onclick = () => selectMathTable(i);
-                btn.innerHTML = `
-                    <span class="text-xs text-slate-400">Table de</span>
-                    <span class="text-2xl font-heading font-extrabold">${i}</span>
-                    <span class="text-xs">${isTableMastered ? '⚡ Validée' : ' En cours'}</span>
-                `;
-                container.appendChild(btn);
-            }
-        }
-
-        function checkTableMastery(tableNum) {
-            let p = getCurrentProfile();
-            for (let j = 1; j <= 10; j++) {
-                let key = `${tableNum}x${j}`;
-                let stat = p.mathStats[key] || { fastCount: 0 };
-                if (stat.fastCount < 3) return false;
-            }
-            return true;
-        }
-
-        function selectMathTable(tableNum) {
-            currentMathTable = tableNum;
-            document.getElementById('math-quiz-container').classList.remove('hidden');
-            document.getElementById('mastery-table-num').textContent = `de ${tableNum}`;
-            updateTableMasteryGrid();
-            nextMathQuestion();
-        }
-
-        function closeMathQuiz() {
-            document.getElementById('math-quiz-container').classList.add('hidden');
-        }
-
-        function nextMathQuestion() {
-            let multiplier = Math.floor(Math.random() * 10) + 1;
-            let a = currentMathTable;
-            let b = multiplier;
-            let answer = a * b;
-
-            currentFactObj = { a, b, answer, key: `${a}x${b}` };
-
-            document.getElementById('quiz-table-title').textContent = `Table de ${a}`;
-            document.getElementById('math-question').textContent = `${a} × ${b} = ?`;
-            document.getElementById('speed-feedback').textContent = "Réponds le plus vite possible ! ⚡";
-            document.getElementById('speed-feedback').className = "h-6 text-sm font-bold text-slate-400";
-
-            // Mise à jour du statut pour ce calcul
-            let p = getCurrentProfile();
-            let stat = p.mathStats[currentFactObj.key] || { fastCount: 0 };
-            document.getElementById('fact-status').textContent = `${stat.fastCount}/3 en <1.0s`;
-            document.getElementById('fact-progress-bar').style.width = `${Math.min(100, (stat.fastCount/3)*100)}%`;
-
-            // Génération de 4 choix avec distracteurs crédibles
-            let choices = [answer];
-            while (choices.length < 4) {
-                let fake = answer + (Math.floor(Math.random() * 5) - 2) * currentMathTable;
-                if (fake > 0 && !choices.includes(fake)) {
-                    choices.push(fake);
-                } else if (!choices.includes(answer + choices.length)) {
-                    choices.push(answer + choices.length);
-                }
-            }
-            choices.sort(() => Math.random() - 0.5);
-
-            const optionsContainer = document.getElementById('math-options');
-            optionsContainer.innerHTML = '';
-            choices.forEach(val => {
-                let btn = document.createElement('button');
-                btn.className = "bg-slate-100 hover:bg-indigo-50 border-2 border-slate-200 hover:border-indigo-400 font-extrabold text-2xl py-3 rounded-2xl text-slate-800 transition transform active:scale-95";
-                btn.textContent = val;
-                btn.onclick = () => handleMathAnswer(val);
-                optionsContainer.appendChild(btn);
-            });
-
-            questionStartTime = performance.now();
-        }
-
-        function handleMathAnswer(selectedVal) {
-            let elapsedMs = performance.now() - questionStartTime;
-            let elapsedSec = (elapsedMs / 1000).toFixed(2);
-            let p = getCurrentProfile();
-            let key = currentFactObj.key;
-
-            if (!p.mathStats[key]) {
-                p.mathStats[key] = { fastCount: 0, totalCorrect: 0 };
-            }
-
-            if (selectedVal === currentFactObj.answer) {
-                // Bonne réponse
-                playAudioTone(600, 0.1);
-                p.mathStats[key].totalCorrect++;
-
-                if (elapsedMs <= 1000) {
-                    // Réponse sous 1 seconde !
-                    p.mathStats[key].fastCount++;
-                    p.points += 15;
-                    document.getElementById('speed-feedback').textContent = `⚡ SUPER RAPIDE ! (${elapsedSec}s) +1⚡`;
-                    document.getElementById('speed-feedback').className = "h-6 text-sm font-extrabold text-emerald-500 animate-pulse-fast";
-                } else {
-                    p.points += 5;
-                    document.getElementById('speed-feedback').textContent = ` Correct ! Mais un peu trop lent (${elapsedSec}s)`;
-                    document.getElementById('speed-feedback').className = "h-6 text-sm font-bold text-amber-500";
-                }
-
-                saveData();
-                updateTableMasteryGrid();
-                generateMathTableButtons();
-
-                // Vérifier si toute la table vient d'être débloquée
-                if (checkTableMastery(currentMathTable)) {
-                    awardBadge(`table_${currentMathTable}`, `Maître du ${currentMathTable} ⚡`, `A validé tous les calculs du ${currentMathTable} sous 1 seconde !`);
-                }
-
-                setTimeout(nextMathQuestion, 1200);
-            } else {
-                // Mauvaise réponse
-                playAudioTone(200, 0.2);
-                document.getElementById('speed-feedback').textContent = ` Erreur ! La réponse était ${currentFactObj.answer}`;
-                document.getElementById('speed-feedback').className = "h-6 text-sm font-bold text-rose-500 animate-shake";
-                setTimeout(nextMathQuestion, 1500);
-            }
-        }
-
-        function updateTableMasteryGrid() {
-            const container = document.getElementById('mastery-items');
-            container.innerHTML = '';
-            let p = getCurrentProfile();
-
-            for (let j = 1; j <= 10; j++) {
-                let key = `${currentMathTable}x${j}`;
-                let stat = p.mathStats[key] || { fastCount: 0 };
-                let isDone = stat.fastCount >= 3;
-
-                let div = document.createElement('div');
-                div.className = `p-2 rounded-xl border flex justify-between items-center ${isDone ? 'bg-emerald-50 border-emerald-300 text-emerald-800' : 'bg-slate-50 border-slate-200 text-slate-500'}`;
-                div.innerHTML = `
-                    <span class="font-bold">${currentMathTable} × ${j} = ${currentMathTable * j}</span>
-                    <span class="font-bold text-xs">${isDone ? '⚡ 3/3' : `${stat.fastCount}/3`}</span>
-                `;
-                container.appendChild(div);
-            }
-        }
-
-        // =========================================================================
-        // LOGIQUE DICTÉE CM1
-        // =========================================================================
-        let currentWeekObj = null;
-        let currentWordIndex = 0;
-        let mistakesCurrentWord = 0;
-
-        function renderDicteeWeeks() {
-            const container = document.getElementById('dictee-weeks-list');
-            container.innerHTML = '';
-            let p = getCurrentProfile();
-
-            DICTEE_WEEKS.forEach(week => {
-                let learnedCount = 0;
-                week.words.forEach(w => {
-                    if ((p.dicteeStats[w.word] || 0) >= 3) learnedCount++;
-                });
-
-                let isCompleted = learnedCount === week.words.length;
-
-                let card = document.createElement('div');
-                card.className = "bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center";
-                card.innerHTML = `
-                    <div class="space-y-1">
-                        <div class="font-bold text-slate-800 font-heading">${week.title}</div>
-                        <div class="text-xs text-slate-500">${week.description}</div>
-                        <div class="text-xs font-bold text-indigo-600 bg-indigo-50 inline-block px-2 py-0.5 rounded-md mt-1">
-                            ${learnedCount}/${week.words.length} mots maîtrisés
-                        </div>
-                    </div>
-                    <button onclick="startDicteeGame('${week.id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-xl text-sm shadow">
-                        ${isCompleted ? 'Réviser' : 'Jouer'}
-                    </button>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function startDicteeGame(weekId) {
-            currentWeekObj = DICTEE_WEEKS.find(w => w.id === weekId);
-            currentWordIndex = 0;
-            
-            document.getElementById('dictee-weeks-list').classList.add('hidden');
-            document.getElementById('dictee-game-container').classList.remove('hidden');
-            
-            launchWordCycle();
-        }
-
-        function exitDicteeGame() {
-            document.getElementById('dictee-game-container').classList.add('hidden');
-            document.getElementById('dictee-weeks-list').classList.remove('hidden');
-            renderDicteeWeeks();
-        }
-
-        function launchWordCycle() {
-            mistakesCurrentWord = 0;
-            let targetWordObj = currentWeekObj.words[currentWordIndex];
-            
-            document.getElementById('dictee-word-progress').textContent = `Mot ${currentWordIndex + 1}/${currentWeekObj.words.length}`;
-            document.getElementById('card-word-text').textContent = targetWordObj.word;
-
-            // Reset des étapes
-            document.getElementById('dictee-step-memo').classList.remove('hidden');
-            document.getElementById('dictee-step-input').classList.add('hidden');
-            document.getElementById('dictee-step-nature').classList.add('hidden');
-            document.getElementById('dictee-card').classList.remove('flipped');
-
-            // Timer de mémorisation (2s)
-            const timerBar = document.getElementById('dictee-timer-bar');
-            timerBar.style.transition = 'none';
-            timerBar.style.width = '100%';
-            void timerBar.offsetWidth;
-            timerBar.style.transition = 'width 2s linear';
-            timerBar.style.width = '0%';
-
-            setTimeout(() => {
-                document.getElementById('dictee-card').classList.add('flipped');
-                setTimeout(showDicteeInputPhase, 500);
-            }, 2000);
-        }
-
-        function speakWord() {
-            if ('speechSynthesis' in window) {
-                let targetWord = currentWeekObj.words[currentWordIndex].word;
-                let utterance = new SpeechSynthesisUtterance(targetWord);
-                utterance.lang = 'fr-FR';
-                window.speechSynthesis.speak(utterance);
-            }
-        }
-
-        function showDicteeInputPhase() {
-            document.getElementById('dictee-step-memo').classList.add('hidden');
-            document.getElementById('dictee-step-input').classList.remove('hidden');
-
-            let word = currentWeekObj.words[currentWordIndex].word;
-            let clueContainer = document.getElementById('dictee-clue-display');
-            clueContainer.innerHTML = '';
-
-            for (let i = 0; i < word.length; i++) {
-                let char = word[i];
-                let span = document.createElement('span');
-                if (i === 0) {
-                    span.textContent = char;
-                    span.className = "text-indigo-600 font-bold border-b-2 border-transparent px-1";
-                } else if (char === ' ') {
-                    span.innerHTML = '&nbsp;';
-                    span.className = "px-1";
-                } else if (char === "'" || char === "-") {
-                    span.textContent = char;
-                    span.className = "text-slate-400 font-bold px-1";
-                } else {
-                    span.textContent = char;
-                    span.className = "text-transparent border-b-2 border-slate-300 px-1";
-                }
-                clueContainer.appendChild(span);
-            }
-
-            const input = document.getElementById('dictee-input');
-            input.value = '';
-            input.focus();
-        }
-
-        function validateWordInput(e) {
-            e.preventDefault();
-            let input = document.getElementById('dictee-input');
-            let targetWord = currentWeekObj.words[currentWordIndex].word;
-
-            if (input.value.trim().toLowerCase() === targetWord.toLowerCase()) {
-                playAudioTone(523.25, 0.15); // C5
-                document.getElementById('dictee-step-input').classList.add('hidden');
-                document.getElementById('dictee-step-nature').classList.remove('hidden');
-            } else {
-                mistakesCurrentWord++;
-                playAudioTone(200, 0.2);
-                input.classList.add('border-rose-500', 'animate-shake');
-                setTimeout(() => {
-                    input.classList.remove('border-rose-500', 'animate-shake');
-                    input.value = '';
-                }, 500);
-            }
-        }
-
-        function checkGrammarNature(selectedNature) {
-            let targetNature = currentWeekObj.words[currentWordIndex].nature;
-            let p = getCurrentProfile();
-
-            if (selectedNature === targetNature) {
-                playAudioTone(659.25, 0.15); // E5
-                let wName = currentWeekObj.words[currentWordIndex].word;
-                
-                if (!p.dicteeStats[wName]) p.dicteeStats[wName] = 0;
-                if (mistakesCurrentWord === 0) {
-                    p.dicteeStats[wName] = Math.min(3, p.dicteeStats[wName] + 1);
-                    p.points += 10;
-                }
-                saveData();
-
-                currentWordIndex++;
-                if (currentWordIndex < currentWeekObj.words.length) {
-                    launchWordCycle();
-                } else {
-                    // Fin de la semaine !
-                    awardBadge(`week_${currentWeekObj.id}`, `Expert : ${currentWeekObj.title}`, "A terminé tous les mots de cette semaine de dictée !");
-                    alert("🎉 Félicitations, tu as terminé cette série de mots !");
-                    exitDicteeGame();
-                }
-            } else {
-                playAudioTone(200, 0.2);
-                alert("Oups ! Réessaye de trouver la bonne catégorie grammaticale.");
-            }
-        }
-
-        // =========================================================================
-        // ATTRIBUTION DES BADGES & EFFETS SONORES SYNTHÉTISÉS
-        // =========================================================================
-        function awardBadge(badgeId, title, desc) {
-            let p = getCurrentProfile();
-            if (!p.badges.some(b => b.id === badgeId)) {
-                p.badges.push({ id: badgeId, title, desc, date: new Date().toLocaleDateString() });
-                saveData();
-                playFanfare();
-            }
-        }
-
-        function checkTimeBadges() {
-            let p = getCurrentProfile();
-            let mins = Math.floor(p.totalSeconds / 60);
-            if (mins >= 10) awardBadge('time_10', '10 Minutes d\'Effort ⏱️', 'A travaillé au moins 10 minutes !');
-            if (mins >= 30) awardBadge('time_30', 'Champion de la Mémorisation 🧠', 'A travaillé 30 minutes entières !');
-            if (mins >= 60) awardBadge('time_60', '1 Heure de Travail CM1 👑', 'Un vrai travailleur acharné !');
-        }
-
-        function playAudioTone(freq, duration) {
-            try {
-                let ctx = new (window.AudioContext || window.webkitAudioContext)();
-                let osc = ctx.createOscillator();
-                let gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.value = freq;
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + duration);
-                setTimeout(() => ctx.close(), duration * 1000 + 100);
-            } catch(e){}
-        }
-
-        function playFanfare() {
-            playAudioTone(523.25, 0.1);
-            setTimeout(() => playAudioTone(659.25, 0.1), 100);
-            setTimeout(() => playAudioTone(783.99, 0.2), 200);
-        }
-
-        // =========================================================================
-        // RENDER & NAVIGATION
-        // =========================================================================
-        function updateUIHeader() {
-            let p = getCurrentProfile();
-            document.getElementById('header-avatar').textContent = p.avatar;
-            document.getElementById('header-name').textContent = p.name;
-            document.getElementById('header-score').textContent = `${p.points} pts`;
-            document.getElementById('work-timer').textContent = formatTime(p.totalSeconds);
-            document.getElementById('stat-total-time').textContent = `${Math.floor(p.totalSeconds / 60)} min`;
-            document.getElementById('stat-total-badges').textContent = `${p.badges.length} / 15`;
-        }
-
-        function switchTab(tabId) {
-            ['home', 'maths', 'dictee', 'trophies', 'evar'].forEach(id => {
-                document.getElementById(`view-${id}`).classList.add('hidden');
-                let navBtn = document.getElementById(`nav-${id}`);
-                if (navBtn) {
-                    navBtn.classList.remove('text-indigo-600');
-                    navBtn.classList.add('text-slate-400');
-                }
-            });
-
-            document.getElementById(`view-${tabId}`).classList.remove('hidden');
-            let activeNav = document.getElementById(`nav-${tabId}`);
-            if (activeNav) {
-                activeNav.classList.remove('text-slate-400');
-                activeNav.classList.add('text-indigo-600');
-            }
-
-            if (tabId === 'home') renderWeeklyRoadmap();
-            if (tabId === 'maths') generateMathTableButtons();
-            if (tabId === 'dictee') renderDicteeWeeks();
-            if (tabId === 'trophies') renderBadgesGrid();
-        }
-
-        function renderWeeklyRoadmap() {
-            const container = document.getElementById('weekly-roadmap');
-            container.innerHTML = '';
-
-            DICTEE_WEEKS.forEach(w => {
-                let card = document.createElement('div');
-                card.className = "bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between";
-                card.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg font-heading">
-                            📚
-                        </div>
-                        <div>
-                            <div class="font-bold text-slate-800 text-sm font-heading">${w.title}</div>
-                            <div class="text-xs text-slate-400">Orthographe & Vocabulaire</div>
-                        </div>
-                    </div>
-                    <button onclick="switchTab('dictee')" class="text-xs bg-slate-100 hover:bg-indigo-50 text-indigo-600 font-bold px-3 py-1.5 rounded-lg border border-slate-200">
-                        Ouvrir
-                    </button>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function renderBadgesGrid() {
-            const container = document.getElementById('badges-grid');
-            container.innerHTML = '';
-            let p = getCurrentProfile();
-
-            const ALL_BADGES = [
-                { id: 'time_10', title: '10 Min d\'Effort ⏱️', desc: 'A travaillé 10 minutes' },
-                { id: 'time_30', title: '30 Min d\'Effort 🧠', desc: 'A travaillé 30 minutes' },
-                { id: 'time_60', title: '1 Heure de Travail 👑', desc: 'A travaillé 1 heure' },
-                { id: 'table_7', title: 'Maître du 7 ⚡', desc: 'Table du 7 validée sous 1s' },
-                { id: 'week_semaine1', title: 'Expert Tour Eiffel 🏰', desc: 'Dictée Semaine 1 validée' },
-                { id: 'week_semaine2', title: 'Expert Arènes Nîmes 🏛️', desc: 'Dictée Semaine 2 validée' }
-            ];
-
-            ALL_BADGES.forEach(b => {
-                let isUnlocked = p.badges.some(x => x.id === b.id);
-                let div = document.createElement('div');
-                div.className = `p-4 rounded-2xl border flex flex-col items-center text-center space-y-1 ${isUnlocked ? 'bg-amber-50 border-amber-300 text-amber-900' : 'bg-slate-100 border-slate-200 text-slate-400 opacity-60'}`;
-                div.innerHTML = `
-                    <div class="text-3xl">${isUnlocked ? '🎖️' : '🔒'}</div>
-                    <div class="font-bold text-xs font-heading">${b.title}</div>
-                    <div class="text-[10px] opacity-80">${b.desc}</div>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        // =========================================================================
-        // GESTION DES PROFILS
-        // =========================================================================
-        function openProfileModal() {
-            document.getElementById('profile-modal').classList.remove('hidden');
-            renderProfilesList();
-        }
-
-        function closeProfileModal() {
-            document.getElementById('profile-modal').classList.add('hidden');
-        }
-
-        function renderProfilesList() {
-            const container = document.getElementById('profiles-list');
-            container.innerHTML = '';
-
-            appData.profiles.forEach(p => {
-                let isCurrent = p.id === appData.activeProfileId;
-                let btn = document.createElement('button');
-                btn.className = `w-full p-2.5 rounded-xl border flex items-center justify-between text-sm font-bold ${isCurrent ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'bg-slate-50 border-slate-200 text-slate-600'}`;
-                btn.onclick = () => selectProfile(p.id);
-                btn.innerHTML = `
-                    <span>${p.avatar} ${p.name}</span>
-                    <span class="text-xs bg-white px-2 py-0.5 rounded-md border">${Math.floor(p.totalSeconds/60)} min</span>
-                `;
-                container.appendChild(btn);
-            });
-        }
-
-        function selectProfile(id) {
-            appData.activeProfileId = id;
-            saveData();
-            closeProfileModal();
-            switchTab('home');
-        }
-
-        function createNewProfile() {
-            let input = document.getElementById('new-profile-name');
-            let name = input.value.trim();
-            if (name) {
-                let newId = 'p_' + Date.now();
-                let randomAvatar = AVATARS[Math.floor(Math.random() * AVATARS.length)];
-                appData.profiles.push({
-                    id: newId,
-                    name: name,
-                    avatar: randomAvatar,
-                    totalSeconds: 0,
-                    points: 0,
-                    mathStats: {},
-                    dicteeStats: {},
-                    badges: []
-                });
-                appData.activeProfileId = newId;
-                input.value = '';
-                saveData();
-                closeProfileModal();
-                switchTab('home');
-            }
-        }
-
-        // Initialisation au chargement de la page
-        window.onload = () => {
-            updateUIHeader();
-            startWorkTimer();
-            switchTab('home');
-        };
-    </script>
+    <!-- ═══════════════════════════════════════════════════════════
+         MODAL : CÉLÉBRATION (badge / bravo)
+    ═══════════════════════════════════════════════════════════ -->
+    <div id="celebration-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-xs text-center space-y-4 animate-pop-in">
+            <div id="cel-icon"  class="text-6xl">🎉</div>
+            <h3 id="cel-title"  class="text-2xl font-bold text-slate-800 font-heading"></h3>
+            <p  id="cel-desc"   class="text-sm text-slate-600"></p>
+            <div id="cel-badge-box" class="hidden bg-amber-50 border-2 border-amber-300 rounded-2xl p-4">
+                <div class="text-3xl mb-1">🎖️</div>
+                <div id="cel-badge-title" class="font-bold text-amber-800 font-heading text-sm"></div>
+            </div>
+            <button onclick="closeCelebrationModal()"
+                    class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl text-lg transition active:scale-95">
+                Super ! 🚀
+            </button>
+        </div>
+    </div>
+
+</div><!-- /#app -->
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  ████ DONNÉES ─ 26 THÈMES DE DICTÉES ████
+//  Un thème par semaine, associé à une leçon d'orthographe (O1–O26)
+//  Vocabulaire : 12–14 mots par thème (noms · verbes · adjectifs · invariables)
+// ═══════════════════════════════════════════════════════════════
+const DICTEE_WEEKS = [
+  {
+    id:"semaine1", title:"La Tour Eiffel", icon:"🗼",
+    orthoLecon:"O1 · Le pluriel des noms",
+    description:"Le monument parisien et ses chiffres impressionnants",
+    words:[
+      {word:"la construction",nature:"noms"},{word:"la tour",nature:"noms"},
+      {word:"le fer",nature:"noms"},{word:"la tonne",nature:"noms"},
+      {word:"la peinture",nature:"noms"},{word:"le sommet",nature:"noms"},
+      {word:"le monument",nature:"noms"},{word:"le pays",nature:"noms"},
+      {word:"nécessiter",nature:"verbes"},{word:"briller",nature:"verbes"},
+      {word:"célèbre",nature:"adjectifs"},
+      {word:"plusieurs",nature:"invariables"},{word:"au-dessus",nature:"invariables"},{word:"ainsi",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine2", title:"L'amphithéâtre de Nîmes", icon:"🏛️",
+    orthoLecon:"O2 · Écrire « a » ou « à »",
+    description:"Les vestiges romains et les combats de gladiateurs",
+    words:[
+      {word:"le siècle",nature:"noms"},{word:"une époque",nature:"noms"},
+      {word:"la Gaule",nature:"noms"},{word:"le spectateur",nature:"noms"},
+      {word:"le gladiateur",nature:"noms"},{word:"le combat",nature:"noms"},
+      {word:"accueillir",nature:"verbes"},{word:"assister",nature:"verbes"},
+      {word:"violent",nature:"adjectifs"},{word:"romain",nature:"adjectifs"},
+      {word:"jusqu'à",nature:"invariables"},{word:"grâce à",nature:"invariables"},{word:"autour",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine3", title:"La cathédrale de Reims", icon:"⛪",
+    orthoLecon:"O3 · Écrire « et » ou « est »",
+    description:"L'art gothique et les couronnements des rois de France",
+    words:[
+      {word:"la cathédrale",nature:"noms"},{word:"le vitrail",nature:"noms"},
+      {word:"la façade",nature:"noms"},{word:"le portail",nature:"noms"},
+      {word:"le couronnement",nature:"noms"},{word:"la lumière",nature:"noms"},
+      {word:"construire",nature:"verbes"},{word:"sculpter",nature:"verbes"},
+      {word:"gothique",nature:"adjectifs"},{word:"magnifique",nature:"adjectifs"},
+      {word:"là",nature:"invariables"},{word:"partout",nature:"invariables"},{word:"aussi",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine4", title:"La grotte de Lascaux", icon:"🦬",
+    orthoLecon:"O4 · Écrire « s » ou « ss »",
+    description:"Les peintures préhistoriques et les premiers artistes",
+    words:[
+      {word:"la grotte",nature:"noms"},{word:"le bison",nature:"noms"},
+      {word:"la paroi",nature:"noms"},{word:"le chasseur",nature:"noms"},
+      {word:"le dessin",nature:"noms"},{word:"la découverte",nature:"noms"},
+      {word:"découvrir",nature:"verbes"},{word:"tracer",nature:"verbes"},
+      {word:"préhistorique",nature:"adjectifs"},{word:"ancien",nature:"adjectifs"},
+      {word:"aussi",nature:"invariables"},{word:"autrefois",nature:"invariables"},{word:"encore",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine5", title:"Les Quatre Saisons", icon:"🍂",
+    orthoLecon:"O5 · Les accords dans le groupe nominal",
+    description:"Vivaldi et les paysages changeants tout au long de l'année",
+    words:[
+      {word:"la saison",nature:"noms"},{word:"le printemps",nature:"noms"},
+      {word:"la nature",nature:"noms"},{word:"le paysage",nature:"noms"},
+      {word:"la feuille",nature:"noms"},{word:"l'hiver",nature:"noms"},
+      {word:"changer",nature:"verbes"},{word:"fleurir",nature:"verbes"},
+      {word:"coloré",nature:"adjectifs"},{word:"beau",nature:"adjectifs"},
+      {word:"dehors",nature:"invariables"},{word:"souvent",nature:"invariables"},{word:"partout",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine6", title:"La Trahison des images", icon:"🎨",
+    orthoLecon:"O6 · Les marques du pluriel",
+    description:"Magritte et le tableau qui dit « Ceci n'est pas une pipe »",
+    words:[
+      {word:"la pipe",nature:"noms"},{word:"l'image",nature:"noms"},
+      {word:"le tableau",nature:"noms"},{word:"le mot",nature:"noms"},
+      {word:"l'artiste",nature:"noms"},{word:"le peintre",nature:"noms"},
+      {word:"peindre",nature:"verbes"},{word:"représenter",nature:"verbes"},
+      {word:"célèbre",nature:"adjectifs"},{word:"faux",nature:"adjectifs"},
+      {word:"voilà",nature:"invariables"},{word:"jamais",nature:"invariables"},{word:"vraiment",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine7", title:"Persée et Méduse", icon:"⚔️",
+    orthoLecon:"O7 · Écrire « ou » ou « où »",
+    description:"La mythologie grecque et les héros légendaires",
+    words:[
+      {word:"le héros",nature:"noms"},{word:"le serpent",nature:"noms"},
+      {word:"le bouclier",nature:"noms"},{word:"la victoire",nature:"noms"},
+      {word:"le regard",nature:"noms"},{word:"le miroir",nature:"noms"},
+      {word:"combattre",nature:"verbes"},{word:"vaincre",nature:"verbes"},
+      {word:"courageux",nature:"adjectifs"},{word:"terrible",nature:"adjectifs"},
+      {word:"loin",nature:"invariables"},{word:"où",nature:"invariables"},{word:"enfin",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine8", title:"La naissance de Vénus", icon:"🌊",
+    orthoLecon:"O8 · Écrire « g » ou « gu »",
+    description:"Botticelli et la déesse de la beauté surgissant des flots",
+    words:[
+      {word:"la déesse",nature:"noms"},{word:"la vague",nature:"noms"},
+      {word:"le coquillage",nature:"noms"},{word:"la beauté",nature:"noms"},
+      {word:"le rivage",nature:"noms"},{word:"le peintre",nature:"noms"},
+      {word:"naître",nature:"verbes"},{word:"flotter",nature:"verbes"},
+      {word:"élégant",nature:"adjectifs"},{word:"magnifique",nature:"adjectifs"},
+      {word:"déjà",nature:"invariables"},{word:"longtemps",nature:"invariables"},{word:"ainsi",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine9", title:"Le château de Bonaguil", icon:"🏰",
+    orthoLecon:"O9 · Écrire « g » ou « ge »",
+    description:"La dernière forteresse médiévale du Lot-et-Garonne",
+    words:[
+      {word:"le château",nature:"noms"},{word:"le donjon",nature:"noms"},
+      {word:"le fossé",nature:"noms"},{word:"le seigneur",nature:"noms"},
+      {word:"la forteresse",nature:"noms"},{word:"le passage",nature:"noms"},
+      {word:"protéger",nature:"verbes"},{word:"défendre",nature:"verbes"},
+      {word:"solide",nature:"adjectifs"},{word:"puissant",nature:"adjectifs"},
+      {word:"partout",nature:"invariables"},{word:"autour",nature:"invariables"},{word:"dedans",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine10", title:"Jaune-rouge-bleu", icon:"🔵",
+    orthoLecon:"O10 · Écrire « son » ou « sont »",
+    description:"Kandinsky et l'abstraction avec les couleurs primaires",
+    words:[
+      {word:"la couleur",nature:"noms"},{word:"la toile",nature:"noms"},
+      {word:"le mélange",nature:"noms"},{word:"la forme",nature:"noms"},
+      {word:"le pinceau",nature:"noms"},{word:"le cercle",nature:"noms"},
+      {word:"mélanger",nature:"verbes"},{word:"créer",nature:"verbes"},
+      {word:"vif",nature:"adjectifs"},{word:"primaire",nature:"adjectifs"},
+      {word:"souvent",nature:"invariables"},{word:"ensemble",nature:"invariables"},{word:"partout",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine11", title:"Summertime", icon:"🎵",
+    orthoLecon:"O11 · Écrire « on » ou « ont »",
+    description:"Gershwin et le jazz américain qui enchante le monde",
+    words:[
+      {word:"le jazz",nature:"noms"},{word:"la mélodie",nature:"noms"},
+      {word:"la chanson",nature:"noms"},{word:"le musicien",nature:"noms"},
+      {word:"la scène",nature:"noms"},{word:"le rythme",nature:"noms"},
+      {word:"chanter",nature:"verbes"},{word:"jouer",nature:"verbes"},
+      {word:"doux",nature:"adjectifs"},{word:"triste",nature:"adjectifs"},
+      {word:"parfois",nature:"invariables"},{word:"souvent",nature:"invariables"},{word:"ensemble",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine12", title:"Le château de Chambord", icon:"🏯",
+    orthoLecon:"O12 · Écrire « c » ou « ç »",
+    description:"Le plus grand château de la Loire, joyau de la Renaissance",
+    words:[
+      {word:"le roi",nature:"noms"},{word:"la Renaissance",nature:"noms"},
+      {word:"l'escalier",nature:"noms"},{word:"la terrasse",nature:"noms"},
+      {word:"la façade",nature:"noms"},{word:"la forêt",nature:"noms"},
+      {word:"visiter",nature:"verbes"},{word:"construire",nature:"verbes"},
+      {word:"royal",nature:"adjectifs"},{word:"somptueux",nature:"adjectifs"},
+      {word:"jamais",nature:"invariables"},{word:"ici",nature:"invariables"},{word:"longtemps",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine13", title:"Les très riches heures du duc de Berry", icon:"📜",
+    orthoLecon:"O13 · Le pluriel des noms (2)",
+    description:"Le plus beau manuscrit enluminé du Moyen Âge",
+    words:[
+      {word:"le manuscrit",nature:"noms"},{word:"le mois",nature:"noms"},
+      {word:"la miniature",nature:"noms"},{word:"le calendrier",nature:"noms"},
+      {word:"le château",nature:"noms"},{word:"le paysan",nature:"noms"},
+      {word:"illustrer",nature:"verbes"},{word:"enluminer",nature:"verbes"},
+      {word:"précieux",nature:"adjectifs"},{word:"luxueux",nature:"adjectifs"},
+      {word:"toujours",nature:"invariables"},{word:"jadis",nature:"invariables"},{word:"autrefois",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine14", title:"Les mégalithes de Carnac", icon:"🪨",
+    orthoLecon:"O14 · Le pluriel des noms (3)",
+    description:"Les mystérieuses pierres levées de Bretagne",
+    words:[
+      {word:"le menhir",nature:"noms"},{word:"le dolmen",nature:"noms"},
+      {word:"la pierre",nature:"noms"},{word:"l'alignement",nature:"noms"},
+      {word:"le mystère",nature:"noms"},{word:"le cheval",nature:"noms"},
+      {word:"dresser",nature:"verbes"},{word:"aligner",nature:"verbes"},
+      {word:"énorme",nature:"adjectifs"},{word:"mystérieux",nature:"adjectifs"},
+      {word:"autrefois",nature:"invariables"},{word:"encore",nature:"invariables"},{word:"partout",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine15", title:"Le lac des cygnes", icon:"🦢",
+    orthoLecon:"O15 · Le féminin des noms",
+    description:"Tchaïkovski et le ballet le plus célèbre du monde",
+    words:[
+      {word:"le ballet",nature:"noms"},{word:"la danseuse",nature:"noms"},
+      {word:"le cygne",nature:"noms"},{word:"la musique",nature:"noms"},
+      {word:"le prince",nature:"noms"},{word:"la princesse",nature:"noms"},
+      {word:"danser",nature:"verbes"},{word:"tourner",nature:"verbes"},
+      {word:"gracieux",nature:"adjectifs"},{word:"léger",nature:"adjectifs"},
+      {word:"ensemble",nature:"invariables"},{word:"doucement",nature:"invariables"},{word:"souvent",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine16", title:"Le château de Versailles", icon:"👑",
+    orthoLecon:"O16 · Le pluriel des adjectifs",
+    description:"La magnificence du Roi-Soleil et ses jardins à la française",
+    words:[
+      {word:"le palais",nature:"noms"},{word:"le jardin",nature:"noms"},
+      {word:"la fontaine",nature:"noms"},{word:"la galerie",nature:"noms"},
+      {word:"le miroir",nature:"noms"},{word:"le courtisan",nature:"noms"},
+      {word:"visiter",nature:"verbes"},{word:"admirer",nature:"verbes"},
+      {word:"royal",nature:"adjectifs"},{word:"immense",nature:"adjectifs"},
+      {word:"ici",nature:"invariables"},{word:"partout",nature:"invariables"},{word:"toujours",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine17", title:"La dame à la licorne", icon:"🦄",
+    orthoLecon:"O17 · Le féminin des adjectifs",
+    description:"La mystérieuse tapisserie médiévale des cinq sens",
+    words:[
+      {word:"la tapisserie",nature:"noms"},{word:"la licorne",nature:"noms"},
+      {word:"la dame",nature:"noms"},{word:"le sens",nature:"noms"},
+      {word:"le toucher",nature:"noms"},{word:"l'ouïe",nature:"noms"},
+      {word:"tisser",nature:"verbes"},{word:"représenter",nature:"verbes"},
+      {word:"délicat",nature:"adjectifs"},{word:"précieux",nature:"adjectifs"},
+      {word:"vers",nature:"invariables"},{word:"selon",nature:"invariables"},{word:"ensemble",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine18", title:"La liberté guidant le peuple", icon:"🗽",
+    orthoLecon:"O18 · Les lettres finales muettes",
+    description:"Delacroix et la Révolution de juillet 1830",
+    words:[
+      {word:"la liberté",nature:"noms"},{word:"le peuple",nature:"noms"},
+      {word:"le drapeau",nature:"noms"},{word:"le combat",nature:"noms"},
+      {word:"la révolution",nature:"noms"},{word:"la victoire",nature:"noms"},
+      {word:"guider",nature:"verbes"},{word:"porter",nature:"verbes"},
+      {word:"debout",nature:"adjectifs"},{word:"tricolore",nature:"adjectifs"},
+      {word:"vers",nature:"invariables"},{word:"ensemble",nature:"invariables"},{word:"toujours",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine19", title:"La pyramide de Keops", icon:"🔺",
+    orthoLecon:"O19 · Les mots en -ail, -eil, -euil, -ouil",
+    description:"La grande pyramide, l'une des Sept Merveilles du monde",
+    words:[
+      {word:"la pyramide",nature:"noms"},{word:"le pharaon",nature:"noms"},
+      {word:"le désert",nature:"noms"},{word:"le tombeau",nature:"noms"},
+      {word:"le sarcophage",nature:"noms"},{word:"le travail",nature:"noms"},
+      {word:"construire",nature:"verbes"},{word:"mesurer",nature:"verbes"},
+      {word:"antique",nature:"adjectifs"},{word:"immense",nature:"adjectifs"},
+      {word:"là-bas",nature:"invariables"},{word:"autrefois",nature:"invariables"},{word:"loin",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine20", title:"Le dictateur", icon:"🎬",
+    orthoLecon:"O20 · Écrire « se » ou « ce »",
+    description:"Chaplin satirise Hitler dans ce film courageux de 1940",
+    words:[
+      {word:"le film",nature:"noms"},{word:"le discours",nature:"noms"},
+      {word:"le pouvoir",nature:"noms"},{word:"la satire",nature:"noms"},
+      {word:"le personnage",nature:"noms"},{word:"le cinéma",nature:"noms"},
+      {word:"critiquer",nature:"verbes"},{word:"dénoncer",nature:"verbes"},
+      {word:"comique",nature:"adjectifs"},{word:"politique",nature:"adjectifs"},
+      {word:"enfin",nature:"invariables"},{word:"parfois",nature:"invariables"},{word:"souvent",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine21", title:"La vague", icon:"🌊",
+    orthoLecon:"O21 · Les accents : é, è, ê",
+    description:"Hokusai et la force de la mer dans l'art japonais",
+    words:[
+      {word:"la mer",nature:"noms"},{word:"le bateau",nature:"noms"},
+      {word:"la tempête",nature:"noms"},{word:"l'écume",nature:"noms"},
+      {word:"le pêcheur",nature:"noms"},{word:"le sommet",nature:"noms"},
+      {word:"rouler",nature:"verbes"},{word:"écraser",nature:"verbes"},
+      {word:"puissant",nature:"adjectifs"},{word:"immense",nature:"adjectifs"},
+      {word:"près",nature:"invariables"},{word:"très",nature:"invariables"},{word:"déjà",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine22", title:"La légende arthurienne", icon:"🗡️",
+    orthoLecon:"O22 · Les accents (2) : accentuer le « e »",
+    description:"Le roi Arthur, Merlin et la quête du Graal",
+    words:[
+      {word:"la légende",nature:"noms"},{word:"l'épée",nature:"noms"},
+      {word:"le chevalier",nature:"noms"},{word:"le royaume",nature:"noms"},
+      {word:"le roi",nature:"noms"},{word:"la magie",nature:"noms"},
+      {word:"régner",nature:"verbes"},{word:"combattre",nature:"verbes"},
+      {word:"noble",nature:"adjectifs"},{word:"courageux",nature:"adjectifs"},
+      {word:"peut-être",nature:"invariables"},{word:"jadis",nature:"invariables"},{word:"toujours",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine23", title:"La Joconde", icon:"🖼️",
+    orthoLecon:"O23 · Écrire -é ou -er",
+    description:"Léonard de Vinci et le sourire mystérieux de Mona Lisa",
+    words:[
+      {word:"le portrait",nature:"noms"},{word:"le sourire",nature:"noms"},
+      {word:"le musée",nature:"noms"},{word:"le peintre",nature:"noms"},
+      {word:"le tableau",nature:"noms"},{word:"le regard",nature:"noms"},
+      {word:"peindre",nature:"verbes"},{word:"observer",nature:"verbes"},
+      {word:"mystérieux",nature:"adjectifs"},{word:"célèbre",nature:"adjectifs"},
+      {word:"depuis",nature:"invariables"},{word:"toujours",nature:"invariables"},{word:"là",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine24", title:"La victoire de Samothrace", icon:"🏺",
+    orthoLecon:"O24 · L'accord du participe passé",
+    description:"La déesse ailée de la victoire, sculpture grecque antique",
+    words:[
+      {word:"la sculpture",nature:"noms"},{word:"l'aile",nature:"noms"},
+      {word:"le marbre",nature:"noms"},{word:"la déesse",nature:"noms"},
+      {word:"le musée",nature:"noms"},{word:"la proue",nature:"noms"},
+      {word:"sculpter",nature:"verbes"},{word:"trouver",nature:"verbes"},
+      {word:"antique",nature:"adjectifs"},{word:"magnifique",nature:"adjectifs"},
+      {word:"jadis",nature:"invariables"},{word:"autrefois",nature:"invariables"},{word:"là",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine25", title:"Le bassin aux nymphéas", icon:"🌸",
+    orthoLecon:"O25 · Les noms en -tion et en -ssion",
+    description:"Monet et ses célèbres nénuphars à Giverny",
+    words:[
+      {word:"le bassin",nature:"noms"},{word:"le reflet",nature:"noms"},
+      {word:"la lumière",nature:"noms"},{word:"la végétation",nature:"noms"},
+      {word:"l'impression",nature:"noms"},{word:"la passion",nature:"noms"},
+      {word:"peindre",nature:"verbes"},{word:"observer",nature:"verbes"},
+      {word:"coloré",nature:"adjectifs"},{word:"délicat",nature:"adjectifs"},
+      {word:"toujours",nature:"invariables"},{word:"près",nature:"invariables"},{word:"souvent",nature:"invariables"}
+    ]
+  },
+  {
+    id:"semaine26", title:"Les trois Grâces", icon:"💃",
+    orthoLecon:"O26 · L'accord du verbe : cas particuliers",
+    description:"Canova et la beauté en mouvement dans la sculpture néoclassique",
+    words:[
+      {word:"la grâce",nature:"noms"},{word:"la beauté",nature:"noms"},
+      {word:"la sculpture",nature:"noms"},{word:"la mythologie",nature:"noms"},
+      {word:"le corps",nature:"noms"},{word:"l'harmonie",nature:"noms"},
+      {word:"représenter",nature:"verbes"},{word:"danser",nature:"verbes"},
+      {word:"élégant",nature:"adjectifs"},{word:"harmonieux",nature:"adjectifs"},
+      {word:"ensemble",nature:"invariables"},{word:"toujours",nature:"invariables"},{word:"partout",nature:"invariables"}
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ DONNÉES ─ 26 TEXTES DE LECTURE FLUENCE ████
+//  Structure prête — ajouter le texte (text) et le nombre de mots (wordCount)
+//  pour chaque thème. La logique de chrono et de progression est déjà active.
+// ═══════════════════════════════════════════════════════════════
+const FLUENCE_WEEKS = [
+  { id:"f1",  wid:"semaine1",  title:"La Tour Eiffel",                            icon:"🗼",  wordCount:0, text:"[ Texte à compléter — La Tour Eiffel ]\n\nLa tour Eiffel a été construite par Gustave Eiffel…" },
+  { id:"f2",  wid:"semaine2",  title:"L'amphithéâtre de Nîmes",                   icon:"🏛️", wordCount:0, text:"[ Texte à compléter — L'amphithéâtre de Nîmes ]" },
+  { id:"f3",  wid:"semaine3",  title:"La cathédrale de Reims",                    icon:"⛪",  wordCount:0, text:"[ Texte à compléter — La cathédrale de Reims ]" },
+  { id:"f4",  wid:"semaine4",  title:"La grotte de Lascaux",                      icon:"🦬",  wordCount:0, text:"[ Texte à compléter — La grotte de Lascaux ]" },
+  { id:"f5",  wid:"semaine5",  title:"Les Quatre Saisons",                        icon:"🍂",  wordCount:0, text:"[ Texte à compléter — Les Quatre Saisons ]" },
+  { id:"f6",  wid:"semaine6",  title:"La Trahison des images",                    icon:"🎨",  wordCount:0, text:"[ Texte à compléter — La Trahison des images ]" },
+  { id:"f7",  wid:"semaine7",  title:"Persée et Méduse",                          icon:"⚔️",  wordCount:0, text:"[ Texte à compléter — Persée et Méduse ]" },
+  { id:"f8",  wid:"semaine8",  title:"La naissance de Vénus",                     icon:"🌊",  wordCount:0, text:"[ Texte à compléter — La naissance de Vénus ]" },
+  { id:"f9",  wid:"semaine9",  title:"Le château de Bonaguil",                    icon:"🏰",  wordCount:0, text:"[ Texte à compléter — Le château de Bonaguil ]" },
+  { id:"f10", wid:"semaine10", title:"Jaune-rouge-bleu",                          icon:"🔵",  wordCount:0, text:"[ Texte à compléter — Jaune-rouge-bleu ]" },
+  { id:"f11", wid:"semaine11", title:"Summertime",                                icon:"🎵",  wordCount:0, text:"[ Texte à compléter — Summertime ]" },
+  { id:"f12", wid:"semaine12", title:"Le château de Chambord",                    icon:"🏯",  wordCount:0, text:"[ Texte à compléter — Le château de Chambord ]" },
+  { id:"f13", wid:"semaine13", title:"Les très riches heures du duc de Berry",    icon:"📜",  wordCount:0, text:"[ Texte à compléter — Les très riches heures du duc de Berry ]" },
+  { id:"f14", wid:"semaine14", title:"Les mégalithes de Carnac",                  icon:"🪨",  wordCount:0, text:"[ Texte à compléter — Les mégalithes de Carnac ]" },
+  { id:"f15", wid:"semaine15", title:"Le lac des cygnes",                         icon:"🦢",  wordCount:0, text:"[ Texte à compléter — Le lac des cygnes ]" },
+  { id:"f16", wid:"semaine16", title:"Le château de Versailles",                  icon:"👑",  wordCount:0, text:"[ Texte à compléter — Le château de Versailles ]" },
+  { id:"f17", wid:"semaine17", title:"La dame à la licorne",                      icon:"🦄",  wordCount:0, text:"[ Texte à compléter — La dame à la licorne ]" },
+  { id:"f18", wid:"semaine18", title:"La liberté guidant le peuple",              icon:"🗽",  wordCount:0, text:"[ Texte à compléter — La liberté guidant le peuple ]" },
+  { id:"f19", wid:"semaine19", title:"La pyramide de Keops",                      icon:"🔺",  wordCount:0, text:"[ Texte à compléter — La pyramide de Keops ]" },
+  { id:"f20", wid:"semaine20", title:"Le dictateur",                              icon:"🎬",  wordCount:0, text:"[ Texte à compléter — Le dictateur ]" },
+  { id:"f21", wid:"semaine21", title:"La vague",                                  icon:"🌊",  wordCount:0, text:"[ Texte à compléter — La vague ]" },
+  { id:"f22", wid:"semaine22", title:"La légende arthurienne",                    icon:"🗡️", wordCount:0, text:"[ Texte à compléter — La légende arthurienne ]" },
+  { id:"f23", wid:"semaine23", title:"La Joconde",                                icon:"🖼️", wordCount:0, text:"[ Texte à compléter — La Joconde ]" },
+  { id:"f24", wid:"semaine24", title:"La victoire de Samothrace",                 icon:"🏺",  wordCount:0, text:"[ Texte à compléter — La victoire de Samothrace ]" },
+  { id:"f25", wid:"semaine25", title:"Le bassin aux nymphéas",                    icon:"🌸",  wordCount:0, text:"[ Texte à compléter — Le bassin aux nymphéas ]" },
+  { id:"f26", wid:"semaine26", title:"Les trois Grâces",                          icon:"💃",  wordCount:0, text:"[ Texte à compléter — Les trois Grâces ]" }
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ CONSTANTES ████
+// ═══════════════════════════════════════════════════════════════
+const AVATARS         = ["🦊","🦁","🐼","🦄","🤖","🚀","🐱","🐶","🐸","🐨","🦋","🐯"];
+const SPEED_MS        = 2000; // seuil de vitesse pour valider une multiplication (2 secondes)
+const STORAGE_KEY     = "cm1AppDataV3"; // clé localStorage (V3 pour éviter conflits avec l'ancien code)
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ PROFILS & STOCKAGE LOCAL ████
+// ═══════════════════════════════════════════════════════════════
+let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+  activeProfileId: "p1",
+  profiles: [{
+    id: "p1", name: "Élève CM1", avatar: "🦊",
+    totalSeconds: 0, points: 0,
+    streak: 0, lastVisitDate: null,
+    mathStats:     {},  // { "7x8": { fastCount, totalCorrect, bestTime, times[] } }
+    dicteeStats:   {},  // { "le mot": 0|1|2|3 }
+    fluenceStats:  {},  // { "f1": [ { date, seconds, wpm } ] }
+    fractionStats: { correct:0, wrong:0, series:0, bestSeries:0 },
+    badges: []
+  }]
+};
+
+function getProfile() {
+  let p = appData.profiles.find(x => x.id === appData.activeProfileId) || appData.profiles[0];
+  appData.activeProfileId = p.id;
+  // Rétrocompatibilité : initialiser les champs manquants
+  if (!p.streak)         p.streak = 0;
+  if (!p.lastVisitDate)  p.lastVisitDate = null;
+  if (!p.fluenceStats)   p.fluenceStats = {};
+  if (!p.fractionStats)  p.fractionStats = { correct:0, wrong:0, series:0, bestSeries:0 };
+  return p;
+}
+
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+  updateHeader();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ MINUTEUR & STREAK ████
+// ═══════════════════════════════════════════════════════════════
+let timerInterval = null;
+
+function startWorkTimer() {
+  checkStreak();
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    let p = getProfile();
+    p.totalSeconds++;
+    document.getElementById('work-timer').textContent = fmtTime(p.totalSeconds);
+    // Badges de temps vérifiés toutes les 60 s
+    if (p.totalSeconds % 60 === 0) { saveData(); checkTimeBadges(); }
+  }, 1000);
+}
+
+function checkStreak() {
+  let p = getProfile();
+  const today = new Date().toDateString();
+  if (p.lastVisitDate === today) return;
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  p.streak = (p.lastVisitDate === yesterday) ? (p.streak || 0) + 1 : 1;
+  p.lastVisitDate = today;
+  saveData();
+}
+
+function fmtTime(sec) {
+  return `${Math.floor(sec/60).toString().padStart(2,'0')}:${(sec%60).toString().padStart(2,'0')}`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ MISE À JOUR DU HEADER ████
+// ═══════════════════════════════════════════════════════════════
+function updateHeader() {
+  let p = getProfile();
+  document.getElementById('header-avatar').textContent = p.avatar;
+  document.getElementById('header-name').textContent   = p.name;
+  document.getElementById('header-score').textContent  = `${p.points} pts`;
+  // Streak (affiché si ≥ 2 jours)
+  let streakEl = document.getElementById('header-streak');
+  if (p.streak >= 2) { streakEl.textContent = `🔥${p.streak}`; streakEl.classList.remove('hidden'); }
+  else streakEl.classList.add('hidden');
+  // Stats accueil
+  el('stat-total-time',   `${Math.floor(p.totalSeconds/60)} min`);
+  el('stat-total-badges', p.badges.length);
+  el('stat-total-points', p.points);
+  el('home-streak', p.streak >= 1 ? `${p.streak} jour${p.streak>1?'s':''} de suite !` : 'Bienvenue !');
+}
+// Petit helper pour éviter les nullchecks répétés
+function el(id, val) { let e=document.getElementById(id); if(e) e.textContent=val; }
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ NAVIGATION ████
+// ═══════════════════════════════════════════════════════════════
+const ALL_TABS = ['home','maths','dictee','fluence','trophies'];
+
+function switchTab(tabId) {
+  ALL_TABS.forEach(id => {
+    document.getElementById(`view-${id}`).classList.add('hidden');
+    let btn = document.getElementById(`nav-${id}`);
+    if (btn) { btn.classList.remove('text-indigo-600'); btn.classList.add('text-slate-400'); }
+  });
+  document.getElementById(`view-${tabId}`).classList.remove('hidden');
+  let active = document.getElementById(`nav-${tabId}`);
+  if (active) { active.classList.add('text-indigo-600'); active.classList.remove('text-slate-400'); }
+
+  if (tabId === 'home')     { updateHeader(); renderRoadmap(); }
+  if (tabId === 'maths')    generateMathTableButtons();
+  if (tabId === 'dictee')   renderDicteeList();
+  if (tabId === 'fluence')  renderFluenceList();
+  if (tabId === 'trophies') renderBadgesGrid();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ ACCUEIL — ROADMAP 26 SEMAINES ████
+// ═══════════════════════════════════════════════════════════════
+function renderRoadmap() {
+  const c = document.getElementById('weekly-roadmap');
+  c.innerHTML = '';
+  let p = getProfile();
+  DICTEE_WEEKS.forEach(w => {
+    let learned = w.words.filter(wd => (p.dicteeStats[wd.word]||0) >= 3).length;
+    let pct     = Math.round(learned / w.words.length * 100);
+    let done    = learned === w.words.length;
+    let d       = document.createElement('div');
+    d.className = `bg-white p-3 rounded-2xl border shadow-sm flex items-center justify-between ${done?'border-emerald-300 bg-emerald-50':'border-slate-200'}`;
+    d.innerHTML = `
+      <div class="flex items-center gap-3 flex-1 min-w-0">
+        <div class="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-lg ${done?'bg-emerald-100':'bg-indigo-50'}">${w.icon}</div>
+        <div class="flex-1 min-w-0">
+          <div class="font-bold text-slate-800 text-sm font-heading truncate">${w.title}</div>
+          <div class="text-[10px] text-slate-400">${w.orthoLecon}</div>
+          <div class="w-full bg-slate-200 h-1 rounded-full mt-1">
+            <div class="bg-indigo-400 h-full rounded-full" style="width:${pct}%"></div>
+          </div>
+        </div>
+      </div>
+      <button onclick="switchTab('dictee')" class="ml-2 text-xs bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-xl flex-shrink-0 ${done?'!bg-emerald-500':''}">
+        ${done?'✅':'→'}
+      </button>`;
+    c.appendChild(d);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ MATHS — SOUS-VUES (MULTIPLICATIONS / FRACTIONS) ████
+// ═══════════════════════════════════════════════════════════════
+function switchMathsSubView(view) {
+  document.getElementById('maths-multiplications').classList.add('hidden');
+  document.getElementById('maths-fractions').classList.add('hidden');
+  ['tab-mult','tab-frac'].forEach(id =>
+    document.getElementById(id).className = 'flex-1 py-2 rounded-xl font-bold text-sm text-slate-500 hover:bg-slate-50 transition'
+  );
+  if (view === 'multiplications') {
+    document.getElementById('maths-multiplications').classList.remove('hidden');
+    document.getElementById('tab-mult').className = 'flex-1 py-2 rounded-xl font-bold text-sm bg-emerald-500 text-white transition';
+    generateMathTableButtons();
+  } else {
+    document.getElementById('maths-fractions').classList.remove('hidden');
+    document.getElementById('tab-frac').className = 'flex-1 py-2 rounded-xl font-bold text-sm bg-amber-500 text-white transition';
+    initFractionScore();
+    generateFractionQuestion();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ MATHS — MULTIPLICATIONS ████
+// ═══════════════════════════════════════════════════════════════
+let curTable = 7, curFact = null, qStart = 0;
+
+function generateMathTableButtons() {
+  const c = document.getElementById('math-table-selector');
+  if (!c) return;
+  c.innerHTML = '';
+  let p = getProfile();
+  for (let i=1; i<=10; i++) {
+    let mastered = isTableMastered(i);
+    let pct      = tableProgress(i);
+    let b = document.createElement('button');
+    b.className = `p-2 rounded-2xl font-bold flex flex-col items-center justify-center gap-0.5 transition active:scale-95 border-2 ${mastered?'bg-emerald-50 border-emerald-400 text-emerald-700':'bg-white border-slate-200 text-slate-700 hover:border-indigo-300'}`;
+    b.onclick = () => selectTable(i);
+    b.innerHTML = `<span class="text-[9px] text-slate-400">Table</span><span class="text-xl font-heading font-extrabold">${i}</span><span class="text-[9px]">${mastered?'⚡ OK':pct+'%'}</span>`;
+    c.appendChild(b);
+  }
+}
+
+function tableProgress(t) {
+  let p = getProfile(), tot=0;
+  for(let j=1;j<=10;j++) tot += Math.min(3, (p.mathStats[`${t}x${j}`]||{fastCount:0}).fastCount);
+  return Math.round(tot/30*100);
+}
+
+function isTableMastered(t) {
+  let p = getProfile();
+  for(let j=1;j<=10;j++) if (((p.mathStats[`${t}x${j}`]||{fastCount:0}).fastCount) < 3) return false;
+  return true;
+}
+
+function selectTable(t) {
+  curTable = t;
+  document.getElementById('math-quiz-container').classList.remove('hidden');
+  document.getElementById('mastery-table-num').textContent = `de ${t}`;
+  renderMasteryGrid();
+  nextQuestion();
+}
+
+function closeMathQuiz() { document.getElementById('math-quiz-container').classList.add('hidden'); }
+
+function nextQuestion() {
+  let b = Math.floor(Math.random()*10)+1, ans = curTable*b;
+  curFact = { a:curTable, b, ans, key:`${curTable}x${b}` };
+  document.getElementById('quiz-table-title').textContent  = `Table de ${curTable}`;
+  document.getElementById('math-question').textContent     = `${curTable} × ${b} = ?`;
+  document.getElementById('speed-feedback').textContent    = 'Réponds vite ! ⚡';
+  document.getElementById('speed-feedback').className      = 'text-sm font-bold text-slate-400 min-h-[1.5rem]';
+  // Statut du calcul
+  let p  = getProfile(), stat = p.mathStats[curFact.key]||{fastCount:0,bestTime:null};
+  document.getElementById('fact-status').textContent       = `${stat.fastCount}/3 en <${SPEED_MS/1000}s`;
+  document.getElementById('fact-progress-bar').style.width = `${Math.min(100,stat.fastCount/3*100)}%`;
+  document.getElementById('best-time-display').textContent = stat.bestTime ? `🏆 ${(stat.bestTime/1000).toFixed(2)}s` : '';
+  // 4 réponses (1 correcte + 3 distracteurs)
+  let choices = [ans];
+  for (let tries=0; choices.length<4 && tries<60; tries++) {
+    let fake = ans + (Math.floor(Math.random()*5)-2)*curTable;
+    if (fake>0 && !choices.includes(fake)) choices.push(fake);
+  }
+  while (choices.length<4) choices.push(ans + choices.length*curTable);
+  choices.sort(()=>Math.random()-.5);
+  let oc = document.getElementById('math-options');
+  oc.innerHTML = '';
+  choices.forEach(v => {
+    let btn = document.createElement('button');
+    btn.className = "bg-slate-100 hover:bg-indigo-50 border-2 border-slate-200 hover:border-indigo-400 font-extrabold text-3xl py-3 rounded-2xl text-slate-800 transition active:scale-95 font-heading";
+    btn.textContent = v;
+    btn.onclick = () => handleMathAnswer(v);
+    oc.appendChild(btn);
+  });
+  qStart = performance.now();
+}
+
+function handleMathAnswer(val) {
+  let elapsed = performance.now() - qStart;
+  let p = getProfile(), key = curFact.key;
+  if (!p.mathStats[key]) p.mathStats[key] = { fastCount:0, totalCorrect:0, bestTime:null, times:[] };
+  let stat = p.mathStats[key];
+
+  if (val === curFact.ans) {
+    // ✅ Bonne réponse — on enregistre TOUJOURS le temps (pour la progression)
+    playTone(600, .12);
+    stat.totalCorrect++;
+    stat.times.push(Math.round(elapsed));
+    if (stat.times.length > 10) stat.times.shift();
+    if (!stat.bestTime || elapsed < stat.bestTime) stat.bestTime = Math.round(elapsed);
+
+    if (elapsed <= SPEED_MS) {
+      // ⚡ En moins de 2 secondes !
+      stat.fastCount++;
+      p.points += 15;
+      document.getElementById('speed-feedback').textContent = `⚡ SUPER RAPIDE ! (${(elapsed/1000).toFixed(2)}s) +15 pts`;
+      document.getElementById('speed-feedback').className   = 'text-sm font-extrabold text-emerald-500 animate-pulse-fast min-h-[1.5rem]';
+    } else {
+      // ✅ Correct mais trop lent
+      p.points += 5;
+      document.getElementById('speed-feedback').textContent = `✅ Correct ! Plus vite la prochaine fois (${(elapsed/1000).toFixed(2)}s)`;
+      document.getElementById('speed-feedback').className   = 'text-sm font-bold text-amber-500 min-h-[1.5rem]';
+    }
+    saveData(); renderMasteryGrid(); generateMathTableButtons();
+    if (isTableMastered(curTable))
+      awardBadge(`table_${curTable}`, `Maître du ${curTable} ⚡`, `Table de ${curTable} validée en moins de ${SPEED_MS/1000}s !`, 'maths');
+    setTimeout(nextQuestion, 1200);
+
+  } else {
+    // ❌ Mauvaise réponse
+    playTone(200, .2);
+    document.getElementById('speed-feedback').textContent = `❌ Erreur ! La réponse était ${curFact.ans}`;
+    document.getElementById('speed-feedback').className   = 'text-sm font-bold text-rose-500 animate-shake min-h-[1.5rem]';
+    saveData();
+    setTimeout(nextQuestion, 1600);
+  }
+}
+
+function renderMasteryGrid() {
+  const c = document.getElementById('mastery-items');
+  if (!c) return;
+  c.innerHTML = '';
+  let p = getProfile();
+  for (let j=1; j<=10; j++) {
+    let key  = `${curTable}x${j}`, stat = p.mathStats[key]||{fastCount:0,bestTime:null};
+    let done = stat.fastCount >= 3;
+    let d    = document.createElement('div');
+    d.className = `p-2 rounded-xl border flex justify-between items-center ${done?'bg-emerald-50 border-emerald-300':'bg-slate-50 border-slate-200'}`;
+    d.innerHTML = `
+      <span class="font-bold text-xs ${done?'text-emerald-800':'text-slate-500'}">${curTable} × ${j} = <b>${curTable*j}</b></span>
+      <div class="text-right">
+        <div class="font-bold text-xs ${done?'text-emerald-600':'text-slate-400'}">${done?'⚡ 3/3':stat.fastCount+'/3'}</div>
+        <div class="text-[9px] text-slate-300">${stat.bestTime?((stat.bestTime/1000).toFixed(1)+'s'):'—'}</div>
+      </div>`;
+    c.appendChild(d);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ MATHS — FRACTIONS (SVG INTERACTIF) ████
+//  Formes : cercle (camembert) · carré (grille) · rectangle (bandes)
+// ═══════════════════════════════════════════════════════════════
+// Fractions testées, adaptées CM1 (révision CE2 / début CM1)
+const FRAC_POOL = [
+  {n:1,d:2},{n:1,d:3},{n:2,d:3},{n:1,d:4},{n:3,d:4},
+  {n:1,d:6},{n:5,d:6},{n:2,d:6},{n:4,d:6},
+  {n:3,d:8},{n:5,d:8},{n:1,d:8}
+];
+const SHAPES = ['circle','square','rectangle'];
+let fracCurrent = null, fracAnswered = false;
+
+/** Génère le SVG d'une fraction selon la forme */
+function fracSVG(shape, n, d) {
+  const FILL = '#6366f1', EMPTY = '#e2e8f0', S = '#fff', SW = 3;
+  if (shape === 'circle') {
+    let paths = '', cx=75, cy=75, r=64;
+    for (let i=0; i<d; i++) {
+      let a1=(i/d)*Math.PI*2 - Math.PI/2, a2=((i+1)/d)*Math.PI*2 - Math.PI/2;
+      let x1=cx+r*Math.cos(a1), y1=cy+r*Math.sin(a1);
+      let x2=cx+r*Math.cos(a2), y2=cy+r*Math.sin(a2);
+      let large = (a2-a1 > Math.PI) ? 1 : 0;
+      paths += `<path d="M${cx} ${cy} L${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 ${large} 1 ${x2.toFixed(1)} ${y2.toFixed(1)}Z" fill="${i<n?FILL:EMPTY}" stroke="${S}" stroke-width="${SW}"/>`;
+    }
+    return `<svg viewBox="0 0 150 150" width="140" height="140">${paths}</svg>`;
+  }
+  if (shape === 'square') {
+    let rects='', cols=d<=3?1:d<=6?2:d<=8?4:3, rows=Math.ceil(d/cols);
+    let pw=(140-10)/cols, ph=(140-10)/rows, ox=5, oy=5;
+    for(let i=0;i<d;i++){
+      let c=i%cols, row=Math.floor(i/cols);
+      rects+=`<rect x="${(ox+c*pw).toFixed(1)}" y="${(oy+row*ph).toFixed(1)}" width="${pw.toFixed(1)}" height="${ph.toFixed(1)}" fill="${i<n?FILL:EMPTY}" stroke="${S}" stroke-width="${SW}" rx="4"/>`;
+    }
+    return `<svg viewBox="0 0 150 150" width="140" height="140">${rects}</svg>`;
+  }
+  // Rectangle : bandes horizontales
+  let strips='', ph2=(140-10)/d;
+  for(let i=0;i<d;i++)
+    strips+=`<rect x="5" y="${(5+i*ph2).toFixed(1)}" width="140" height="${ph2.toFixed(1)}" fill="${i<n?FILL:EMPTY}" stroke="${S}" stroke-width="${SW}" rx="4"/>`;
+  return `<svg viewBox="0 0 150 150" width="140" height="140">${strips}</svg>`;
+}
+
+/** Affiche une fraction comme fraction typographique */
+function fmtFrac(n,d){ return `<span class="flex flex-col items-center leading-none gap-0.5"><span class="text-lg font-extrabold border-b-2 border-current">${n}</span><span class="text-lg font-extrabold">${d}</span></span>`; }
+
+function initFractionScore(){
+  let p=getProfile(), fs=p.fractionStats||{correct:0,wrong:0,series:0};
+  document.getElementById('frac-correct').textContent = fs.correct;
+  document.getElementById('frac-wrong').textContent   = fs.wrong;
+  document.getElementById('frac-series').textContent  = fs.series;
+}
+
+function generateFractionQuestion() {
+  fracAnswered = false;
+  document.getElementById('btn-next-fraction').classList.add('hidden');
+  document.getElementById('fraction-feedback').textContent = '';
+  document.getElementById('fraction-feedback').className   = 'min-h-[2rem] text-sm font-bold flex items-center justify-center text-slate-400';
+
+  let correct = FRAC_POOL[Math.floor(Math.random()*FRAC_POOL.length)];
+  let shape   = SHAPES[Math.floor(Math.random()*SHAPES.length)];
+  fracCurrent = { correct, shape };
+
+  document.getElementById('fraction-shape-container').innerHTML = fracSVG(shape, correct.n, correct.d);
+
+  // 4 choix (1 correct + 3 distracteurs)
+  let pool = [...FRAC_POOL].filter(f=>!(f.n===correct.n && f.d===correct.d));
+  pool.sort(()=>Math.random()-.5);
+  let choices = [{...correct}, ...pool.slice(0,3)];
+  choices.sort(()=>Math.random()-.5);
+
+  let cc = document.getElementById('fraction-choices');
+  cc.innerHTML = '';
+  choices.forEach(ch => {
+    let btn = document.createElement('button');
+    btn.className = "fraction-btn bg-slate-100 hover:bg-indigo-50 border-2 border-slate-200 hover:border-indigo-400 font-bold rounded-2xl text-slate-800 transition active:scale-95 flex items-center justify-center";
+    btn.innerHTML = fmtFrac(ch.n, ch.d);
+    btn.onclick   = () => handleFracAnswer(ch, btn);
+    cc.appendChild(btn);
+  });
+}
+
+function handleFracAnswer(chosen, clickedBtn) {
+  if (fracAnswered) return;
+  fracAnswered = true;
+  document.querySelectorAll('#fraction-choices button').forEach(b=>b.disabled=true);
+
+  let p = getProfile(), c = fracCurrent.correct;
+  let ok = chosen.n===c.n && chosen.d===c.d;
+
+  if (ok) {
+    clickedBtn.className = "fraction-btn bg-emerald-100 border-2 border-emerald-500 font-bold rounded-2xl text-emerald-800 flex items-center justify-center";
+    document.getElementById('fraction-feedback').innerHTML  = '🎉 Bravo, c\'est la bonne fraction !';
+    document.getElementById('fraction-feedback').className  = 'min-h-[2rem] text-sm font-bold text-emerald-600 flex items-center justify-center';
+    playTone(660, .15);
+    p.fractionStats.correct++;
+    p.fractionStats.series++;
+    if (p.fractionStats.series > (p.fractionStats.bestSeries||0)) p.fractionStats.bestSeries = p.fractionStats.series;
+    p.points += 10;
+    if (p.fractionStats.series === 5)  awardBadge('frac_5',  'Série de 5 fractions 🍕',  '5 bonnes réponses d\'affilée !', 'fractions');
+    if (p.fractionStats.series === 10) awardBadge('frac_10', 'Champion fractions 🏆', '10 bonnes réponses consécutives !', 'fractions');
+  } else {
+    clickedBtn.className = "fraction-btn bg-rose-100 border-2 border-rose-500 font-bold rounded-2xl text-rose-800 flex items-center justify-center";
+    document.getElementById('fraction-feedback').innerHTML  = `❌ Oups ! C'était ${fmtFrac(c.n,c.d)}`;
+    document.getElementById('fraction-feedback').className  = 'min-h-[2rem] text-sm font-bold text-rose-500 flex items-center justify-center';
+    playTone(200, .2);
+    p.fractionStats.wrong++;
+    p.fractionStats.series = 0;
+  }
+  saveData(); initFractionScore();
+  document.getElementById('btn-next-fraction').classList.remove('hidden');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ DICTÉES ████
+// ═══════════════════════════════════════════════════════════════
+let curWeek=null, wordIdx=0, mistakes=0;
+
+function renderDicteeList() {
+  let c = document.getElementById('dictee-weeks-list');
+  c.innerHTML = '';
+  let p = getProfile();
+  DICTEE_WEEKS.forEach(w => {
+    let learned = w.words.filter(wd=>(p.dicteeStats[wd.word]||0)>=3).length;
+    let pct     = Math.round(learned/w.words.length*100);
+    let done    = learned === w.words.length;
+    let d = document.createElement('div');
+    d.className = "bg-white p-4 rounded-2xl border border-slate-200 shadow-sm";
+    d.innerHTML = `
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 flex-1 min-w-0">
+          <div class="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-xl ${done?'bg-emerald-100':'bg-indigo-50'}">${w.icon}</div>
+          <div class="flex-1 min-w-0">
+            <div class="font-bold text-slate-800 text-sm font-heading">${w.title}</div>
+            <div class="text-[10px] text-amber-600 font-bold">${w.orthoLecon}</div>
+            <div class="text-[10px] text-slate-400 truncate">${w.description}</div>
+          </div>
+        </div>
+        <button onclick="startDictee('${w.id}')"
+                class="${done?'bg-emerald-500 hover:bg-emerald-600':'bg-indigo-600 hover:bg-indigo-700'} text-white font-bold py-2 px-4 rounded-xl text-sm shadow flex-shrink-0 transition active:scale-95">
+          ${done?'✅':'▶'}
+        </button>
+      </div>
+      <div class="mt-2 flex justify-between text-[10px] font-bold">
+        <span class="${pct===100?'text-emerald-600':'text-indigo-600'}">${learned}/${w.words.length} mots maîtrisés</span>
+        <span class="text-slate-400">${pct}%</span>
+      </div>
+      <div class="w-full bg-slate-200 h-1.5 rounded-full mt-1">
+        <div class="bg-indigo-500 h-full rounded-full transition-all" style="width:${pct}%"></div>
+      </div>`;
+    c.appendChild(d);
+  });
+}
+
+function startDictee(weekId) {
+  curWeek   = DICTEE_WEEKS.find(w=>w.id===weekId);
+  wordIdx   = 0;
+  document.getElementById('dictee-weeks-list').classList.add('hidden');
+  document.getElementById('dictee-game-container').classList.remove('hidden');
+  document.getElementById('dictee-lecon-badge').textContent = `📚 ${curWeek.orthoLecon}`;
+  launchWordCycle();
+}
+
+function exitDicteeGame() {
+  document.getElementById('dictee-game-container').classList.add('hidden');
+  document.getElementById('dictee-weeks-list').classList.remove('hidden');
+  renderDicteeList();
+}
+
+function launchWordCycle() {
+  mistakes = 0;
+  let wo   = curWeek.words[wordIdx];
+  document.getElementById('dictee-word-progress').textContent = `Mot ${wordIdx+1}/${curWeek.words.length}`;
+  document.getElementById('card-word-text').textContent = wo.word;
+
+  // Réinitialisation des étapes
+  document.getElementById('dictee-step-memo').classList.remove('hidden');
+  document.getElementById('dictee-step-input').classList.add('hidden');
+  document.getElementById('dictee-step-nature').classList.add('hidden');
+  document.getElementById('dictee-card').classList.remove('flipped');
+
+  // Barre de mémorisation (2 secondes)
+  let bar = document.getElementById('dictee-timer-bar');
+  bar.style.transition = 'none'; bar.style.width = '100%';
+  void bar.offsetWidth;
+  bar.style.transition = 'width 2s linear'; bar.style.width = '0%';
+
+  setTimeout(() => {
+    document.getElementById('dictee-card').classList.add('flipped');
+    setTimeout(showInputPhase, 500);
+  }, 2000);
+}
+
+function speakWord() {
+  if ('speechSynthesis' in window) {
+    let u = new SpeechSynthesisUtterance(curWeek.words[wordIdx].word);
+    u.lang = 'fr-FR';
+    speechSynthesis.speak(u);
+  }
+}
+
+function showInputPhase() {
+  document.getElementById('dictee-step-memo').classList.add('hidden');
+  document.getElementById('dictee-step-input').classList.remove('hidden');
+
+  let word = curWeek.words[wordIdx].word;
+  let clue = document.getElementById('dictee-clue-display');
+  clue.innerHTML = '';
+
+  for (let i=0; i<word.length; i++) {
+    let ch   = word[i];
+    let span = document.createElement('span');
+    if (i === 0) {
+      // Première lettre visible
+      span.textContent = ch;
+      span.className   = 'text-indigo-600 font-bold';
+    } else if (ch === ' ') {
+      span.innerHTML = '&nbsp;&nbsp;';
+    } else if ("'-'".includes(ch)) {
+      span.textContent = ch; span.className = 'text-slate-400 font-bold';
+    } else {
+      // Lettre masquée : on montre un underscore
+      span.textContent = '_'; span.className = 'text-slate-300 font-bold';
+    }
+    clue.appendChild(span);
+  }
+  let inp = document.getElementById('dictee-input');
+  inp.value = ''; inp.className = "w-full py-3 px-4 rounded-xl border-2 border-slate-300 text-center font-bold text-xl outline-none focus:border-indigo-500 transition";
+  inp.focus();
+}
+
+function validateWordInput(e) {
+  e.preventDefault();
+  let inp    = document.getElementById('dictee-input');
+  let target = curWeek.words[wordIdx].word.toLowerCase().replace(/['']/g,"'");
+  let typed  = inp.value.trim().toLowerCase().replace(/['']/g,"'");
+  if (typed === target) {
+    playTone(523, .15);
+    document.getElementById('dictee-step-input').classList.add('hidden');
+    document.getElementById('dictee-step-nature').classList.remove('hidden');
+  } else {
+    mistakes++;
+    playTone(200, .2);
+    inp.classList.add('border-rose-500','animate-shake');
+    setTimeout(()=>{ inp.classList.remove('border-rose-500','animate-shake'); inp.value=''; }, 500);
+  }
+}
+
+function checkGrammarNature(selected) {
+  let target = curWeek.words[wordIdx].nature;
+  let p = getProfile();
+  if (selected === target) {
+    playTone(659, .15);
+    let mot = curWeek.words[wordIdx].word;
+    if (!p.dicteeStats[mot]) p.dicteeStats[mot] = 0;
+    if (mistakes === 0) { p.dicteeStats[mot] = Math.min(3, p.dicteeStats[mot]+1); p.points += 10; }
+    saveData();
+    wordIdx++;
+    if (wordIdx < curWeek.words.length) {
+      launchWordCycle();
+    } else {
+      // Fin de la série
+      let allDone = curWeek.words.every(w=>(p.dicteeStats[w.word]||0)>=3);
+      if (allDone) {
+        awardBadge(`week_${curWeek.id}`, `Expert : ${curWeek.title} ${curWeek.icon}`,
+          `Tous les mots de « ${curWeek.title} » sont maîtrisés !`, 'dictee');
+      } else {
+        showCelebration('✍️', 'Série terminée !',
+          "Bien joué ! Continue de t'entraîner pour maîtriser tous les mots.", null);
+      }
+      exitDicteeGame();
+    }
+  } else {
+    // Mauvaise nature — petite animation sans bloquer
+    playTone(200, .2);
+    document.querySelectorAll('.grammar-btn').forEach(b=>{
+      b.classList.add('animate-shake');
+      setTimeout(()=>b.classList.remove('animate-shake'), 400);
+    });
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ FLUENCE ████
+// ═══════════════════════════════════════════════════════════════
+let curFluence=null, fluTimer=null, fluSec=0;
+
+function renderFluenceList() {
+  let c = document.getElementById('fluence-weeks-list');
+  c.innerHTML = '';
+  let p = getProfile();
+  FLUENCE_WEEKS.forEach((fw,i) => {
+    let sessions = p.fluenceStats[fw.id]||[];
+    let last     = sessions.length ? sessions[sessions.length-1] : null;
+    let d = document.createElement('div');
+    d.className = "bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between";
+    d.innerHTML = `
+      <div class="flex items-center gap-3 flex-1 min-w-0">
+        <div class="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-xl bg-rose-50">${fw.icon}</div>
+        <div class="flex-1 min-w-0">
+          <div class="font-bold text-slate-800 text-sm font-heading truncate">${fw.title}</div>
+          <div class="text-[10px] text-slate-400">${sessions.length} lecture${sessions.length>1?'s':''} enregistrée${sessions.length>1?'s':''}</div>
+          ${last ? `<div class="text-[10px] text-rose-600 font-bold">Dernier : ${fmtTime(last.seconds)}${last.wpm?' · '+last.wpm+' m/min':''}</div>` : ''}
+        </div>
+      </div>
+      <button onclick="openFluence('${fw.id}')"
+              class="ml-2 bg-rose-500 hover:bg-rose-600 text-white font-bold py-2 px-4 rounded-xl text-sm shadow flex-shrink-0 transition active:scale-95">
+        📖
+      </button>`;
+    c.appendChild(d);
+  });
+}
+
+function openFluence(fid) {
+  curFluence = FLUENCE_WEEKS.find(f=>f.id===fid);
+  fluSec     = 0;
+  document.getElementById('fluence-weeks-list').classList.add('hidden');
+  document.getElementById('fluence-game-container').classList.remove('hidden');
+  document.getElementById('fluence-theme-badge').textContent     = `Thème ${FLUENCE_WEEKS.indexOf(curFluence)+1}`;
+  document.getElementById('fluence-icon-big').textContent        = curFluence.icon;
+  document.getElementById('fluence-title-display').textContent   = curFluence.title;
+  document.getElementById('fluence-word-count').textContent      = curFluence.wordCount || '?';
+  showFluenceState('ready');
+  renderFluenceHistory();
+}
+
+function showFluenceState(s) {
+  ['ready','reading','result'].forEach(n =>
+    document.getElementById(`fluence-state-${n}`).classList[n===s?'remove':'add']('hidden')
+  );
+}
+
+function startFluenceTimer() {
+  fluSec = 0;
+  // Affichage du texte (grand et lisible)
+  let textBox = document.getElementById('fluence-text-display');
+  let hasText = curFluence.wordCount > 0 && curFluence.text && !curFluence.text.startsWith('[');
+  textBox.innerHTML = hasText
+    ? `<p class="text-lg leading-loose">${curFluence.text.replace(/\n/g,'<br>')}</p>`
+    : `<p class="text-slate-400 italic text-sm text-center py-8">${curFluence.text}</p><p class="text-center text-xs text-slate-300 mt-2">Ajouter le texte dans le tableau FLUENCE_WEEKS</p>`;
+  showFluenceState('reading');
+  document.getElementById('fluence-timer-display').textContent = '0:00';
+  if (fluTimer) clearInterval(fluTimer);
+  fluTimer = setInterval(() => {
+    fluSec++;
+    let m=Math.floor(fluSec/60), s=fluSec%60;
+    document.getElementById('fluence-timer-display').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  }, 1000);
+}
+
+function stopFluenceTimer() {
+  if (fluTimer) { clearInterval(fluTimer); fluTimer=null; }
+  let p   = getProfile();
+  let wc  = curFluence.wordCount || 0;
+  let wpm = (wc>0 && fluSec>0) ? Math.round(wc/fluSec*60) : 0;
+
+  if (!p.fluenceStats[curFluence.id]) p.fluenceStats[curFluence.id] = [];
+  p.fluenceStats[curFluence.id].push({ date:new Date().toLocaleDateString('fr-FR'), seconds:fluSec, wpm });
+  if (p.fluenceStats[curFluence.id].length > 10) p.fluenceStats[curFluence.id].shift();
+  p.points += 20;
+  saveData();
+
+  // Badges fluence
+  let total = Object.values(p.fluenceStats).reduce((s,a)=>s+a.length, 0);
+  if (total === 1)  awardBadge('flu_1',  'Premier texte lu ! 📖', 'Première lecture fluence réalisée !', 'fluence');
+  if (total === 10) awardBadge('flu_10', '10 lectures ! 🔖',       '10 sessions de fluence enregistrées !', 'fluence');
+  let allRead = FLUENCE_WEEKS.every(fw=>(p.fluenceStats[fw.id]||[]).length >= 1);
+  if (allRead) awardBadge('flu_all', 'Tous les textes lus 📚', 'Les 26 textes fluence ont été lus au moins une fois !', 'fluence');
+
+  document.getElementById('fluence-result-time').textContent = fmtTime(fluSec);
+  document.getElementById('fluence-result-wpm').textContent  = wpm > 0 ? `${wpm} mots/min` : '— (texte à renseigner)';
+  showFluenceState('result');
+  renderProgressChart();
+}
+
+function renderFluenceHistory() {
+  let p = getProfile(), sessions = p.fluenceStats[curFluence.id]||[];
+  let box = document.getElementById('fluence-history-box');
+  if (!sessions.length) {
+    box.innerHTML = '<p class="text-xs text-slate-400 text-center py-2">Pas encore de lecture pour ce texte.</p>';
+    return;
+  }
+  box.innerHTML = `
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1.5">
+      <div class="text-xs font-bold text-slate-400 mb-1">📊 Tes dernières lectures</div>
+      ${sessions.slice(-5).reverse().map(s=>`
+        <div class="flex justify-between text-xs">
+          <span class="text-slate-400">${s.date}</span>
+          <span class="font-bold text-slate-700">${fmtTime(s.seconds)}</span>
+          <span class="font-bold text-rose-600">${s.wpm>0?s.wpm+' m/min':'—'}</span>
+        </div>`).join('')}
+    </div>`;
+}
+
+function renderProgressChart() {
+  let p = getProfile(), sessions = (p.fluenceStats[curFluence.id]||[]).slice(-6);
+  let bars = document.getElementById('fluence-chart-bars');
+  let labs = document.getElementById('fluence-chart-labels');
+  bars.innerHTML = ''; labs.innerHTML = '';
+  if (sessions.length < 2) {
+    bars.innerHTML = '<p class="text-[10px] text-slate-400 text-center w-full">Lis plusieurs fois pour voir ta progression !</p>';
+    return;
+  }
+  let maxSec = Math.max(...sessions.map(s=>s.seconds));
+  sessions.forEach((s,i) => {
+    let h   = maxSec > 0 ? Math.round(s.seconds/maxSec*100) : 50;
+    let best= s.seconds === Math.min(...sessions.map(x=>x.seconds));
+    let bar = document.createElement('div');
+    bar.className       = `${best?'bg-emerald-400':i===sessions.length-1?'bg-rose-400':'bg-slate-300'} rounded-t-lg flex-1 transition-all`;
+    bar.style.height    = `${h}%`;
+    bar.title           = fmtTime(s.seconds);
+    bars.appendChild(bar);
+    let lbl = document.createElement('span');
+    lbl.className       = 'text-[9px] text-slate-400 font-bold flex-1 text-center';
+    lbl.textContent     = `L${i+1}`;
+    labs.appendChild(lbl);
+  });
+}
+
+function exitFluenceGame() {
+  if (fluTimer) { clearInterval(fluTimer); fluTimer=null; }
+  document.getElementById('fluence-game-container').classList.add('hidden');
+  document.getElementById('fluence-weeks-list').classList.remove('hidden');
+  renderFluenceList();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ BADGES & TROPHÉES ████
+// ═══════════════════════════════════════════════════════════════
+/** Retourne la liste complète de tous les badges possibles */
+function allBadges() {
+  return [
+    // Temps & régularité
+    {id:'time_10',   title:'10 min de travail ⏱️',    desc:'A travaillé 10 minutes',       cat:'time'},
+    {id:'time_30',   title:'30 min de travail 🧠',    desc:'A travaillé 30 minutes',       cat:'time'},
+    {id:'time_60',   title:'1 heure de travail 👑',   desc:'A travaillé 1 heure entière',  cat:'time'},
+    {id:'streak_3',  title:'3 jours de suite 🔥',     desc:'3 jours consécutifs !',        cat:'time'},
+    {id:'streak_7',  title:'1 semaine entière 🏅',    desc:'7 jours de suite !',           cat:'time'},
+    // Tables de multiplication (une par table)
+    ...[1,2,3,4,5,6,7,8,9,10].map(n=>({id:`table_${n}`, title:`Maître du ${n} ⚡`, desc:`Table de ${n} validée en <2s !`, cat:'maths'})),
+    // Dictées (un par thème)
+    ...DICTEE_WEEKS.map(w=>({id:`week_${w.id}`, title:`Expert : ${w.title} ${w.icon}`, desc:`Tous les mots de « ${w.title} » maîtrisés`, cat:'dictee'})),
+    // Fluence
+    {id:'flu_1',   title:'Premier texte lu 📖',     desc:'1ère session de fluence',        cat:'fluence'},
+    {id:'flu_10',  title:'10 lectures 🔖',           desc:'10 sessions de fluence',        cat:'fluence'},
+    {id:'flu_all', title:'Tous les textes lus 📚',  desc:'Les 26 textes lus 1 fois',      cat:'fluence'},
+    // Fractions
+    {id:'frac_5',  title:'Série de 5 fractions 🍕', desc:'5 bonnes réponses d\'affilée', cat:'fractions'},
+    {id:'frac_10', title:'Champion fractions 🏆',   desc:'10 bonnes réponses de suite',   cat:'fractions'}
+  ];
+}
+
+let badgeCat = 'all';
+function filterBadges(cat, btn) {
+  badgeCat = cat;
+  document.querySelectorAll('.badge-filter').forEach(b => {
+    b.classList.remove('bg-indigo-600','text-white');
+    b.classList.add('bg-slate-100','text-slate-500');
+  });
+  if (btn) { btn.classList.add('bg-indigo-600','text-white'); btn.classList.remove('bg-slate-100','text-slate-500'); }
+  renderBadgesGrid();
+}
+
+function renderBadgesGrid() {
+  let c  = document.getElementById('badges-grid');
+  c.innerHTML = '';
+  let p  = getProfile();
+  let all = allBadges();
+  let filtered = badgeCat==='all' ? all : all.filter(b=>b.cat===badgeCat);
+  document.getElementById('trophy-summary').textContent = `${p.badges.length} / ${all.length} badges débloqués`;
+
+  filtered.forEach(b => {
+    let unlocked = p.badges.some(x=>x.id===b.id);
+    let date     = unlocked ? (p.badges.find(x=>x.id===b.id)||{}).date||'' : '';
+    let div = document.createElement('div');
+    div.className = `p-4 rounded-2xl border flex flex-col items-center text-center gap-1 ${unlocked?'bg-amber-50 border-amber-300':'bg-slate-100 border-slate-200 opacity-50'}`;
+    div.innerHTML = `
+      <div class="text-3xl">${unlocked?'🎖️':'🔒'}</div>
+      <div class="font-bold text-xs font-heading ${unlocked?'text-amber-800':'text-slate-400'}">${b.title}</div>
+      <div class="text-[10px] ${unlocked?'text-amber-600':'text-slate-400'}">${b.desc}</div>
+      ${date?`<div class="text-[9px] text-amber-300">${date}</div>`:''}`;
+    c.appendChild(div);
+  });
+}
+
+function awardBadge(id, title, desc, cat) {
+  let p = getProfile();
+  if (p.badges.some(b=>b.id===id)) return; // Déjà obtenu
+  p.badges.push({ id, title, desc, date:new Date().toLocaleDateString('fr-FR') });
+  saveData();
+  playFanfare();
+  showCelebration('🎖️', 'Nouveau badge !', desc, title);
+}
+
+function checkTimeBadges() {
+  let p = getProfile(), m = Math.floor(p.totalSeconds/60);
+  if (m>=10) awardBadge('time_10','10 min de travail ⏱️','A travaillé 10 minutes !','time');
+  if (m>=30) awardBadge('time_30','30 min de travail 🧠','A travaillé 30 minutes !','time');
+  if (m>=60) awardBadge('time_60','1 heure de travail 👑','A travaillé 1 heure entière !','time');
+  if ((p.streak||0)>=3) awardBadge('streak_3','3 jours de suite 🔥','3 jours de travail consécutifs !','time');
+  if ((p.streak||0)>=7) awardBadge('streak_7','1 semaine entière 🏅','7 jours de suite !','time');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ MODAL CÉLÉBRATION ████
+// ═══════════════════════════════════════════════════════════════
+function showCelebration(icon, title, desc, badgeTitle) {
+  document.getElementById('cel-icon').textContent  = icon;
+  document.getElementById('cel-title').textContent = title;
+  document.getElementById('cel-desc').textContent  = desc;
+  let box = document.getElementById('cel-badge-box');
+  if (badgeTitle) {
+    document.getElementById('cel-badge-title').textContent = badgeTitle;
+    box.classList.remove('hidden');
+  } else { box.classList.add('hidden'); }
+  document.getElementById('celebration-modal').classList.remove('hidden');
+}
+function closeCelebrationModal() { document.getElementById('celebration-modal').classList.add('hidden'); }
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ PROFILS ████
+// ═══════════════════════════════════════════════════════════════
+function openProfileModal()  { document.getElementById('profile-modal').classList.remove('hidden'); renderProfilesList(); }
+function closeProfileModal() { document.getElementById('profile-modal').classList.add('hidden'); }
+
+function renderProfilesList() {
+  let c = document.getElementById('profiles-list');
+  c.innerHTML = '';
+  appData.profiles.forEach(p => {
+    let cur = p.id === appData.activeProfileId;
+    let btn = document.createElement('button');
+    btn.className = `w-full p-2.5 rounded-xl border flex items-center justify-between text-sm font-bold ${cur?'bg-indigo-50 border-indigo-500 text-indigo-700':'bg-slate-50 border-slate-200 text-slate-600'}`;
+    btn.onclick   = () => selectProfile(p.id);
+    btn.innerHTML = `
+      <span>${p.avatar} ${p.name}</span>
+      <div class="flex gap-1.5 text-xs">
+        <span class="bg-white px-2 py-0.5 rounded-md border">${Math.floor(p.totalSeconds/60)} min</span>
+        <span class="bg-yellow-100 px-2 py-0.5 rounded-md text-yellow-800">${p.points} pts</span>
+      </div>`;
+    c.appendChild(btn);
+  });
+}
+
+function selectProfile(id) { appData.activeProfileId=id; saveData(); closeProfileModal(); switchTab('home'); }
+
+function createNewProfile() {
+  let inp = document.getElementById('new-profile-name'), name = inp.value.trim();
+  if (!name) return;
+  let id = 'p_'+Date.now();
+  appData.profiles.push({
+    id, name, avatar:AVATARS[Math.floor(Math.random()*AVATARS.length)],
+    totalSeconds:0, points:0, streak:0, lastVisitDate:null,
+    mathStats:{}, dicteeStats:{}, fluenceStats:{},
+    fractionStats:{correct:0,wrong:0,series:0,bestSeries:0},
+    badges:[]
+  });
+  appData.activeProfileId = id;
+  inp.value = '';
+  saveData(); closeProfileModal(); switchTab('home');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ AUDIO (Web Audio API synthétisé — sans fichier externe) ████
+// ═══════════════════════════════════════════════════════════════
+function playTone(freq, dur) {
+  try {
+    let ctx  = new (window.AudioContext||window.webkitAudioContext)();
+    let osc  = ctx.createOscillator();
+    let gain = ctx.createGain();
+    osc.type = 'sine'; osc.frequency.value = freq;
+    osc.connect(gain); gain.connect(ctx.destination);
+    gain.gain.setValueAtTime(.3, ctx.currentTime);
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(.00001, ctx.currentTime+dur);
+    setTimeout(()=>ctx.close(), dur*1000+100);
+  } catch(e){}
+}
+function playFanfare() {
+  playTone(523.25, .12);
+  setTimeout(()=>playTone(659.25, .12), 150);
+  setTimeout(()=>playTone(783.99, .15), 300);
+  setTimeout(()=>playTone(1046.5, .3),  450);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ INITIALISATION ████
+// ═══════════════════════════════════════════════════════════════
+window.onload = () => {
+  updateHeader();
+  startWorkTimer();
+  switchTab('home');
+  switchMathsSubView('multiplications'); // sous-vue maths par défaut
+};
+</script>
 </body>
 </html>
