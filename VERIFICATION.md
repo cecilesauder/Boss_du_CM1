@@ -29,3 +29,17 @@ La galerie des badges affiche désormais un résumé partageable : points, badge
 ## Classement de classe
 
 Un classement local a été ajouté à la galerie des badges. Le test navigateur a publié le pseudo « Camille » et a confirmé l’affichage d’une ligne classée, la conservation dans `localStorage` et le calcul des points, badges, leçons, mots maîtrisés et lectures. Les actions Exporter et Importer utilisent un fichier JSON afin que l’enseignant puisse faire circuler un classement sans serveur ni collecte automatique de données.
+
+## Correctifs du rapport de test
+
+Le chrono global ne démarre plus au chargement ou pendant la navigation : il démarre uniquement lorsqu’une activité est ouverte et s’arrête au retour à l’accueil ou à la fin de l’activité. L’accueil propose désormais six raccourcis cohérents : tables, fractions, dictées, fluence, leçons et progression.
+
+Les mots de dictée sont mélangés à chaque session et les mots déjà maîtrisés trois fois sont écartés tant qu’il reste des mots à travailler. La barre de progression est calculée depuis les scores du profil. Une réponse finalement correcte fait maintenant progresser le mot, même si une première tentative était erronée, avec une récompense réduite.
+
+Les exercices d’orthographe, de grammaire, de conjugaison, de lexique et de géométrie ont été retestés par clic navigateur ; un feedback visuel est affiché et les points sont enregistrés. La géométrie comprend huit questions originales couvrant périmètre, angles, figures, symétrie et aire.
+
+La galerie de progression contient maintenant un relevé détaillé des sept derniers jours : durée réellement passée dans les activités, points, maths, fractions, dictées, orthographe, leçons et fluence. Le bilan du jour peut être copié pour être montré à la famille ou à l’enseignant.
+
+Les badges de durée sont explicitement définis comme des objectifs **dans une même session d’activité**, et quatre badges supplémentaires récompensent les progrès en géométrie et en français. Le nombre de badges passe de 47 à 51.
+
+Les textes des fiches officielles de fluence n’ont pas été recopiés dans le dépôt : ils restent accessibles par leurs liens officiels dans l’application. Cela évite de redistribuer une ressource éditoriale protégée sans autorisation de reproduction.

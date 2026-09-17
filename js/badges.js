@@ -2,9 +2,9 @@
 function allBadges() {
   return [
     // Temps & régularité
-    {id:'time_10',   title:'10 min de travail ⏱️',    desc:'A travaillé 10 minutes',       cat:'time'},
-    {id:'time_30',   title:'30 min de travail 🧠',    desc:'A travaillé 30 minutes',       cat:'time'},
-    {id:'time_60',   title:'1 heure de travail 👑',   desc:'A travaillé 1 heure entière',  cat:'time'},
+    {id:'time_10',   title:'10 min en une session ⏱️', desc:'A joué 10 minutes sans quitter une activité', cat:'time'},
+    {id:'time_30',   title:'30 min en une session 🧠', desc:'A joué 30 minutes sans quitter une activité', cat:'time'},
+    {id:'time_60',   title:'1 h en une session 👑',    desc:'A joué 1 heure sans quitter une activité', cat:'time'},
     {id:'streak_3',  title:'3 jours de suite 🔥',     desc:'3 jours consécutifs !',        cat:'time'},
     {id:'streak_7',  title:'1 semaine entière 🏅',    desc:'7 jours de suite !',           cat:'time'},
     // Tables de multiplication (une par table)
@@ -18,7 +18,12 @@ function allBadges() {
     {id:'flu_all', title:'Tous les textes lus 📚',  desc:'Les 26 textes lus 1 fois',      cat:'fluence'},
     // Fractions
     {id:'frac_5',  title:'Série de 5 fractions 🍕', desc:'5 bonnes réponses d\'affilée', cat:'fractions'},
-    {id:'frac_10', title:'Champion fractions 🏆',   desc:'10 bonnes réponses de suite',   cat:'fractions'}
+    {id:'frac_10', title:'Champion fractions 🏆', desc:'10 bonnes réponses de suite', cat:'fractions'},
+    // Géométrie et français
+    {id:'geo_5', title:'Géomètre en herbe 📐', desc:'5 réponses de géométrie', cat:'maths'},
+    {id:'geo_20', title:'Géomètre expert 📏', desc:'20 réponses de géométrie', cat:'maths'},
+    {id:'lessons_5', title:'Curieux du français 📚', desc:'5 notions de français réussies', cat:'time'},
+    {id:'lessons_15', title:'Expert du français 🎓', desc:'Les 15 notions de français réussies', cat:'time'}
   ];
 }
 
@@ -47,6 +52,7 @@ function renderBadgesGrid() {
   if (progressBox) progressBox.textContent = progress;
   window.currentProgressSummary = `Progression de ${p.name}\n${progress}\nJeu CM1 : https://cecilesauder.github.io/Boss_du_CM1/`;
   if (typeof renderClassBoard === 'function') renderClassBoard();
+  if (typeof renderDailyStats === 'function') renderDailyStats();
 
   filtered.forEach(b => {
     let unlocked = p.badges.some(x=>x.id===b.id);
@@ -83,10 +89,10 @@ function awardBadge(id, title, desc, cat) {
 }
 
 function checkTimeBadges() {
-  let p = getProfile(), m = Math.floor(p.totalSeconds/60);
-  if (m>=10) awardBadge('time_10','10 min de travail ⏱️','A travaillé 10 minutes !','time');
-  if (m>=30) awardBadge('time_30','30 min de travail 🧠','A travaillé 30 minutes !','time');
-  if (m>=60) awardBadge('time_60','1 heure de travail 👑','A travaillé 1 heure entière !','time');
+  let p = getProfile(), m = Math.floor(currentSessionSeconds/60);
+  if (m>=10) awardBadge('time_10','10 min en une session ⏱️','A joué 10 minutes sans quitter une activité !','time');
+  if (m>=30) awardBadge('time_30','30 min en une session 🧠','A joué 30 minutes sans quitter une activité !','time');
+  if (m>=60) awardBadge('time_60','1 h en une session 👑','A joué une heure sans quitter une activité !','time');
   if ((p.streak||0)>=3) awardBadge('streak_3','3 jours de suite 🔥','3 jours de travail consécutifs !','time');
   if ((p.streak||0)>=7) awardBadge('streak_7','1 semaine entière 🏅','7 jours de suite !','time');
 }

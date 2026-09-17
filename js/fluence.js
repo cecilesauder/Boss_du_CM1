@@ -71,6 +71,7 @@ function showFluenceState(s) {
 }
 
 function startFluenceTimer() {
+  setGameActive('fluence');
   fluSec = 0;
   fluSentences = splitFluenceSentences(curFluence.text || '');
   fluSentenceIndex = 0;
@@ -108,6 +109,7 @@ function stopFluenceTimer() {
   p.fluenceStats[curFluence.id].push({ date:new Date().toLocaleDateString('fr-FR'), seconds:fluSec, wpm });
   if (p.fluenceStats[curFluence.id].length > 10) p.fluenceStats[curFluence.id].shift();
   p.points += 20;
+  dailyRecord('fluence', 20);
   saveData();
 
   // Badges fluence
@@ -121,6 +123,7 @@ function stopFluenceTimer() {
   document.getElementById('fluence-result-wpm').textContent  = wpm > 0 ? `${wpm} mots/min` : '— (texte à renseigner)';
   showFluenceState('result');
   renderProgressChart();
+  setGameActive(null);
 }
 
 function renderFluenceHistory() {
@@ -168,6 +171,7 @@ function renderProgressChart() {
 }
 
 function exitFluenceGame() {
+  setGameActive(null);
   if (fluTimer) { clearInterval(fluTimer); fluTimer=null; }
   document.getElementById('fluence-game-container').classList.add('hidden');
   document.getElementById('fluence-weeks-list').classList.remove('hidden');

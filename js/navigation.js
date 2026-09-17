@@ -1,6 +1,7 @@
 const ALL_TABS = ['home','maths','dictee','fluence','lessons','trophies'];
 
 function switchTab(tabId) {
+  if (typeof setGameActive === 'function') setGameActive(null);
   ALL_TABS.forEach(id => {
     document.getElementById(`view-${id}`).classList.add('hidden');
     let btn = document.getElementById(`nav-${id}`);
@@ -55,18 +56,23 @@ function renderRoadmap() {
 function switchMathsSubView(view) {
   document.getElementById('maths-multiplications').classList.add('hidden');
   document.getElementById('maths-fractions').classList.add('hidden');
-  ['tab-mult','tab-frac'].forEach(id =>
+  document.getElementById('maths-geometry').classList.add('hidden');
+  ['tab-mult','tab-frac','tab-geo'].forEach(id =>
     document.getElementById(id).className = 'flex-1 py-2 rounded-xl font-bold text-sm text-slate-500 hover:bg-slate-50 transition'
   );
   if (view === 'multiplications') {
     document.getElementById('maths-multiplications').classList.remove('hidden');
     document.getElementById('tab-mult').className = 'flex-1 py-2 rounded-xl font-bold text-sm bg-emerald-500 text-white transition';
     generateMathTableButtons();
-  } else {
+  } else if (view === 'fractions') {
     document.getElementById('maths-fractions').classList.remove('hidden');
     document.getElementById('tab-frac').className = 'flex-1 py-2 rounded-xl font-bold text-sm bg-amber-500 text-white transition';
     initFractionScore();
     generateFractionQuestion();
+  } else {
+    document.getElementById('maths-geometry').classList.remove('hidden');
+    document.getElementById('tab-geo').className = 'flex-1 py-2 rounded-xl font-bold text-sm bg-indigo-500 text-white transition';
+    initGeometry();
   }
 }
 

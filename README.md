@@ -25,6 +25,8 @@ Les 26 fiches de fluence officielles de [Stylo Plume Blog](https://www.styloplum
 
 La page **Leçons** propose quinze activités originales de niveau CM1, réparties entre grammaire, conjugaison et lexique. Les scores sont conservés par profil et peuvent être copiés ou partagés depuis la galerie des badges.
 
+La rubrique Maths comprend également un module original de **géométrie** avec des exercices sur les périmètres, les angles, les figures, la symétrie et les aires. La galerie de progression conserve un historique quotidien sur sept jours, avec le temps réellement passé dans les jeux et le détail des activités réalisées.
+
 La galerie des badges propose aussi un **classement de classe local**. Un élève choisit un pseudo et publie son score sur l’appareil utilisé ; l’enseignant peut exporter le classement en JSON, le partager à sa classe, puis l’importer sur un autre appareil. Aucun score n’est envoyé automatiquement à un serveur et aucun nom réel n’est requis.
 
 ## Source des mots de dictée

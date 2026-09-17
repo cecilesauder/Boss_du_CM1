@@ -1,4 +1,4 @@
-let curWeek=null, wordIdx=0, mistakes=0;
+let curWeek=null, sessionWords=[], wordIdx=0, mistakes=0;
 let orthoCurrent = null;
 
 const WORD_NATURE_LABELS = {
@@ -60,8 +60,12 @@ function renderDicteeList() {
 }
 
 function startDictee(weekId) {
+  setGameActive('dictees');
   hideOrthoExercise();
   curWeek   = DICTEE_WEEKS.find(w=>w.id===weekId);
+  const p = getProfile();
+  sessionWords = curWeek.words.filter(word => (p.dicteeStats[word.word] || 0) < 3).sort(() => Math.random() - 0.5);
+  if (!sessionWords.length) sessionWords = [...curWeek.words].sort(() => Math.random() - 0.5);
   wordIdx   = 0;
   document.getElementById('dictee-weeks-list').classList.add('hidden');
   document.getElementById('dictee-game-container').classList.remove('hidden');
@@ -70,6 +74,7 @@ function startDictee(weekId) {
 }
 
 function exitDicteeGame() {
+  setGameActive(null);
   document.getElementById('dictee-game-container').classList.add('hidden');
   document.getElementById('dictee-weeks-list').classList.remove('hidden');
   renderDicteeList();
@@ -78,6 +83,7 @@ function exitDicteeGame() {
 function startOrthoExercise(weekId) {
   const exercise = ORTHO_EXERCISES[weekId];
   if (!exercise) return;
+  setGameActive('orthographe');
   orthoCurrent = exercise;
   const week = DICTEE_WEEKS.find(item => item.id === weekId);
   const box = document.getElementById('ortho-exercise-container');
@@ -107,6 +113,7 @@ function answerOrthoExercise(button, answer) {
     feedback.className = 'min-h-[2.5rem] text-sm font-bold text-emerald-600';
     feedback.textContent = `✅ Bravo ! ${orthoCurrent.explanation}`;
     getProfile().points += 10;
+    dailyRecord('orthographe', 10);
     saveData();
   } else {
     button.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-700');
@@ -118,14 +125,16 @@ function answerOrthoExercise(button, answer) {
 }
 
 function closeOrthoExercise() {
+  setGameActive(null);
   const box = document.getElementById('ortho-exercise-container');
   if (box) box.classList.add('hidden');
 }
 
 function launchWordCycle() {
   mistakes = 0;
-  let wo   = curWeek.words[wordIdx];
-  document.getElementById('dictee-word-progress').textContent = `Mot ${wordIdx+1}/${curWeek.words.length}`;
+  let wo   = sessionWords[wordIdx];
+  const mastered = curWeek.words.filter(w => (getProfile().dicteeStats[w.word] || 0) >= 3).length;
+  document.getElementById('dictee-word-progress').textContent = `Mot ${wordIdx+1}/${sessionWords.length} · ${mastered}/${curWeek.words.length} maîtrisés`;
   const wordCard = document.getElementById('card-word-text');
   wordCard.textContent = wo.word;
   wordCard.className = `font-extrabold text-2xl ${natureClass(wo.nature)}`;
@@ -153,7 +162,7 @@ function launchWordCycle() {
 
 function speakWord() {
   if ('speechSynthesis' in window) {
-    let u = new SpeechSynthesisUtterance(curWeek.words[wordIdx].word);
+    let u = new SpeechSynthesisUtterance(sessionWords[wordIdx].word);
     u.lang = 'fr-FR';
     speechSynthesis.speak(u);
   }
@@ -163,7 +172,7 @@ function showInputPhase() {
   document.getElementById('dictee-step-memo').classList.add('hidden');
   document.getElementById('dictee-step-input').classList.remove('hidden');
 
-  let word = curWeek.words[wordIdx].word;
+  let word = sessionWords[wordIdx].word;
   let clue = document.getElementById('dictee-clue-display');
   clue.innerHTML = '';
 
@@ -192,7 +201,7 @@ function showInputPhase() {
 function validateWordInput(e) {
   e.preventDefault();
   let inp    = document.getElementById('dictee-input');
-  let target = curWeek.words[wordIdx].word.toLowerCase().replace(/['']/g,"'");
+  let target = sessionWords[wordIdx].word.toLowerCase().replace(/['']/g,"'");
   let typed  = inp.value.trim().toLowerCase().replace(/['']/g,"'");
   if (typed === target) {
     playTone(523, .15);
@@ -207,16 +216,19 @@ function validateWordInput(e) {
 }
 
 function checkGrammarNature(selected) {
-  let target = curWeek.words[wordIdx].nature;
+  let target = sessionWords[wordIdx].nature;
   let p = getProfile();
   if (selected === target) {
     playTone(659, .15);
-    let mot = curWeek.words[wordIdx].word;
+    let mot = sessionWords[wordIdx].word;
     if (!p.dicteeStats[mot]) p.dicteeStats[mot] = 0;
-    if (mistakes === 0) { p.dicteeStats[mot] = Math.min(3, p.dicteeStats[mot]+1); p.points += 10; }
+    p.dicteeStats[mot] = Math.min(3, p.dicteeStats[mot] + 1);
+    const earned = mistakes === 0 ? 10 : 5;
+    p.points += earned;
+    dailyRecord('dictees', earned);
     saveData();
     wordIdx++;
-    if (wordIdx < curWeek.words.length) {
+    if (wordIdx < sessionWords.length) {
       launchWordCycle();
     } else {
       // Fin de la série

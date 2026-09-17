@@ -28,6 +28,7 @@ function renderLessons() {
 function openLesson(lessonId) {
   const lesson = Object.values(FRENCH_LESSONS).flat().find(item => item.id === lessonId);
   if (!lesson) return;
+  setGameActive('lessons');
   currentLesson = lesson;
   const box = document.getElementById('lesson-exercise');
   box.classList.remove('hidden');
@@ -46,6 +47,10 @@ function answerLesson(button, answer) {
   if (answer === currentLesson.answer) {
     p.lessonStats[currentLesson.id].correct++;
     p.points += 10;
+    dailyRecord('lessons', 10);
+    const lessonSuccesses = Object.values(p.lessonStats).filter(score => score.correct > 0).length;
+    if (lessonSuccesses >= 5) awardBadge('lessons_5', 'Curieux du français 📚', '5 notions de français réussies !', 'time');
+    if (lessonSuccesses >= 15) awardBadge('lessons_15', 'Expert du français 🎓', 'Les 15 notions de français réussies !', 'time');
     button.classList.add('border-emerald-500','bg-emerald-50','text-emerald-700');
     feedback.className = 'mt-3 min-h-[2.5rem] text-sm font-bold text-emerald-600';
     feedback.textContent = '✅ Bravo, notion maîtrisée pour cette fois !';
@@ -61,5 +66,6 @@ function answerLesson(button, answer) {
 }
 
 function closeLesson() {
+  setGameActive(null);
   document.getElementById('lesson-exercise')?.classList.add('hidden');
 }

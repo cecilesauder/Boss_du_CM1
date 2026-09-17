@@ -101,6 +101,16 @@
                         <span class="text-3xl">📖</span>
                         <div><div class="font-bold font-heading text-lg">Fluence</div><div class="text-xs opacity-90">Lecture chronométrée</div></div>
                     </button>
+                    <button onclick="switchTab('lessons')"
+                            class="bg-gradient-to-br from-violet-400 to-purple-600 text-white p-4 rounded-2xl shadow-md text-left transition transform active:scale-95 flex flex-col justify-between h-28">
+                        <span class="text-3xl">📚</span>
+                        <div><div class="font-bold font-heading text-lg">Leçons</div><div class="text-xs opacity-90">Français CM1</div></div>
+                    </button>
+                    <button onclick="switchTab('trophies')"
+                            class="bg-gradient-to-br from-yellow-400 to-orange-500 text-white p-4 rounded-2xl shadow-md text-left transition transform active:scale-95 flex flex-col justify-between h-28">
+                        <span class="text-3xl">🏆</span>
+                        <div><div class="font-bold font-heading text-lg">Ma progression</div><div class="text-xs opacity-90">Stats et classement</div></div>
+                    </button>
                 </div>
             </div>
 
@@ -125,6 +135,10 @@
                 <button id="tab-frac" onclick="switchMathsSubView('fractions')"
                         class="flex-1 py-2 rounded-xl font-bold text-sm text-slate-500 hover:bg-slate-50 transition">
                     🍕 Fractions
+                </button>
+                <button id="tab-geo" onclick="switchMathsSubView('geometry')"
+                        class="flex-1 py-2 rounded-xl font-bold text-sm text-slate-500 hover:bg-slate-50 transition">
+                    📐 Géométrie
                 </button>
                 <!-- Placeholder pour conjugaison / grammaire (à venir) -->
                 <!-- <button class="flex-1 py-2 rounded-xl font-bold text-sm text-slate-300 cursor-not-allowed">🔒 Conjugaison</button> -->
@@ -207,6 +221,19 @@
                             class="hidden w-full bg-indigo-600 text-white font-bold py-3 rounded-xl transition active:scale-95">
                         Question suivante ➡️
                     </button>
+                </div>
+            </div>
+            <div id="maths-geometry" class="hidden space-y-5">
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
+                    <h2 class="text-xl font-bold text-slate-800 font-heading mb-1">📐 Défis de géométrie</h2>
+                    <p class="text-xs text-slate-500">Périmètres, angles, figures et symétrie · niveau CM1</p>
+                </div>
+                <div class="bg-white p-5 rounded-3xl shadow-lg border border-slate-200 text-center space-y-4">
+                    <div id="geometry-progress" class="text-xs text-indigo-600 font-bold"></div>
+                    <div id="geometry-question" class="text-lg font-bold text-slate-800"></div>
+                    <div id="geometry-options" class="grid grid-cols-2 gap-3"></div>
+                    <div id="geometry-feedback" class="min-h-[2rem] text-sm font-bold"></div>
+                    <button id="geometry-next" onclick="nextGeometryQuestion()" class="hidden w-full bg-indigo-600 text-white font-bold py-3 rounded-xl">Question suivante ➡️</button>
                 </div>
             </div>
         </section>
@@ -426,6 +453,11 @@
                     <button onclick="shareProgressSummary()" class="bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs">📤 Partager</button>
                 </div>
                 <div class="mt-4 pt-4 border-t border-indigo-100">
+                    <div class="flex justify-between items-center"><h3 class="font-bold text-slate-800 font-heading">📊 Mes 7 derniers jours</h3><button onclick="copyDailyStats()" class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-2 py-1 rounded-lg">Copier le bilan du jour</button></div>
+                    <p class="text-[10px] text-slate-500 mt-1">Temps de jeu réellement passé dans les exercices et activités réalisées.</p>
+                    <div id="daily-stats-box" class="mt-3"></div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-indigo-100">
                     <h3 class="font-bold text-slate-800 font-heading">🏫 Classement de la classe</h3>
                     <p class="text-[10px] text-slate-500 mt-1">Les résultats restent sur cet appareil. L’enseignant peut exporter puis importer le fichier de classement.</p>
                     <div class="flex gap-2 mt-3">
@@ -514,21 +546,23 @@
     </div>
 
 </div><!-- /#app -->
-  <script defer src="js/data/dictees.js"></script>
-  <script defer src="js/data/fluence.js"></script>
-  <script defer src="js/data/orthographe.js"></script>
-  <script defer src="js/data/lessons.js"></script>
-  <script defer src="js/state.js"></script>
-  <script defer src="js/navigation.js"></script>
-  <script defer src="js/multiplication.js"></script>
-  <script defer src="js/fractions.js"></script>
-  <script defer src="js/dictee.js"></script>
-  <script defer src="js/fluence.js"></script>
-  <script defer src="js/lessons.js"></script>
-  <script defer src="js/badges.js"></script>
-  <script defer src="js/classe.js"></script>
-  <script defer src="js/profiles.js"></script>
-  <script defer src="js/audio.js"></script>
-  <script defer src="js/app.js"></script>
+  <script defer src="js/data/dictees.js?v=20260917b"></script>
+  <script defer src="js/data/fluence.js?v=20260917b"></script>
+  <script defer src="js/data/orthographe.js?v=20260917b"></script>
+  <script defer src="js/data/lessons.js?v=20260917b"></script>
+  <script defer src="js/state.js?v=20260917b"></script>
+  <script defer src="js/navigation.js?v=20260917b"></script>
+  <script defer src="js/multiplication.js?v=20260917b"></script>
+  <script defer src="js/fractions.js?v=20260917b"></script>
+  <script defer src="js/geometry.js?v=20260917b"></script>
+  <script defer src="js/dictee.js?v=20260917b"></script>
+  <script defer src="js/fluence.js?v=20260917b"></script>
+  <script defer src="js/lessons.js?v=20260917b"></script>
+  <script defer src="js/badges.js?v=20260917b"></script>
+  <script defer src="js/classe.js?v=20260917b"></script>
+  <script defer src="js/statistiques.js?v=20260917b"></script>
+  <script defer src="js/profiles.js?v=20260917b"></script>
+  <script defer src="js/audio.js?v=20260917b"></script>
+  <script defer src="js/app.js?v=20260917b"></script>
 </body>
 </html>

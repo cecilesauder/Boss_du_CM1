@@ -15,6 +15,8 @@ let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
     dicteeStats:   {},  // { "le mot": 0|1|2|3 }
     fluenceStats:  {},  // { "f1": [ { date, seconds, wpm } ] }
     lessonStats:   {},  // { "g1": { correct, attempts } }
+    geometryStats: {correct:0, wrong:0},
+    dailyStats:    {},  // { "YYYY-MM-DD": { seconds, points, ... } }
     fractionStats: { correct:0, wrong:0, series:0, bestSeries:0 },
     badges: []
   }]
@@ -28,6 +30,8 @@ function getProfile() {
   if (!p.lastVisitDate)  p.lastVisitDate = null;
   if (!p.fluenceStats)   p.fluenceStats = {};
   if (!p.lessonStats)    p.lessonStats = {};
+  if (!p.geometryStats)  p.geometryStats = {correct:0, wrong:0};
+  if (!p.dailyStats)     p.dailyStats = {};
   if (!p.fractionStats)  p.fractionStats = { correct:0, wrong:0, series:0, bestSeries:0 };
   return p;
 }
@@ -41,16 +45,43 @@ function saveData() {
 //  ████ MINUTEUR & STREAK ████
 // ═══════════════════════════════════════════════════════════════
 let timerInterval = null;
+let activeGameType = null;
+let currentSessionSeconds = 0;
+
+function todayKey() { return new Date().toISOString().slice(0,10); }
+
+function dailyRecord(type, points=0) {
+  const p = getProfile();
+  const key = todayKey();
+  if (!p.dailyStats[key]) p.dailyStats[key] = {seconds:0, points:0, maths:0, fractions:0, dictees:0, fluence:0, lessons:0, orthographe:0};
+  if (type && Object.prototype.hasOwnProperty.call(p.dailyStats[key], type)) p.dailyStats[key][type]++;
+  p.dailyStats[key].points += points;
+  return p.dailyStats[key];
+}
+
+function setGameActive(type) {
+  if (activeGameType) stopWorkTimer();
+  activeGameType = type || null;
+  currentSessionSeconds = 0;
+  if (activeGameType) startWorkTimer();
+}
+
+function stopWorkTimer() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  if (currentSessionSeconds > 0) saveData();
+}
 
 function startWorkTimer() {
   checkStreak();
-  if (timerInterval) clearInterval(timerInterval);
+  stopWorkTimer();
   timerInterval = setInterval(() => {
     let p = getProfile();
     p.totalSeconds++;
+    currentSessionSeconds++;
+    dailyRecord(null).seconds++;
     document.getElementById('work-timer').textContent = fmtTime(p.totalSeconds);
     // Badges de temps vérifiés toutes les 60 s
-    if (p.totalSeconds % 60 === 0) { saveData(); checkTimeBadges(); }
+    if (currentSessionSeconds % 60 === 0) { saveData(); checkTimeBadges(); }
   }, 1000);
 }
 

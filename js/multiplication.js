@@ -58,6 +58,7 @@ function isTableMastered(t) {
 }
 
 function openMathQuiz() {
+  setGameActive('maths');
   document.getElementById('math-quiz-container').classList.remove('hidden');
   renderMasteryGrid();
   nextQuestion();
@@ -79,6 +80,7 @@ function selectAllTables() {
 }
 
 function closeMathQuiz() {
+  setGameActive(null);
   mathAnswered = true;
   document.getElementById('math-quiz-container').classList.add('hidden');
 }
@@ -148,10 +150,12 @@ function handleMathAnswer(value) {
     if (elapsed <= SPEED_MS) {
       stat.fastCount = Math.min(3, stat.fastCount + 1);
       p.points += 15;
+      dailyRecord('maths', 15);
       document.getElementById('speed-feedback').textContent = `⚡ SUPER RAPIDE ! (${(elapsed/1000).toFixed(2)}s) +15 pts`;
       document.getElementById('speed-feedback').className = 'text-sm font-extrabold text-emerald-500 animate-pulse-fast min-h-[1.5rem]';
     } else {
       p.points += 5;
+      dailyRecord('maths', 5);
       document.getElementById('speed-feedback').textContent = `✅ Correct ! Plus vite la prochaine fois (${(elapsed/1000).toFixed(2)}s)`;
       document.getElementById('speed-feedback').className = 'text-sm font-bold text-amber-500 min-h-[1.5rem]';
     }
@@ -202,4 +206,3 @@ function renderMasteryGrid() {
     c.appendChild(d);
   }
 }
-

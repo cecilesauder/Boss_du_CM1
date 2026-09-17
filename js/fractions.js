@@ -47,6 +47,7 @@ function initFractionScore(){
 }
 
 function generateFractionQuestion() {
+  setGameActive('fractions');
   fracAnswered = false;
   document.getElementById('btn-next-fraction').classList.add('hidden');
   document.getElementById('fraction-feedback').textContent = '';
@@ -92,6 +93,7 @@ function handleFracAnswer(chosen, clickedBtn) {
     p.fractionStats.series++;
     if (p.fractionStats.series > (p.fractionStats.bestSeries||0)) p.fractionStats.bestSeries = p.fractionStats.series;
     p.points += 10;
+    dailyRecord('fractions', 10);
     if (p.fractionStats.series === 5)  awardBadge('frac_5',  'Série de 5 fractions 🍕',  '5 bonnes réponses d\'affilée !', 'fractions');
     if (p.fractionStats.series === 10) awardBadge('frac_10', 'Champion fractions 🏆', '10 bonnes réponses consécutives !', 'fractions');
   } else {
@@ -109,4 +111,3 @@ function handleFracAnswer(chosen, clickedBtn) {
 // ═══════════════════════════════════════════════════════════════
 //  ████ DICTÉES ████
 // ═══════════════════════════════════════════════════════════════
-
