@@ -1,0 +1,27 @@
+body { font-family: 'Quicksand', sans-serif; user-select: none; -webkit-user-select: none; }
+        h1, h2, h3, .font-heading { font-family: 'Fredoka', cursive; }
+
+        /* ── Carte flip (mémorisation dictée) ─────────────────── */
+        .flip-card { perspective: 1000px; width: 100%; max-width: 280px; aspect-ratio: 4/3; margin: 0 auto; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(.4,.2,.2,1); transform-style: preserve-3d; }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 1.25rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,.08); padding: 1rem; }
+        .flip-card-front { background: linear-gradient(135deg,#fff 0%,#f8fafc 100%); color: #1e293b; border: 3px solid #e2e8f0; }
+        .flip-card-back  { background: linear-gradient(135deg,#6366f1 0%,#4f46e5 100%); color: #fff; transform: rotateY(180deg); }
+
+        /* ── Animations ───────────────────────────────────────── */
+        @keyframes pulse-fast { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+        .animate-pulse-fast { animation: pulse-fast .8s infinite; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+        .animate-shake { animation: shake .4s ease-in-out; }
+        @keyframes pop-in { 0%{transform:scale(.3);opacity:0} 60%{transform:scale(1.06)} 100%{transform:scale(1);opacity:1} }
+        .animate-pop-in { animation: pop-in .45s cubic-bezier(.34,1.56,.64,1) both; }
+        @keyframes slide-up { 0%{transform:translateY(20px);opacity:0} 100%{transform:translateY(0);opacity:1} }
+        .animate-slide-up { animation: slide-up .3s ease both; }
+
+        /* ── Scrollbar ────────────────────────────────────────── */
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* ── Fraction SVG ─────────────────────────────────────── */
+        .fraction-btn { min-height: 56px; }
