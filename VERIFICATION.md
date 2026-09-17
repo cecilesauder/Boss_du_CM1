@@ -17,3 +17,11 @@ Les 26 listes de mots officielles de l’École de Meyssiez ont été récupér�
 Les 26 leçons d’orthographe disposent chacune d’un exercice interactif à choix multiples. La fluence se déroule maintenant phrase par phrase : un clic ou la touche Entrée/Espace affiche la phrase suivante, tandis que le chronomètre continue de mesurer la lecture complète.
 
 Le serveur local de vérification qui avait été laissé en arrière-plan a été arrêté à la demande de la propriétaire du projet ; il ne servait qu’aux tests de la version précédente.
+
+## Ressources et suivi ajoutés
+
+Les 26 fiches de fluence officielles de Stylo Plume Blog sont accessibles depuis les 26 thèmes de l’application par un lien externe dédié. Les textes affichés dans le jeu restent des textes originaux de révision.
+
+Une nouvelle vue « Leçons » propose 5 notions de grammaire, 5 notions de conjugaison et 5 notions de lexique, chacune avec une règle CM1 et un exercice interactif. Le score de chaque notion est enregistré dans le profil.
+
+La galerie des badges affiche désormais un résumé partageable : points, badges, mots de dictée maîtrisés, leçons réussies et nombre de lectures. Le test navigateur a confirmé qu’une réponse correcte sur la leçon « Le groupe nominal » est bien conservée dans le score du profil et apparaît dans le bilan.

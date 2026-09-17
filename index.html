@@ -397,12 +397,34 @@
         </section>
 
         <!-- ╔══════════════════════════════╗
-             ║  VUE 5 · TROPHÉES            ║
+             ║  VUE 5 · LEÇONS              ║
+             ╚══════════════════════════════╝ -->
+        <section id="view-lessons" class="hidden space-y-5">
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-800 font-heading mb-1">📚 Leçons de français</h2>
+                <p class="text-xs text-slate-500">Grammaire, conjugaison et lexique · une activité interactive par notion</p>
+            </div>
+            <div class="flex gap-2 bg-white rounded-2xl p-2 border border-slate-200">
+                <button id="lesson-tab-grammaire" onclick="switchLessonCategory('grammaire')" class="flex-1 py-2 rounded-xl bg-indigo-500 text-white font-bold text-xs">Grammaire</button>
+                <button id="lesson-tab-conjugaison" onclick="switchLessonCategory('conjugaison')" class="flex-1 py-2 rounded-xl text-slate-500 font-bold text-xs">Conjugaison</button>
+                <button id="lesson-tab-lexique" onclick="switchLessonCategory('lexique')" class="flex-1 py-2 rounded-xl text-slate-500 font-bold text-xs">Lexique</button>
+            </div>
+            <div id="lessons-list" class="space-y-3"></div>
+            <div id="lesson-exercise" class="hidden bg-white rounded-3xl p-5 border border-indigo-200 shadow-md"></div>
+        </section>
+
+        <!-- ╔══════════════════════════════╗
+             ║  VUE 6 · TROPHÉES            ║
              ╚══════════════════════════════╝ -->
         <section id="view-trophies" class="hidden space-y-5">
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
                 <h2 class="text-xl font-bold text-slate-800 font-heading mb-1">🏆 Ta Galerie de Badges</h2>
                 <div id="trophy-summary" class="text-xs text-indigo-600 font-bold"></div>
+                <div id="progress-summary" class="mt-3 bg-indigo-50 rounded-2xl p-3 text-xs text-indigo-800"></div>
+                <div class="grid grid-cols-2 gap-2 mt-3">
+                    <button onclick="copyProgressSummary()" class="bg-indigo-600 text-white font-bold py-2 rounded-xl text-xs">📋 Copier mon bilan</button>
+                    <button onclick="shareProgressSummary()" class="bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs">📤 Partager</button>
+                </div>
             </div>
             <!-- Filtres par catégorie -->
             <div class="flex gap-2 flex-wrap">
@@ -432,6 +454,7 @@
         <button onclick="switchTab('maths')"    id="nav-maths"    class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">✖️</span><span>Maths</span></button>
         <button onclick="switchTab('dictee')"   id="nav-dictee"   class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">✍️</span><span>Dictées</span></button>
         <button onclick="switchTab('fluence')"  id="nav-fluence"  class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">📖</span><span>Fluence</span></button>
+        <button onclick="switchTab('lessons')"  id="nav-lessons"  class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">📚</span><span>Leçons</span></button>
         <button onclick="switchTab('trophies')" id="nav-trophies" class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">🏆</span><span>Badges</span></button>
         <!-- À VENIR : conjugaison, grammaire -->
         <!-- <button class="flex flex-col items-center text-slate-300 font-bold text-xs cursor-not-allowed"><span class="text-xl">🔒</span><span>Conjugaison</span></button> -->
@@ -479,12 +502,14 @@
   <script defer src="js/data/dictees.js"></script>
   <script defer src="js/data/fluence.js"></script>
   <script defer src="js/data/orthographe.js"></script>
+  <script defer src="js/data/lessons.js"></script>
   <script defer src="js/state.js"></script>
   <script defer src="js/navigation.js"></script>
   <script defer src="js/multiplication.js"></script>
   <script defer src="js/fractions.js"></script>
   <script defer src="js/dictee.js"></script>
   <script defer src="js/fluence.js"></script>
+  <script defer src="js/lessons.js"></script>
   <script defer src="js/badges.js"></script>
   <script defer src="js/profiles.js"></script>
   <script defer src="js/audio.js"></script>

@@ -14,6 +14,7 @@ let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
     mathStats:     {},  // { "7x8": { fastCount, totalCorrect, bestTime, times[] } }
     dicteeStats:   {},  // { "le mot": 0|1|2|3 }
     fluenceStats:  {},  // { "f1": [ { date, seconds, wpm } ] }
+    lessonStats:   {},  // { "g1": { correct, attempts } }
     fractionStats: { correct:0, wrong:0, series:0, bestSeries:0 },
     badges: []
   }]
@@ -26,6 +27,7 @@ function getProfile() {
   if (!p.streak)         p.streak = 0;
   if (!p.lastVisitDate)  p.lastVisitDate = null;
   if (!p.fluenceStats)   p.fluenceStats = {};
+  if (!p.lessonStats)    p.lessonStats = {};
   if (!p.fractionStats)  p.fractionStats = { correct:0, wrong:0, series:0, bestSeries:0 };
   return p;
 }
@@ -90,4 +92,3 @@ function el(id, val) { let e=document.getElementById(id); if(e) e.textContent=va
 // ═══════════════════════════════════════════════════════════════
 //  ████ NAVIGATION ████
 // ═══════════════════════════════════════════════════════════════
-

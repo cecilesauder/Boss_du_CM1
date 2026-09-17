@@ -1,4 +1,4 @@
-const ALL_TABS = ['home','maths','dictee','fluence','trophies'];
+const ALL_TABS = ['home','maths','dictee','fluence','lessons','trophies'];
 
 function switchTab(tabId) {
   ALL_TABS.forEach(id => {
@@ -14,6 +14,7 @@ function switchTab(tabId) {
   if (tabId === 'maths')    generateMathTableButtons();
   if (tabId === 'dictee')   renderDicteeList();
   if (tabId === 'fluence')  renderFluenceList();
+  if (tabId === 'lessons')  { switchLessonCategory(currentLessonCategory || 'grammaire'); }
   if (tabId === 'trophies') renderBadgesGrid();
 }
 
@@ -72,4 +73,3 @@ function switchMathsSubView(view) {
 // ═══════════════════════════════════════════════════════════════
 //  ████ MATHS — MULTIPLICATIONS ████
 // ═══════════════════════════════════════════════════════════════
-

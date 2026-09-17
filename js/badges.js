@@ -40,6 +40,12 @@ function renderBadgesGrid() {
   let all = allBadges();
   let filtered = badgeCat==='all' ? all : all.filter(b=>b.cat===badgeCat);
   document.getElementById('trophy-summary').textContent = `${p.badges.length} / ${all.length} badges débloqués`;
+  const lessonStats = Object.values(p.lessonStats || {});
+  const lessonsDone = lessonStats.filter(score => score.correct > 0).length;
+  const progress = `⭐ ${p.points} points · 🎖️ ${p.badges.length} badges · ✍️ ${Object.values(p.dicteeStats || {}).filter(score => score >= 3).length} mots maîtrisés · 📚 ${lessonsDone}/15 leçons réussies · 📖 ${Object.values(p.fluenceStats || {}).reduce((total, sessions) => total + sessions.length, 0)} lectures`;
+  const progressBox = document.getElementById('progress-summary');
+  if (progressBox) progressBox.textContent = progress;
+  window.currentProgressSummary = `Progression de ${p.name}\n${progress}\nJeu CM1 : https://cecilesauder.github.io/Boss_du_CM1/`;
 
   filtered.forEach(b => {
     let unlocked = p.badges.some(x=>x.id===b.id);
@@ -53,6 +59,17 @@ function renderBadgesGrid() {
       ${date?`<div class="text-[9px] text-amber-300">${date}</div>`:''}`;
     c.appendChild(div);
   });
+}
+
+function copyProgressSummary() {
+  const text = window.currentProgressSummary || 'Ma progression CM1';
+  navigator.clipboard?.writeText(text).then(() => showCelebration('📋', 'Bilan copié !', 'Tu peux maintenant le coller dans un message.', null));
+}
+
+function shareProgressSummary() {
+  const text = window.currentProgressSummary || 'Ma progression CM1';
+  if (navigator.share) navigator.share({ title:'Ma progression CM1', text }).catch(() => {});
+  else copyProgressSummary();
 }
 
 function awardBadge(id, title, desc, cat) {
@@ -76,4 +93,3 @@ function checkTimeBadges() {
 // ═══════════════════════════════════════════════════════════════
 //  ████ MODAL CÉLÉBRATION ████
 // ═══════════════════════════════════════════════════════════════
-

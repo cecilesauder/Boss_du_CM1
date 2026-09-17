@@ -15,10 +15,15 @@ Le jeu est publié sur [GitHub Pages](https://cecilesauder.github.io/Boss_du_CM1
 | `js/data/dictees.js` | 26 thèmes de dictées et leur vocabulaire enrichi. |
 | `js/data/orthographe.js` | Un exercice interactif pour chacune des 26 leçons d’orthographe. |
 | `js/data/fluence.js` | 26 textes originaux de fluence ; le nombre de mots est calculé automatiquement. |
+| `js/data/lessons.js` | Leçons originales de grammaire, conjugaison et lexique avec exercices interactifs. |
 | `js/multiplication.js` | Quiz des tables, mode « Toutes les tables » et progression. |
 | `js/*.js` | Logique distincte pour la navigation, les profils, fractions, dictées, fluence, badges et audio. |
 
 Les progrès sont enregistrés localement dans le navigateur de chaque élève.
+
+Les 26 fiches de fluence officielles de [Stylo Plume Blog](https://www.styloplumeblog.fr/dictees-histoire-arts-cm-genially/) sont maintenant accessibles depuis chaque thème via un lien « Fiche officielle ». Les textes affichés dans l’application restent des textes de révision originaux afin de ne pas recopier une ressource éditoriale protégée.
+
+La page **Leçons** propose quinze activités originales de niveau CM1, réparties entre grammaire, conjugaison et lexique. Les scores sont conservés par profil et peuvent être copiés ou partagés depuis la galerie des badges.
 
 ## Source des mots de dictée
 
