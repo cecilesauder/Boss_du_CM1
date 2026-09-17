@@ -98,7 +98,7 @@ function startOrthoExercise(weekId) {
     <p class="text-sm text-slate-500">${exercise.instruction}</p>
     <p class="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-lg font-bold text-slate-800">${exercise.sentence}</p>
     <div class="grid gap-2" id="ortho-options">
-      ${exercise.options.map(option => `<button class="ortho-option w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 font-bold text-slate-700 transition active:scale-95" onclick="answerOrthoExercise(this, ${JSON.stringify(option)})">${option}</button>`).join('')}
+      ${exercise.options.map(option => `<button type="button" class="ortho-option w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 font-bold text-slate-700 transition active:scale-95" data-answer="${encodeURIComponent(option)}" onclick="answerOrthoExercise(this, decodeURIComponent(this.dataset.answer))">${option}</button>`).join('')}
     </div>
     <div id="ortho-feedback" class="min-h-[2.5rem] text-sm font-bold"></div>`;
   box.scrollIntoView({ behavior:'smooth', block:'start' });

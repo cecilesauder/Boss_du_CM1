@@ -47,3 +47,9 @@ Les textes des fiches officielles de fluence n’ont pas été recopiés dans le
 ## Accès officiel renforcé
 
 Chaque thème de fluence affiche maintenant le lien « Fiche officielle » dans la liste et un grand bouton « Ouvrir la fiche officielle » dans l’écran de préparation. Le test navigateur a confirmé la présence des 26 liens et, pour le thème « La Tour Eiffel », la sélection dynamique de `https://www.styloplumeblog.fr/la-tour-eiffel-2/`. Le jeu conserve le texte original, le découpage phrase par phrase, le chronomètre, les mots par minute, le graphe et l’historique.
+
+## Test des clics interactifs
+
+Le test de la version publique a révélé que les boutons d’orthographe et de français étaient visibles mais ne réagissaient pas : les valeurs étaient injectées directement dans des attributs `onclick`, ce qui rendait le JavaScript HTML invalide. Les boutons utilisent maintenant une valeur encodée dans `data-answer`, décodée au clic.
+
+Après correction, le test navigateur local a validé **26/26 exercices d’orthographe** et **15/15 exercices de français**. Pour chaque exercice, le clic sur la bonne réponse affiche le feedback « Bravo », désactive les choix et enregistre la progression.
