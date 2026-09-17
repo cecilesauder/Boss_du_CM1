@@ -39,6 +39,7 @@ function renderFluenceList() {
         <div class="flex-1 min-w-0">
           <div class="font-bold text-slate-800 text-sm font-heading truncate">${fw.title}</div>
           <div class="text-[10px] text-slate-400">${sessions.length} lecture${sessions.length>1?'s':''} enregistrée${sessions.length>1?'s':''}</div>
+          ${fw.officialUrl ? `<a href="${fw.officialUrl}" target="_blank" rel="noopener" class="text-[10px] text-indigo-600 font-bold underline" onclick="event.stopPropagation()">Fiche officielle</a>` : ''}
           ${last ? `<div class="text-[10px] text-rose-600 font-bold">Dernier : ${fmtTime(last.seconds)}${last.wpm?' · '+last.wpm+' m/min':''}</div>` : ''}
         </div>
       </div>
