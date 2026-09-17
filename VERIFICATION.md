@@ -25,3 +25,7 @@ Les 26 fiches de fluence officielles de Stylo Plume Blog sont accessibles depuis
 Une nouvelle vue « Leçons » propose 5 notions de grammaire, 5 notions de conjugaison et 5 notions de lexique, chacune avec une règle CM1 et un exercice interactif. Le score de chaque notion est enregistré dans le profil.
 
 La galerie des badges affiche désormais un résumé partageable : points, badges, mots de dictée maîtrisés, leçons réussies et nombre de lectures. Le test navigateur a confirmé qu’une réponse correcte sur la leçon « Le groupe nominal » est bien conservée dans le score du profil et apparaît dans le bilan.
+
+## Classement de classe
+
+Un classement local a été ajouté à la galerie des badges. Le test navigateur a publié le pseudo « Camille » et a confirmé l’affichage d’une ligne classée, la conservation dans `localStorage` et le calcul des points, badges, leçons, mots maîtrisés et lectures. Les actions Exporter et Importer utilisent un fichier JSON afin que l’enseignant puisse faire circuler un classement sans serveur ni collecte automatique de données.

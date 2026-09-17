@@ -35,3 +35,6 @@ body { font-family: 'Quicksand', sans-serif; user-select: none; -webkit-user-sel
 .fluence-reading-card { cursor:pointer; min-height:9rem; display:flex; align-items:center; justify-content:center; user-select:none; transition:background .2s, border-color .2s, transform .2s; }
 .fluence-reading-card:hover, .fluence-reading-card:focus { background:#fff1f2; border-color:#fb7185; outline:none; transform:translateY(-1px); }
 .fluence-sentence-progress { color:#e11d48; font-size:.75rem; font-weight:800; text-align:center; }
+.class-rank-row { display:flex; align-items:center; gap:.65rem; padding:.65rem .75rem; border:1px solid #e2e8f0; border-radius:1rem; background:#f8fafc; }
+.class-rank-first { background:#fffbeb; border-color:#fcd34d; }
+.class-rank-number { width:1.7rem; height:1.7rem; display:flex; align-items:center; justify-content:center; border-radius:999px; background:#e0e7ff; color:#4338ca; font-weight:800; font-size:.8rem; }

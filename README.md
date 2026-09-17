@@ -25,6 +25,8 @@ Les 26 fiches de fluence officielles de [Stylo Plume Blog](https://www.styloplum
 
 La page **Leçons** propose quinze activités originales de niveau CM1, réparties entre grammaire, conjugaison et lexique. Les scores sont conservés par profil et peuvent être copiés ou partagés depuis la galerie des badges.
 
+La galerie des badges propose aussi un **classement de classe local**. Un élève choisit un pseudo et publie son score sur l’appareil utilisé ; l’enseignant peut exporter le classement en JSON, le partager à sa classe, puis l’importer sur un autre appareil. Aucun score n’est envoyé automatiquement à un serveur et aucun nom réel n’est requis.
+
 ## Source des mots de dictée
 
 Les listes de mots ont été remplacées par les listes officielles publiées par l’[École de Meyssiez](https://ecole-meyssiez.web.ac-grenoble.fr/vie-de-la-classe-ce2-cm1-cm2/mots-apprendre-pour-les-dictees-en-lien-avec-lhistoire-de-lart). Les catégories sont conservées : noms, verbes, adjectifs/participes passés et mots invariables.

@@ -425,6 +425,21 @@
                     <button onclick="copyProgressSummary()" class="bg-indigo-600 text-white font-bold py-2 rounded-xl text-xs">📋 Copier mon bilan</button>
                     <button onclick="shareProgressSummary()" class="bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs">📤 Partager</button>
                 </div>
+                <div class="mt-4 pt-4 border-t border-indigo-100">
+                    <h3 class="font-bold text-slate-800 font-heading">🏫 Classement de la classe</h3>
+                    <p class="text-[10px] text-slate-500 mt-1">Les résultats restent sur cet appareil. L’enseignant peut exporter puis importer le fichier de classement.</p>
+                    <div class="flex gap-2 mt-3">
+                        <input id="class-pseudo" type="text" maxlength="24" placeholder="Ton pseudo…" class="min-w-0 flex-1 p-2 rounded-xl border border-slate-200 text-xs">
+                        <button onclick="publishCurrentScore()" class="bg-amber-500 text-white font-bold px-3 rounded-xl text-xs">Publier</button>
+                    </div>
+                    <div id="class-current-score" class="text-[10px] text-indigo-600 font-bold mt-2"></div>
+                    <div id="class-board-list" class="mt-3 space-y-2"></div>
+                    <div class="flex gap-2 mt-3">
+                        <button onclick="exportClassBoard()" class="flex-1 bg-slate-100 text-slate-700 font-bold py-2 rounded-xl text-[10px]">⬇️ Exporter</button>
+                        <label class="flex-1 bg-slate-100 text-slate-700 font-bold py-2 rounded-xl text-[10px] text-center cursor-pointer">⬆️ Importer<input type="file" accept="application/json" onchange="importClassBoard(event)" class="hidden"></label>
+                        <button onclick="clearClassBoard()" class="bg-rose-50 text-rose-600 font-bold px-3 rounded-xl text-[10px]">Effacer</button>
+                    </div>
+                </div>
             </div>
             <!-- Filtres par catégorie -->
             <div class="flex gap-2 flex-wrap">
@@ -511,6 +526,7 @@
   <script defer src="js/fluence.js"></script>
   <script defer src="js/lessons.js"></script>
   <script defer src="js/badges.js"></script>
+  <script defer src="js/classe.js"></script>
   <script defer src="js/profiles.js"></script>
   <script defer src="js/audio.js"></script>
   <script defer src="js/app.js"></script>
