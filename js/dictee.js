@@ -1,4 +1,21 @@
 let curWeek=null, wordIdx=0, mistakes=0;
+let orthoCurrent = null;
+
+const WORD_NATURE_LABELS = {
+  noms: 'Nom',
+  verbes: 'Verbe',
+  adjectifs: 'Adjectif',
+  invariables: 'Mot invariable'
+};
+
+function natureClass(nature) {
+  return `word-${nature === 'noms' ? 'nom' : nature === 'verbes' ? 'verbe' : nature === 'adjectifs' ? 'adjectif' : 'invariable'}`;
+}
+
+function hideOrthoExercise() {
+  const box = document.getElementById('ortho-exercise-container');
+  if (box) box.classList.add('hidden');
+}
 
 function renderDicteeList() {
   let c = document.getElementById('dictee-weeks-list');
@@ -20,10 +37,16 @@ function renderDicteeList() {
             <div class="text-[10px] text-slate-400 truncate">${w.description}</div>
           </div>
         </div>
-        <button onclick="startDictee('${w.id}')"
-                class="${done?'bg-emerald-500 hover:bg-emerald-600':'bg-indigo-600 hover:bg-indigo-700'} text-white font-bold py-2 px-4 rounded-xl text-sm shadow flex-shrink-0 transition active:scale-95">
-          ${done?'✅':'▶'}
-        </button>
+        <div class="flex gap-2 flex-shrink-0">
+          <button onclick="startOrthoExercise('${w.id}')"
+                  class="bg-amber-100 text-amber-800 font-bold py-2 px-3 rounded-xl text-xs border border-amber-200 transition active:scale-95">
+            📝 Exercice
+          </button>
+          <button onclick="startDictee('${w.id}')"
+                  class="${done?'bg-emerald-500 hover:bg-emerald-600':'bg-indigo-600 hover:bg-indigo-700'} text-white font-bold py-2 px-3 rounded-xl text-sm shadow transition active:scale-95">
+            ${done?'✅':'▶'}
+          </button>
+        </div>
       </div>
       <div class="mt-2 flex justify-between text-[10px] font-bold">
         <span class="${pct===100?'text-emerald-600':'text-indigo-600'}">${learned}/${w.words.length} mots maîtrisés</span>
@@ -37,6 +60,7 @@ function renderDicteeList() {
 }
 
 function startDictee(weekId) {
+  hideOrthoExercise();
   curWeek   = DICTEE_WEEKS.find(w=>w.id===weekId);
   wordIdx   = 0;
   document.getElementById('dictee-weeks-list').classList.add('hidden');
@@ -51,11 +75,63 @@ function exitDicteeGame() {
   renderDicteeList();
 }
 
+function startOrthoExercise(weekId) {
+  const exercise = ORTHO_EXERCISES[weekId];
+  if (!exercise) return;
+  orthoCurrent = exercise;
+  const week = DICTEE_WEEKS.find(item => item.id === weekId);
+  const box = document.getElementById('ortho-exercise-container');
+  document.getElementById('dictee-weeks-list').classList.remove('hidden');
+  document.getElementById('dictee-game-container').classList.add('hidden');
+  box.classList.remove('hidden');
+  box.innerHTML = `
+    <div class="flex items-center justify-between gap-3">
+      <div class="text-left"><div class="text-xs font-bold text-amber-600">${week?.icon || '📝'} ${week?.title || ''}</div><h3 class="text-xl font-bold text-slate-800 font-heading">${exercise.title}</h3></div>
+      <button onclick="closeOrthoExercise()" class="text-slate-400 text-xl" aria-label="Fermer">✕</button>
+    </div>
+    <p class="text-sm text-slate-500">${exercise.instruction}</p>
+    <p class="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-lg font-bold text-slate-800">${exercise.sentence}</p>
+    <div class="grid gap-2" id="ortho-options">
+      ${exercise.options.map(option => `<button class="ortho-option w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 font-bold text-slate-700 transition active:scale-95" onclick="answerOrthoExercise(this, ${JSON.stringify(option)})">${option}</button>`).join('')}
+    </div>
+    <div id="ortho-feedback" class="min-h-[2.5rem] text-sm font-bold"></div>`;
+  box.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function answerOrthoExercise(button, answer) {
+  const feedback = document.getElementById('ortho-feedback');
+  if (!feedback || !orthoCurrent) return;
+  document.querySelectorAll('.ortho-option').forEach(option => option.disabled = true);
+  if (answer === orthoCurrent.answer) {
+    button.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-700');
+    feedback.className = 'min-h-[2.5rem] text-sm font-bold text-emerald-600';
+    feedback.textContent = `✅ Bravo ! ${orthoCurrent.explanation}`;
+    getProfile().points += 10;
+    saveData();
+  } else {
+    button.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-700');
+    feedback.className = 'min-h-[2.5rem] text-sm font-bold text-rose-600';
+    feedback.textContent = `❌ Pas encore. La bonne réponse était « ${orthoCurrent.answer} ». ${orthoCurrent.explanation}`;
+    const correct = [...document.querySelectorAll('.ortho-option')].find(option => option.textContent === orthoCurrent.answer);
+    if (correct) correct.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-700');
+  }
+}
+
+function closeOrthoExercise() {
+  const box = document.getElementById('ortho-exercise-container');
+  if (box) box.classList.add('hidden');
+}
+
 function launchWordCycle() {
   mistakes = 0;
   let wo   = curWeek.words[wordIdx];
   document.getElementById('dictee-word-progress').textContent = `Mot ${wordIdx+1}/${curWeek.words.length}`;
-  document.getElementById('card-word-text').textContent = wo.word;
+  const wordCard = document.getElementById('card-word-text');
+  wordCard.textContent = wo.word;
+  wordCard.className = `font-extrabold text-2xl ${natureClass(wo.nature)}`;
+  const natureBadge = document.getElementById('card-word-nature');
+  natureBadge.textContent = WORD_NATURE_LABELS[wo.nature] || wo.nature;
+  natureBadge.className = `word-legend ${natureClass(wo.nature)}`;
 
   // Réinitialisation des étapes
   document.getElementById('dictee-step-memo').classList.remove('hidden');
@@ -167,4 +243,3 @@ function checkGrammarNature(selected) {
 // ═══════════════════════════════════════════════════════════════
 //  ████ FLUENCE ████
 // ═══════════════════════════════════════════════════════════════
-

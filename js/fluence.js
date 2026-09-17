@@ -1,4 +1,28 @@
-let curFluence=null, fluTimer=null, fluSec=0;
+let curFluence=null, fluTimer=null, fluSec=0, fluSentences=[], fluSentenceIndex=0;
+
+function splitFluenceSentences(text) {
+  return text.replace(/\s+/g, ' ').trim().match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g)?.map(sentence => sentence.trim()) || [];
+}
+
+function renderCurrentFluenceSentence() {
+  const textBox = document.getElementById('fluence-text-display');
+  const progress = document.getElementById('fluence-sentence-progress');
+  if (!textBox || !fluSentences.length) return;
+  textBox.innerHTML = `<p class="text-xl sm:text-2xl leading-relaxed font-heading">${fluSentences[fluSentenceIndex]}</p>`;
+  if (progress) progress.textContent = `Phrase ${fluSentenceIndex + 1} / ${fluSentences.length} · Clique pour continuer`;
+}
+
+function advanceFluenceSentence(event) {
+  if (event?.target?.closest('button')) return;
+  if (!fluSentences.length) return;
+  if (fluSentenceIndex < fluSentences.length - 1) {
+    fluSentenceIndex++;
+    renderCurrentFluenceSentence();
+  } else {
+    const progress = document.getElementById('fluence-sentence-progress');
+    if (progress) progress.textContent = 'Dernière phrase · Clique encore ou termine la lecture';
+  }
+}
 
 function renderFluenceList() {
   let c = document.getElementById('fluence-weeks-list');
@@ -47,12 +71,14 @@ function showFluenceState(s) {
 
 function startFluenceTimer() {
   fluSec = 0;
-  // Affichage du texte (grand et lisible)
+  fluSentences = splitFluenceSentences(curFluence.text || '');
+  fluSentenceIndex = 0;
   let textBox = document.getElementById('fluence-text-display');
   let hasText = curFluence.wordCount > 0 && curFluence.text && !curFluence.text.startsWith('[');
   textBox.innerHTML = hasText
-    ? `<p class="text-lg leading-loose">${curFluence.text.replace(/\n/g,'<br>')}</p>`
+    ? ''
     : `<p class="text-slate-400 italic text-sm text-center py-8">${curFluence.text}</p><p class="text-center text-xs text-slate-300 mt-2">Ajouter le texte dans le tableau FLUENCE_WEEKS</p>`;
+  if (hasText) renderCurrentFluenceSentence();
   showFluenceState('reading');
   document.getElementById('fluence-timer-display').textContent = '0:00';
   if (fluTimer) clearInterval(fluTimer);
@@ -62,6 +88,14 @@ function startFluenceTimer() {
     document.getElementById('fluence-timer-display').textContent = `${m}:${s.toString().padStart(2,'0')}`;
   }, 1000);
 }
+
+document.getElementById('fluence-text-display')?.addEventListener('click', advanceFluenceSentence);
+document.getElementById('fluence-text-display')?.addEventListener('keydown', event => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    advanceFluenceSentence(event);
+  }
+});
 
 function stopFluenceTimer() {
   if (fluTimer) { clearInterval(fluTimer); fluTimer=null; }
@@ -142,4 +176,3 @@ function exitFluenceGame() {
 // ═══════════════════════════════════════════════════════════════
 //  ████ BADGES & TROPHÉES ████
 // ═══════════════════════════════════════════════════════════════
-

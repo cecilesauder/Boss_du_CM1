@@ -218,10 +218,18 @@
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
                 <h2 class="text-xl font-bold text-slate-800 font-heading mb-1">✍️ Dictées Révision CM1</h2>
                 <p class="text-xs text-slate-500">26 thèmes · Mémorise les mots et identifie leur nature grammaticale</p>
+                <div class="mt-3 flex flex-wrap gap-2 text-[10px] font-bold" aria-label="Code couleur des classes de mots">
+                    <span class="word-legend word-nom">Nom</span>
+                    <span class="word-legend word-verbe">Verbe</span>
+                    <span class="word-legend word-adjectif">Adjectif</span>
+                    <span class="word-legend word-invariable">Mot invariable</span>
+                </div>
             </div>
 
             <!-- Liste des 26 thèmes -->
             <div id="dictee-weeks-list" class="space-y-3"></div>
+
+            <div id="ortho-exercise-container" class="hidden bg-white p-5 rounded-3xl shadow-md border border-slate-200 space-y-4 text-center"></div>
 
             <!-- Zone de jeu dictée -->
             <div id="dictee-game-container" class="hidden space-y-5">
@@ -247,7 +255,8 @@
                     <div class="flip-card" id="dictee-card">
                         <div class="flip-card-inner">
                             <div class="flip-card-front flex flex-col items-center justify-center space-y-3">
-                                <span id="card-word-text" class="font-extrabold text-2xl text-indigo-600"></span>
+                                <span id="card-word-text" class="font-extrabold text-2xl"></span>
+                                <span id="card-word-nature" class="word-legend"></span>
                                 <button onclick="speakWord()"
                                         class="text-xs bg-indigo-50 text-indigo-600 font-bold px-3 py-1 rounded-full border border-indigo-200">
                                     🔊 Écouter
@@ -307,7 +316,7 @@
         <section id="view-fluence" class="hidden space-y-5">
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
                 <h2 class="text-xl font-bold text-slate-800 font-heading mb-1">📖 Lecture Fluence</h2>
-                <p class="text-xs text-slate-500">Lis le texte à voix haute. Un adulte démarre le chrono — fais-le diminuer à chaque lecture !</p>
+                <p class="text-xs text-slate-500">Lis le texte à voix haute, puis clique sur l’écran pour afficher la phrase suivante. Un adulte démarre le chrono !</p>
             </div>
 
             <!-- Liste des 26 textes -->
@@ -346,9 +355,10 @@
                         <div id="fluence-timer-display" class="text-6xl font-mono font-extrabold font-heading">0:00</div>
                     </div>
                     <!-- Texte à lire (grande police, lisible) -->
-                    <div id="fluence-text-display"
-                         class="bg-white border-2 border-slate-200 rounded-2xl p-5 text-left text-lg leading-loose text-slate-700 font-medium shadow-inner max-h-72 overflow-y-auto custom-scrollbar">
+                    <div id="fluence-text-display" role="button" tabindex="0" aria-label="Cliquer pour afficher la phrase suivante"
+                         class="fluence-reading-card bg-white border-2 border-slate-200 rounded-2xl p-5 text-left text-lg leading-loose text-slate-700 font-medium shadow-inner max-h-72 overflow-y-auto custom-scrollbar">
                     </div>
+                    <div id="fluence-sentence-progress" class="fluence-sentence-progress">Phrase 1 · Clique pour commencer</div>
                     <button onclick="stopFluenceTimer()"
                             class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-2xl text-xl shadow-lg transition active:scale-95">
                         ✅ J'ai fini !
@@ -468,6 +478,7 @@
 </div><!-- /#app -->
   <script defer src="js/data/dictees.js"></script>
   <script defer src="js/data/fluence.js"></script>
+  <script defer src="js/data/orthographe.js"></script>
   <script defer src="js/state.js"></script>
   <script defer src="js/navigation.js"></script>
   <script defer src="js/multiplication.js"></script>
