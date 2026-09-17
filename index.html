@@ -343,7 +343,7 @@
         <section id="view-fluence" class="hidden space-y-5">
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
                 <h2 class="text-xl font-bold text-slate-800 font-heading mb-1">📖 Lecture Fluence</h2>
-                <p class="text-xs text-slate-500">Lis le texte à voix haute, puis clique sur l’écran pour afficher la phrase suivante. Un adulte démarre le chrono !</p>
+                <p class="text-xs text-slate-500">Lis le texte à voix haute, puis clique sur l’écran pour afficher la phrase suivante. Un adulte démarre le chrono ! Les fiches officielles sont accessibles depuis chaque thème.</p>
             </div>
 
             <!-- Liste des 26 textes -->
@@ -367,6 +367,11 @@
                     <div class="bg-rose-50 border border-rose-200 rounded-2xl p-4 text-sm font-bold text-rose-800 space-y-1">
                         <p>📜 Ce texte contient <span id="fluence-word-count" class="text-xl font-extrabold">?</span> mots</p>
                         <p class="text-xs font-normal text-rose-500 mt-1">Un adulte clique « Commencer » quand l'enfant est prêt !</p>
+                    </div>
+                    <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 text-left space-y-2">
+                        <p class="text-xs font-bold text-indigo-800">📎 Fiche officielle associée</p>
+                        <p class="text-[10px] text-indigo-600">Le texte officiel s’ouvre dans un nouvel onglet, sur le site de sa créatrice. Il peut servir de support à l’adulte pendant la lecture.</p>
+                        <a id="fluence-official-ready-link" href="#" target="_blank" rel="noopener" class="block text-center bg-indigo-600 text-white font-bold py-2.5 rounded-xl text-sm">🔗 Ouvrir la fiche officielle</a>
                     </div>
                     <button onclick="startFluenceTimer()"
                             class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-4 rounded-2xl text-xl shadow-lg transition active:scale-95">

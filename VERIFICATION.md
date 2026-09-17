@@ -43,3 +43,7 @@ La galerie de progression contient maintenant un relevé détaillé des sept der
 Les badges de durée sont explicitement définis comme des objectifs **dans une même session d’activité**, et quatre badges supplémentaires récompensent les progrès en géométrie et en français. Le nombre de badges passe de 47 à 51.
 
 Les textes des fiches officielles de fluence n’ont pas été recopiés dans le dépôt : ils restent accessibles par leurs liens officiels dans l’application. Cela évite de redistribuer une ressource éditoriale protégée sans autorisation de reproduction.
+
+## Accès officiel renforcé
+
+Chaque thème de fluence affiche maintenant le lien « Fiche officielle » dans la liste et un grand bouton « Ouvrir la fiche officielle » dans l’écran de préparation. Le test navigateur a confirmé la présence des 26 liens et, pour le thème « La Tour Eiffel », la sélection dynamique de `https://www.styloplumeblog.fr/la-tour-eiffel-2/`. Le jeu conserve le texte original, le découpage phrase par phrase, le chronomètre, les mots par minute, le graphe et l’historique.
