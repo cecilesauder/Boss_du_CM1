@@ -14,6 +14,16 @@ function renderDailyStats() {
   box.innerHTML = `<div class="grid grid-cols-7 gap-1 items-end h-28">${rows.slice().reverse().map(row => `<div class="flex flex-col items-center gap-1 h-full justify-end"><div class="text-[9px] text-indigo-600 font-bold">${row.stat.seconds ? Math.max(1, Math.round(row.stat.seconds / 60))+'m' : ''}</div><div class="w-full bg-indigo-400 rounded-t-md" style="height:${Math.max(row.stat.seconds ? 8 : 2, row.stat.seconds / maxSeconds * 70)}px"></div><div class="text-[9px] text-slate-500 truncate w-full text-center">${row.label}</div></div>`).join('')}</div><div class="mt-3 space-y-2">${rows.map(row => `<div class="bg-slate-50 border border-slate-100 rounded-xl p-2"><div class="flex justify-between text-xs font-bold"><span>${row.label}</span><span class="text-indigo-600">${row.stat.points} pts · ${Math.floor(row.stat.seconds/60)} min</span></div><div class="text-[10px] text-slate-500 mt-1">✖️ ${row.stat.maths} · 🍕 ${row.stat.fractions} · ✍️ ${row.stat.dictees} · 📝 ${row.stat.orthographe} · 📚 ${row.stat.lessons} · 📖 ${row.stat.fluence}</div></div>`).join('')}</div>`;
 }
 
+function toggleDailyStats() {
+  const panel = document.getElementById('daily-stats-panel');
+  const chevron = document.getElementById('daily-stats-chevron');
+  if (!panel) return;
+  const opening = !panel.classList.contains('hidden');
+  panel.classList.toggle('hidden');
+  if (!opening) renderDailyStats();
+  if (chevron) chevron.textContent = opening ? '⌄' : '⌃';
+}
+
 function dailyStatsText() {
   const p = getProfile();
   const key = todayKey();

@@ -51,7 +51,6 @@ function renderBadgesGrid() {
   const progressBox = document.getElementById('progress-summary');
   if (progressBox) progressBox.textContent = progress;
   window.currentProgressSummary = `Progression de ${p.name}\n${progress}\nJeu CM1 : https://cecilesauder.github.io/Boss_du_CM1/`;
-  if (typeof renderClassBoard === 'function') renderClassBoard();
   if (typeof renderDailyStats === 'function') renderDailyStats();
 
   filtered.forEach(b => {

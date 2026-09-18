@@ -261,9 +261,9 @@
             <!-- Zone de jeu dictée -->
             <div id="dictee-game-container" class="hidden space-y-5">
                 <div class="flex justify-between items-center">
-                    <button onclick="exitDicteeGame()"
-                            class="text-xs bg-slate-200 font-bold px-3 py-1.5 rounded-full text-slate-600 transition active:scale-95">
-                        ← Retour
+                    <button type="button" onclick="exitDicteeGame()" aria-label="Fermer les dictées"
+                            class="text-slate-400 hover:text-slate-700 text-xl font-bold transition active:scale-95">
+                        ✕
                     </button>
                     <span id="dictee-word-progress"
                           class="text-xs font-bold bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full">Mot 1/10</span>
@@ -357,9 +357,9 @@
             <!-- Zone de lecture -->
             <div id="fluence-game-container" class="hidden space-y-5">
                 <div class="flex justify-between items-center">
-                    <button onclick="exitFluenceGame()"
-                            class="text-xs bg-slate-200 font-bold px-3 py-1.5 rounded-full text-slate-600 transition active:scale-95">
-                        ← Retour
+                    <button type="button" onclick="exitFluenceGame()" aria-label="Fermer la fluence"
+                            class="text-slate-400 hover:text-slate-700 text-xl font-bold transition active:scale-95">
+                        ✕
                     </button>
                     <span id="fluence-theme-badge"
                           class="text-xs font-bold bg-rose-100 text-rose-700 px-3 py-1.5 rounded-full">Thème 1</span>
@@ -371,7 +371,7 @@
                     <h3 id="fluence-title-display" class="text-2xl font-bold text-slate-800 font-heading"></h3>
                     <div class="bg-rose-50 border border-rose-200 rounded-2xl p-4 text-sm font-bold text-rose-800 space-y-1">
                         <p>📜 Ce texte contient <span id="fluence-word-count" class="text-xl font-extrabold">?</span> mots</p>
-                        <p class="text-xs font-normal text-rose-500 mt-1">Un adulte clique « Commencer » quand l'enfant est prêt !</p>
+                        <p class="text-xs font-normal text-rose-500 mt-1">Clique sur « Commencer » quand tu es prêt·e !</p>
                     </div>
                     <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 text-left space-y-2">
                         <p class="text-xs font-bold text-indigo-800">📎 Fiche officielle associée</p>
@@ -424,9 +424,9 @@
                                 class="bg-rose-500 text-white font-bold py-3 rounded-xl text-sm transition active:scale-95">
                             🔄 Relire
                         </button>
-                        <button onclick="exitFluenceGame()"
+                        <button type="button" onclick="exitFluenceGame()" aria-label="Fermer la fluence"
                                 class="bg-slate-200 text-slate-700 font-bold py-3 rounded-xl text-sm transition active:scale-95">
-                            ← Retour
+                            ✕ Fermer
                         </button>
                     </div>
                 </div>
@@ -463,23 +463,12 @@
                     <button onclick="shareProgressSummary()" class="bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs">📤 Partager</button>
                 </div>
                 <div class="mt-4 pt-4 border-t border-indigo-100">
-                    <div class="flex justify-between items-center"><h3 class="font-bold text-slate-800 font-heading">📊 Mes 7 derniers jours</h3><button onclick="copyDailyStats()" class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-2 py-1 rounded-lg">Copier le bilan du jour</button></div>
-                    <p class="text-[10px] text-slate-500 mt-1">Temps de jeu réellement passé dans les exercices et activités réalisées.</p>
-                    <div id="daily-stats-box" class="mt-3"></div>
-                </div>
-                <div class="mt-4 pt-4 border-t border-indigo-100">
-                    <h3 class="font-bold text-slate-800 font-heading">🏫 Classement de la classe</h3>
-                    <p class="text-[10px] text-slate-500 mt-1">Les résultats restent sur cet appareil. L’enseignant peut exporter puis importer le fichier de classement.</p>
-                    <div class="flex gap-2 mt-3">
-                        <input id="class-pseudo" type="text" maxlength="24" placeholder="Ton pseudo…" class="min-w-0 flex-1 p-2 rounded-xl border border-slate-200 text-xs">
-                        <button onclick="publishCurrentScore()" class="bg-amber-500 text-white font-bold px-3 rounded-xl text-xs">Publier</button>
-                    </div>
-                    <div id="class-current-score" class="text-[10px] text-indigo-600 font-bold mt-2"></div>
-                    <div id="class-board-list" class="mt-3 space-y-2"></div>
-                    <div class="flex gap-2 mt-3">
-                        <button onclick="exportClassBoard()" class="flex-1 bg-slate-100 text-slate-700 font-bold py-2 rounded-xl text-[10px]">⬇️ Exporter</button>
-                        <label class="flex-1 bg-slate-100 text-slate-700 font-bold py-2 rounded-xl text-[10px] text-center cursor-pointer">⬆️ Importer<input type="file" accept="application/json" onchange="importClassBoard(event)" class="hidden"></label>
-                        <button onclick="clearClassBoard()" class="bg-rose-50 text-rose-600 font-bold px-3 rounded-xl text-[10px]">Effacer</button>
+                    <button type="button" onclick="toggleDailyStats()" class="w-full flex justify-between items-center text-left font-bold text-slate-800 font-heading">
+                        <span>📊 Voir mes 7 derniers jours</span><span id="daily-stats-chevron">⌄</span>
+                    </button>
+                    <div id="daily-stats-panel" class="hidden">
+                        <div class="flex justify-between items-center mt-3"><p class="text-[10px] text-slate-500">Temps de jeu et activités réalisées.</p><button onclick="copyDailyStats()" class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-2 py-1 rounded-lg">Copier le bilan du jour</button></div>
+                        <div id="daily-stats-box" class="mt-3"></div>
                     </div>
                 </div>
             </div>
@@ -556,23 +545,22 @@
     </div>
 
 </div><!-- /#app -->
-  <script defer src="js/data/dictees.js?v=20260918a"></script>
-  <script defer src="js/data/fluence.js?v=20260918a"></script>
-  <script defer src="js/data/orthographe.js?v=20260918a"></script>
-  <script defer src="js/data/lessons.js?v=20260918a"></script>
-  <script defer src="js/state.js?v=20260918a"></script>
-  <script defer src="js/navigation.js?v=20260918a"></script>
-  <script defer src="js/multiplication.js?v=20260918a"></script>
-  <script defer src="js/fractions.js?v=20260918a"></script>
-  <script defer src="js/geometry.js?v=20260918a"></script>
-  <script defer src="js/dictee.js?v=20260918a"></script>
-  <script defer src="js/fluence.js?v=20260918a"></script>
-  <script defer src="js/lessons.js?v=20260918a"></script>
-  <script defer src="js/badges.js?v=20260918a"></script>
-  <script defer src="js/classe.js?v=20260918a"></script>
-  <script defer src="js/statistiques.js?v=20260918a"></script>
-  <script defer src="js/profiles.js?v=20260918a"></script>
-  <script defer src="js/audio.js?v=20260918a"></script>
-  <script defer src="js/app.js?v=20260918a"></script>
+  <script defer src="js/data/dictees.js?v=20260918b"></script>
+  <script defer src="js/data/fluence.js?v=20260918b"></script>
+  <script defer src="js/data/orthographe.js?v=20260918b"></script>
+  <script defer src="js/data/lessons.js?v=20260918b"></script>
+  <script defer src="js/state.js?v=20260918b"></script>
+  <script defer src="js/navigation.js?v=20260918b"></script>
+  <script defer src="js/multiplication.js?v=20260918b"></script>
+  <script defer src="js/fractions.js?v=20260918b"></script>
+  <script defer src="js/geometry.js?v=20260918b"></script>
+  <script defer src="js/dictee.js?v=20260918b"></script>
+  <script defer src="js/fluence.js?v=20260918b"></script>
+  <script defer src="js/lessons.js?v=20260918b"></script>
+  <script defer src="js/badges.js?v=20260918b"></script>
+  <script defer src="js/statistiques.js?v=20260918b"></script>
+  <script defer src="js/profiles.js?v=20260918b"></script>
+  <script defer src="js/audio.js?v=20260918b"></script>
+  <script defer src="js/app.js?v=20260918b"></script>
 </body>
 </html>

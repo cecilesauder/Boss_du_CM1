@@ -76,6 +76,7 @@ function startDictee(weekId) {
 
 function exitDicteeGame() {
   setGameActive(null);
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
   document.getElementById('dictee-game-container').classList.add('hidden');
   document.getElementById('dictee-weeks-list').classList.remove('hidden');
   renderDicteeList();
@@ -206,16 +207,23 @@ function launchWordCycle() {
 }
 
 function speakWord() {
-  if ('speechSynthesis' in window) {
-    let u = new SpeechSynthesisUtterance(sessionWords[wordIdx].word);
-    u.lang = 'fr-FR';
-    speechSynthesis.speak(u);
-  }
+  const current = sessionWords[wordIdx];
+  if (!current || !('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) return;
+  const synth = window.speechSynthesis;
+  synth.cancel();
+  const utterance = new SpeechSynthesisUtterance(current.word);
+  utterance.lang = 'fr-FR';
+  utterance.rate = 0.9;
+  const frenchVoice = synth.getVoices().find(voice => voice.lang?.toLowerCase().startsWith('fr'));
+  if (frenchVoice) utterance.voice = frenchVoice;
+  synth.resume();
+  synth.speak(utterance);
 }
 
 function showInputPhase() {
   document.getElementById('dictee-step-memo').classList.add('hidden');
   document.getElementById('dictee-step-input').classList.remove('hidden');
+  document.getElementById('dictee-session-progress').classList.add('hidden');
 
   let word = sessionWords[wordIdx].word;
   let clue = document.getElementById('dictee-clue-display');
@@ -246,6 +254,7 @@ function showInputPhase() {
 function showNaturePhase() {
   document.getElementById('dictee-step-input').classList.add('hidden');
   document.getElementById('dictee-step-nature').classList.remove('hidden');
+  document.getElementById('dictee-session-progress').classList.remove('hidden');
   document.getElementById('dictee-nature-feedback').textContent = '';
 }
 
