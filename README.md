@@ -2,6 +2,8 @@
 
 Jeu web de révision pour les élèves de CM1 : tables de multiplication, fractions, dictées et lecture fluence.
 
+> 🎮 **[Accéder directement au jeu →](https://cecilesauder.github.io/Boss_du_CM1/)**
+
 ## Jouer
 
 Le jeu est publié sur [GitHub Pages](https://cecilesauder.github.io/Boss_du_CM1/).
