@@ -106,6 +106,11 @@
                         <span class="text-3xl">📚</span>
                         <div><div class="font-bold font-heading text-lg">Leçons</div><div class="text-xs opacity-90">Français CM1</div></div>
                     </button>
+                    <button onclick="switchTab('poesie')"
+                            class="bg-gradient-to-br from-fuchsia-400 to-pink-600 text-white p-4 rounded-2xl shadow-md text-left transition transform active:scale-95 flex flex-col justify-between h-28">
+                        <span class="text-3xl">🎨</span>
+                        <div><div class="font-bold font-heading text-lg">Poésies</div><div class="text-xs opacity-90">4 jeux pour mémoriser</div></div>
+                    </button>
                     <button onclick="switchTab('trophies')"
                             class="bg-gradient-to-br from-yellow-400 to-orange-500 text-white p-4 rounded-2xl shadow-md text-left transition transform active:scale-95 flex flex-col justify-between h-28">
                         <span class="text-3xl">🏆</span>
@@ -122,8 +127,30 @@
         </section>
 
         <!-- ╔══════════════════════════════╗
+             ║  VUE · POÉSIES               ║
+        ╚══════════════════════════════╝ -->
+        <section id="view-poesie" class="hidden space-y-5">
+            <div class="bg-gradient-to-r from-fuchsia-500 to-pink-600 rounded-3xl p-5 text-white shadow-lg">
+                <span class="bg-white/20 text-xs uppercase px-3 py-1 rounded-full font-bold">Apprendre en jouant</span>
+                <h2 class="text-2xl font-bold mt-2 font-heading">🎨 Mes poésies</h2>
+                <p class="text-pink-100 text-sm mt-1">Écoute, récite et mémorise tes poésies avec quatre activités.</p>
+            </div>
+            <div id="poesie-list" class="space-y-3">
+                <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center gap-3">
+                    <div class="text-4xl">📝</div><div class="flex-1"><h3 class="font-bold text-slate-800 font-heading">À quoi ça sert, un poème ?</h3><p class="text-xs text-slate-500">Henriette Major · À apprendre pour jeudi 24 septembre</p></div>
+                    <button onclick="poetryStart('poesie1')" class="bg-fuchsia-600 text-white font-bold py-2 px-3 rounded-xl text-xs">Commencer</button>
+                </div>
+            </div>
+            <div id="poesie-workspace" class="hidden bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+                <div class="flex justify-between items-start gap-3"><div><h3 id="poesie-title" class="text-xl font-bold text-slate-800 font-heading"></h3><p id="poesie-author" class="text-xs text-slate-500"></p></div><button type="button" onclick="poetryClose()" class="text-slate-400 hover:text-slate-700 text-xl" aria-label="Fermer">✕</button></div>
+                <div id="poesie-menu" class="mt-4 space-y-3"><p class="text-sm text-slate-600">Choisis une activité :</p><div class="grid gap-2"><button class="poetry-option" onclick="startPoetryMode('puzzle')">🧩 Puzzle de vers <span class="block text-xs font-normal text-slate-500">Remets les vers dans l’ordre</span></button><button class="poetry-option" onclick="startPoetryMode('fill')">🕳️ Poème effaçable <span class="block text-xs font-normal text-slate-500">Complète les mots cachés, niveau après niveau</span></button><button class="poetry-option" onclick="startPoetryMode('karaoke')">🎤 Karaoké pas-à-pas <span class="block text-xs font-normal text-slate-500">Écoute et suis chaque vers</span></button><button class="poetry-option" onclick="startPoetryMode('quiz')">❓ Questions de compréhension <span class="block text-xs font-normal text-slate-500">Réponds à 5 questions sur le poème</span></button></div></div>
+                <div id="poesie-stage" class="mt-4"></div>
+            </div>
+        </section>
+
+        <!-- ╔══════════════════════════════╗
              ║  VUE 2 · MATHS               ║
-             ╚══════════════════════════════╝ -->
+        ╚══════════════════════════════╝ -->
         <section id="view-maths" class="hidden space-y-5">
 
             <!-- Sous-onglets : Tables · Fractions -->
@@ -496,6 +523,7 @@
         <button onclick="switchTab('dictee')"   id="nav-dictee"   class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">✍️</span><span>Dictées</span></button>
         <button onclick="switchTab('fluence')"  id="nav-fluence"  class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">📖</span><span>Fluence</span></button>
         <button onclick="switchTab('lessons')"  id="nav-lessons"  class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">📚</span><span>Leçons</span></button>
+        <button onclick="switchTab('poesie')"   id="nav-poesie"   class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">🎨</span><span>Poésies</span></button>
         <button onclick="switchTab('trophies')" id="nav-trophies" class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">🏆</span><span>Badges</span></button>
         <!-- À VENIR : conjugaison, grammaire -->
         <!-- <button class="flex flex-col items-center text-slate-300 font-bold text-xs cursor-not-allowed"><span class="text-xl">🔒</span><span>Conjugaison</span></button> -->
@@ -540,6 +568,7 @@
     </div>
 
 </div><!-- /#app -->
+  <script defer src="js/data/poesies.js?v=20260918c"></script>
   <script defer src="js/data/dictees.js?v=20260918c"></script>
   <script defer src="js/data/fluence.js?v=20260918c"></script>
   <script defer src="js/data/orthographe.js?v=20260918c"></script>
@@ -554,6 +583,7 @@
   <script defer src="js/dictee.js?v=20260918c"></script>
   <script defer src="js/fluence.js?v=20260918c"></script>
   <script defer src="js/lessons.js?v=20260918c"></script>
+  <script defer src="js/poesie.js?v=20260918c"></script>
   <script defer src="js/badges.js?v=20260918c"></script>
   <script defer src="js/statistiques.js?v=20260918c"></script>
   <script defer src="js/profiles.js?v=20260918c"></script>

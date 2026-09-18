@@ -17,11 +17,14 @@ Le jeu est publié sur [GitHub Pages](https://cecilesauder.github.io/Boss_du_CM1
 | `js/data/dictees.js` | 26 thèmes de dictées et leur vocabulaire enrichi. |
 | `js/data/orthographe.js` + `js/data/orthographe-questions.js` | 26 exercices d’orthographe contextualisés, avec 30 questions par thème. |
 | `js/data/fluence.js` | 26 textes de fluence ; modifier le champ `text` de `FLUENCE_WEEKS` pour remplacer manuellement un texte. |
+| `js/data/poesies.js` + `js/poesie.js` | Poésies à apprendre : puzzle de vers, texte à trous, karaoké pas-à-pas et questions de compréhension. |
 | `js/data/lessons.js` + `js/data/lessons-questions.js` | Leçons de grammaire, conjugaison et lexique avec 10 questions par notion. |
 | `js/multiplication.js` | Quiz des tables, mode « Toutes les tables » et progression. |
 | `js/*.js` | Logique distincte pour la navigation, les profils, fractions, dictées, fluence, badges et audio. |
 
 Les progrès sont enregistrés localement dans le navigateur de chaque élève.
+
+La rubrique **Poésies** contient pour le moment la poésie 1, « À quoi ça sert, un poème ? » d’Henriette Major, à apprendre pour le jeudi 24 septembre. Son enregistrement audio est stocké dans `assets/audio/Poésie1.mp3`. Les prochaines poésies pourront être ajoutées dans le tableau `POESIES` du fichier `js/data/poesies.js`.
 
 Les 26 fiches de fluence officielles de [Stylo Plume Blog](https://www.styloplumeblog.fr/dictees-histoire-arts-cm-genially/) sont maintenant accessibles depuis chaque thème via un lien « Fiche officielle ». Les textes affichés dans l’application restent des textes de révision originaux afin de ne pas recopier une ressource éditoriale protégée.
 
