@@ -60,12 +60,6 @@ function openFluence(fid) {
   document.getElementById('fluence-icon-big').textContent        = curFluence.icon;
   document.getElementById('fluence-title-display').textContent   = curFluence.title;
   document.getElementById('fluence-word-count').textContent      = curFluence.wordCount || '?';
-  const officialLink = document.getElementById('fluence-official-ready-link');
-  if (officialLink) {
-    officialLink.href = curFluence.officialUrl || '#';
-    officialLink.classList.toggle('opacity-50', !curFluence.officialUrl);
-    officialLink.setAttribute('aria-disabled', String(!curFluence.officialUrl));
-  }
   showFluenceState('ready');
   renderFluenceHistory();
 }
