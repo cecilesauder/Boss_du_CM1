@@ -269,7 +269,7 @@
                           class="text-xs font-bold bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full">Mot 1/10</span>
                 </div>
 
-                <!-- Leçon d'orthographe associée au thème -->
+                <!-- Thème de la dictée -->
                 <div class="text-center">
                     <span id="dictee-lecon-badge"
                           class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5 rounded-full border border-amber-200">
@@ -289,7 +289,7 @@
                                     🔊 Écouter
                                 </button>
                             </div>
-                            <div class="flip-card-back font-bold text-5xl">❓</div>
+                            <div class="flip-card-back flex-col gap-3 font-bold text-5xl"><span>❓</span><button onclick="speakWord()" class="text-sm bg-white/20 text-white font-bold px-3 py-1 rounded-full border border-white/40">🔊 Réécouter</button></div>
                         </div>
                     </div>
                     <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
@@ -299,7 +299,7 @@
 
                 <!-- ÉTAPE 2 : saisie du mot -->
                 <div id="dictee-step-input" class="hidden bg-white p-5 rounded-3xl shadow-md border border-slate-200 space-y-4 text-center">
-                    <h3 class="text-lg font-bold text-slate-700 font-heading">Écris le mot caché ✍️</h3>
+                    <h3 class="text-lg font-bold text-slate-700 font-heading">Écris le mot caché ✍️ <button type="button" onclick="speakWord()" class="text-indigo-600" aria-label="Réécouter le mot">🔊</button></h3>
                     <div id="dictee-clue-display" class="flex justify-center flex-wrap gap-1 text-2xl font-bold my-2 min-h-[2.5rem]"></div>
                     <form onsubmit="validateWordInput(event)" class="space-y-3">
                         <input type="text" id="dictee-input"
@@ -310,6 +310,8 @@
                             Valider ✓
                         </button>
                     </form>
+                    <div id="dictee-input-feedback" class="min-h-[2rem] text-sm font-bold"></div>
+                    <button id="dictee-to-nature" onclick="showNaturePhase()" class="hidden w-full bg-indigo-600 text-white font-bold py-3 rounded-xl">Continuer : trouver la nature ➡️</button>
                 </div>
 
                 <!-- ÉTAPE 3 : nature grammaticale -->
@@ -330,10 +332,13 @@
                         </button>
                         <button onclick="checkGrammarNature('invariables')"
                                 class="grammar-btn p-4 rounded-xl border-2 border-slate-200 font-bold text-slate-700 hover:border-amber-400 hover:bg-amber-50 transition active:scale-95">
-                            🔒 Invariable
+                            🔒 Mot invariable
                         </button>
                     </div>
+                    <div id="dictee-nature-feedback" class="min-h-[2rem] text-sm font-bold"></div>
+                    <button id="dictee-next-word" onclick="advanceToNextWord()" class="hidden w-full bg-indigo-600 text-white font-bold py-3 rounded-xl">Mot suivant ➡️</button>
                 </div>
+                <div id="dictee-session-progress" class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm"></div>
             </div>
         </section>
 

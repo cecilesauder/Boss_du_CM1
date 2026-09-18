@@ -13,6 +13,7 @@ let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
     streak: 0, lastVisitDate: null,
     mathStats:     {},  // { "7x8": { fastCount, totalCorrect, bestTime, times[] } }
     dicteeStats:   {},  // { "le mot": 0|1|2|3 }
+    dicteeWritten: {},  // { "le mot": number of correctly written attempts }
     fluenceStats:  {},  // { "f1": [ { date, seconds, wpm } ] }
     lessonStats:   {},  // { "g1": { correct, attempts } }
     geometryStats: {correct:0, wrong:0},
@@ -32,6 +33,7 @@ function getProfile() {
   if (!p.lessonStats)    p.lessonStats = {};
   if (!p.geometryStats)  p.geometryStats = {correct:0, wrong:0};
   if (!p.dailyStats)     p.dailyStats = {};
+  if (!p.dicteeWritten)  p.dicteeWritten = {};
   if (!p.fractionStats)  p.fractionStats = { correct:0, wrong:0, series:0, bestSeries:0 };
   return p;
 }

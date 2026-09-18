@@ -53,3 +53,11 @@ Chaque thème de fluence affiche maintenant le lien « Fiche officielle » dans 
 Le test de la version publique a révélé que les boutons d’orthographe et de français étaient visibles mais ne réagissaient pas : les valeurs étaient injectées directement dans des attributs `onclick`, ce qui rendait le JavaScript HTML invalide. Les boutons utilisent maintenant une valeur encodée dans `data-answer`, décodée au clic.
 
 Après correction, le test navigateur local a validé **26/26 exercices d’orthographe** et **15/15 exercices de français**. Pour chaque exercice, le clic sur la bonne réponse affiche le feedback « Bravo », désactive les choix et enregistre la progression.
+
+## Amélioration du parcours d’apprentissage des dictées
+
+Pour le thème « La tour Eiffel », l’exercice « Le pluriel des noms » s’ouvre maintenant seul, sans la liste des 26 thèmes. Il contient 30 questions couvrant les pluriels réguliers, les noms en -al/-aux, les noms en -eau, les noms en -ail, les mots en -x et les noms qui gardent la même forme.
+
+La leçon est rappelée sous les choix et la progression de la série est affichée. Un bouton « Question suivante » permet de contrôler le rythme. Le test navigateur a confirmé `30` questions, le masquage de la liste, le rappel de la règle et le passage à la question 2 après une réponse.
+
+Dans le jeu de mémorisation, le badge orange affiche maintenant le thème (« La tour Eiffel ») plutôt que la leçon d’orthographe. Le bouton d’écoute reste disponible sur le recto, le verso et pendant la saisie. Une réponse écrite correcte affiche un feedback avant de proposer la nature grammaticale ; une nature correcte affiche également un feedback et un bouton « Mot suivant ». Les mots correctement écrits sont sauvegardés immédiatement, et le panneau « Où j’en suis » classe les mots en acquis, en cours et à découvrir.

@@ -1,5 +1,6 @@
 let curWeek=null, sessionWords=[], wordIdx=0, mistakes=0;
 let orthoCurrent = null;
+let orthoQuestionIndex = 0, orthoQuestions = [], orthoCorrect = 0, orthoAnswered = false;
 
 const WORD_NATURE_LABELS = {
   noms: 'Nom',
@@ -69,7 +70,7 @@ function startDictee(weekId) {
   wordIdx   = 0;
   document.getElementById('dictee-weeks-list').classList.add('hidden');
   document.getElementById('dictee-game-container').classList.remove('hidden');
-  document.getElementById('dictee-lecon-badge').textContent = `📚 ${curWeek.orthoLecon}`;
+  document.getElementById('dictee-lecon-badge').textContent = `${curWeek.icon} ${curWeek.title}`;
   launchWordCycle();
 }
 
@@ -85,9 +86,13 @@ function startOrthoExercise(weekId) {
   if (!exercise) return;
   setGameActive('orthographe');
   orthoCurrent = exercise;
+  orthoQuestions = exercise.questions || [{sentence:exercise.sentence, options:exercise.options, answer:exercise.answer, explanation:exercise.explanation}];
+  orthoQuestionIndex = 0;
+  orthoCorrect = 0;
+  orthoAnswered = false;
   const week = DICTEE_WEEKS.find(item => item.id === weekId);
   const box = document.getElementById('ortho-exercise-container');
-  document.getElementById('dictee-weeks-list').classList.remove('hidden');
+  document.getElementById('dictee-weeks-list').classList.add('hidden');
   document.getElementById('dictee-game-container').classList.add('hidden');
   box.classList.remove('hidden');
   box.innerHTML = `
@@ -95,39 +100,72 @@ function startOrthoExercise(weekId) {
       <div class="text-left"><div class="text-xs font-bold text-amber-600">${week?.icon || '📝'} ${week?.title || ''}</div><h3 class="text-xl font-bold text-slate-800 font-heading">${exercise.title}</h3></div>
       <button onclick="closeOrthoExercise()" class="text-slate-400 text-xl" aria-label="Fermer">✕</button>
     </div>
+    <div id="ortho-question-progress" class="text-xs font-bold text-indigo-600"></div>
     <p class="text-sm text-slate-500">${exercise.instruction}</p>
-    <p class="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-lg font-bold text-slate-800">${exercise.sentence}</p>
-    <div class="grid gap-2" id="ortho-options">
-      ${exercise.options.map(option => `<button type="button" class="ortho-option w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 font-bold text-slate-700 transition active:scale-95" data-answer="${encodeURIComponent(option)}" onclick="answerOrthoExercise(this, decodeURIComponent(this.dataset.answer))">${option}</button>`).join('')}
-    </div>
-    <div id="ortho-feedback" class="min-h-[2.5rem] text-sm font-bold"></div>`;
+    <div id="ortho-question-box"></div>
+    <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-3 text-left text-sm text-indigo-900"><strong>📚 À retenir :</strong> ${exercise.rule || ''}</div>
+    <div id="ortho-notion-progress" class="text-xs text-slate-500"></div>`;
+  renderOrthoQuestion();
   box.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function renderOrthoQuestion() {
+  const q = orthoQuestions[orthoQuestionIndex];
+  const box = document.getElementById('ortho-question-box');
+  if (!q || !box) return;
+  orthoAnswered = false;
+  document.getElementById('ortho-question-progress').textContent = `Question ${orthoQuestionIndex + 1}/${orthoQuestions.length} · ${orthoCorrect} bonnes réponses`;
+  box.innerHTML = `<p class="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-lg font-bold text-slate-800">${q.sentence}</p><div class="grid gap-2 mt-3" id="ortho-options">${q.options.map(option => `<button type="button" class="ortho-option w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 font-bold text-slate-700 transition active:scale-95" data-answer="${encodeURIComponent(option)}" onclick="answerOrthoExercise(this, decodeURIComponent(this.dataset.answer))">${option}</button>`).join('')}</div><div id="ortho-feedback" class="min-h-[2.5rem] text-sm font-bold"></div><button id="ortho-next-button" type="button" onclick="nextOrthoQuestion()" class="hidden w-full bg-indigo-600 text-white font-bold py-3 rounded-xl">Question suivante ➡️</button>`;
+  updateOrthoNotionProgress();
+}
+
+function updateOrthoNotionProgress() {
+  const el = document.getElementById('ortho-notion-progress');
+  if (el && orthoCurrent) el.textContent = `Progression sur cette notion : ${orthoCorrect}/${Math.max(1, orthoQuestionIndex + (orthoAnswered ? 1 : 0))} bonnes réponses dans cette série`;
+}
+
+function nextOrthoQuestion() {
+  if (!orthoAnswered) return;
+  if (orthoQuestionIndex < orthoQuestions.length - 1) { orthoQuestionIndex++; renderOrthoQuestion(); }
+  else {
+    const feedback = document.getElementById('ortho-feedback');
+    if (feedback) feedback.textContent = `🎉 Série terminée : ${orthoCorrect}/${orthoQuestions.length} bonnes réponses.`;
+    document.getElementById('ortho-next-button')?.classList.add('hidden');
+    updateOrthoNotionProgress();
+  }
 }
 
 function answerOrthoExercise(button, answer) {
   const feedback = document.getElementById('ortho-feedback');
-  if (!feedback || !orthoCurrent) return;
+  const q = orthoQuestions[orthoQuestionIndex];
+  if (!feedback || !q || orthoAnswered) return;
+  orthoAnswered = true;
   document.querySelectorAll('.ortho-option').forEach(option => option.disabled = true);
-  if (answer === orthoCurrent.answer) {
+  if (answer === q.answer) {
+    orthoCorrect++;
     button.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-700');
     feedback.className = 'min-h-[2.5rem] text-sm font-bold text-emerald-600';
-    feedback.textContent = `✅ Bravo ! ${orthoCurrent.explanation}`;
+    feedback.textContent = `✅ Bravo ! ${q.explanation}`;
     getProfile().points += 10;
     dailyRecord('orthographe', 10);
     saveData();
   } else {
     button.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-700');
     feedback.className = 'min-h-[2.5rem] text-sm font-bold text-rose-600';
-    feedback.textContent = `❌ Pas encore. La bonne réponse était « ${orthoCurrent.answer} ». ${orthoCurrent.explanation}`;
-    const correct = [...document.querySelectorAll('.ortho-option')].find(option => option.textContent === orthoCurrent.answer);
+    feedback.textContent = `❌ Pas encore. La bonne réponse était « ${q.answer} ». ${q.explanation}`;
+    const correct = [...document.querySelectorAll('.ortho-option')].find(option => option.textContent === q.answer);
     if (correct) correct.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-700');
   }
+  document.getElementById('ortho-next-button')?.classList.remove('hidden');
+  updateOrthoNotionProgress();
 }
 
 function closeOrthoExercise() {
   setGameActive(null);
   const box = document.getElementById('ortho-exercise-container');
   if (box) box.classList.add('hidden');
+  document.getElementById('dictee-weeks-list').classList.remove('hidden');
+  renderDicteeList();
 }
 
 function launchWordCycle() {
@@ -146,7 +184,14 @@ function launchWordCycle() {
   document.getElementById('dictee-step-memo').classList.remove('hidden');
   document.getElementById('dictee-step-input').classList.add('hidden');
   document.getElementById('dictee-step-nature').classList.add('hidden');
+  document.getElementById('dictee-input-feedback').textContent = '';
+  document.getElementById('dictee-nature-feedback').textContent = '';
+  document.getElementById('dictee-to-nature').classList.add('hidden');
+  document.getElementById('dictee-next-word').classList.add('hidden');
+  document.querySelector('#dictee-step-input form button[type="submit"]').disabled = false;
+  document.querySelectorAll('.grammar-btn').forEach(button => button.disabled = false);
   document.getElementById('dictee-card').classList.remove('flipped');
+  renderDictationProgress();
 
   // Barre de mémorisation (2 secondes)
   let bar = document.getElementById('dictee-timer-bar');
@@ -198,6 +243,12 @@ function showInputPhase() {
   inp.focus();
 }
 
+function showNaturePhase() {
+  document.getElementById('dictee-step-input').classList.add('hidden');
+  document.getElementById('dictee-step-nature').classList.remove('hidden');
+  document.getElementById('dictee-nature-feedback').textContent = '';
+}
+
 function validateWordInput(e) {
   e.preventDefault();
   let inp    = document.getElementById('dictee-input');
@@ -205,12 +256,19 @@ function validateWordInput(e) {
   let typed  = inp.value.trim().toLowerCase().replace(/['']/g,"'");
   if (typed === target) {
     playTone(523, .15);
-    document.getElementById('dictee-step-input').classList.add('hidden');
-    document.getElementById('dictee-step-nature').classList.remove('hidden');
+    const profile = getProfile();
+    profile.dicteeWritten[target] = (profile.dicteeWritten[target] || 0) + 1;
+    saveData();
+    document.getElementById('dictee-input-feedback').className = 'min-h-[2rem] text-sm font-bold text-emerald-600';
+    document.getElementById('dictee-input-feedback').textContent = '✅ Bonne réponse ! Le mot est correctement écrit.';
+    document.getElementById('dictee-to-nature').classList.remove('hidden');
+    document.querySelector('#dictee-step-input form button[type="submit"]').disabled = true;
   } else {
     mistakes++;
     playTone(200, .2);
     inp.classList.add('border-rose-500','animate-shake');
+    document.getElementById('dictee-input-feedback').className = 'min-h-[2rem] text-sm font-bold text-rose-600';
+    document.getElementById('dictee-input-feedback').textContent = '❌ Ce n’est pas encore le bon mot. Réessaie !';
     setTimeout(()=>{ inp.classList.remove('border-rose-500','animate-shake'); inp.value=''; }, 500);
   }
 }
@@ -227,21 +285,11 @@ function checkGrammarNature(selected) {
     p.points += earned;
     dailyRecord('dictees', earned);
     saveData();
-    wordIdx++;
-    if (wordIdx < sessionWords.length) {
-      launchWordCycle();
-    } else {
-      // Fin de la série
-      let allDone = curWeek.words.every(w=>(p.dicteeStats[w.word]||0)>=3);
-      if (allDone) {
-        awardBadge(`week_${curWeek.id}`, `Expert : ${curWeek.title} ${curWeek.icon}`,
-          `Tous les mots de « ${curWeek.title} » sont maîtrisés !`, 'dictee');
-      } else {
-        showCelebration('✍️', 'Série terminée !',
-          "Bien joué ! Continue de t'entraîner pour maîtriser tous les mots.", null);
-      }
-      exitDicteeGame();
-    }
+    document.getElementById('dictee-nature-feedback').className = 'min-h-[2rem] text-sm font-bold text-emerald-600';
+    document.getElementById('dictee-nature-feedback').textContent = '✅ Bonne réponse ! Mot mémorisé.';
+    renderDictationProgress();
+    document.querySelectorAll('.grammar-btn').forEach(button => button.disabled = true);
+    document.getElementById('dictee-next-word').classList.remove('hidden');
   } else {
     // Mauvaise nature — petite animation sans bloquer
     playTone(200, .2);
@@ -249,7 +297,30 @@ function checkGrammarNature(selected) {
       b.classList.add('animate-shake');
       setTimeout(()=>b.classList.remove('animate-shake'), 400);
     });
+    document.getElementById('dictee-nature-feedback').className = 'min-h-[2rem] text-sm font-bold text-rose-600';
+    document.getElementById('dictee-nature-feedback').textContent = '❌ Ce n’est pas la bonne nature. Réessaie !';
   }
+}
+
+function renderDictationProgress() {
+  const box = document.getElementById('dictee-session-progress');
+  if (!box || !curWeek) return;
+  const p = getProfile();
+  const learned = curWeek.words.filter(word => (p.dicteeStats[word.word] || 0) >= 3);
+  const learning = curWeek.words.filter(word => { const score = p.dicteeStats[word.word] || 0; return (score > 0 && score < 3) || (!score && p.dicteeWritten[word.word]); });
+  const fresh = curWeek.words.filter(word => !(p.dicteeStats[word.word] || 0) && !p.dicteeWritten[word.word]);
+  const chips = (words, cls) => words.map(word => `<span class="${cls} inline-flex items-center rounded-full px-2 py-1 text-[11px] font-bold">${word.word}</span>`).join('') || '<span class="text-xs text-slate-400">Aucun mot dans cette catégorie</span>';
+  box.innerHTML = `<div class="flex items-center justify-between mb-3"><h3 class="font-bold text-slate-700">📊 Où j’en suis</h3><span class="text-xs font-bold text-indigo-600">${learned.length}/${curWeek.words.length} maîtrisés</span></div><div class="space-y-3"><div><p class="text-[11px] font-bold text-emerald-600 mb-1">✅ Acquis (${learned.length})</p><div class="flex flex-wrap gap-1">${chips(learned,'bg-emerald-100 text-emerald-800')}</div></div><div><p class="text-[11px] font-bold text-amber-600 mb-1">⏳ En cours (${learning.length})</p><div class="flex flex-wrap gap-1">${chips(learning,'bg-amber-100 text-amber-800')}</div></div><div><p class="text-[11px] font-bold text-slate-500 mb-1">🆕 À découvrir (${fresh.length})</p><div class="flex flex-wrap gap-1">${chips(fresh,'bg-slate-100 text-slate-600')}</div></div></div>`;
+}
+
+function advanceToNextWord() {
+  wordIdx++;
+  if (wordIdx < sessionWords.length) return launchWordCycle();
+  const p = getProfile();
+  const allDone = curWeek.words.every(w => (p.dicteeStats[w.word] || 0) >= 3);
+  if (allDone) awardBadge(`week_${curWeek.id}`, `Expert : ${curWeek.title} ${curWeek.icon}`, `Tous les mots de « ${curWeek.title} » sont maîtrisés !`, 'dictee');
+  else showCelebration('✍️', 'Série terminée !', 'Bien joué ! Continue de t’entraîner pour maîtriser tous les mots.', null);
+  exitDicteeGame();
 }
 
 // ═══════════════════════════════════════════════════════════════

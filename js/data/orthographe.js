@@ -28,3 +28,41 @@ const ORTHO_EXERCISES = {
   semaine25: { title:'Les noms en -tion et en -ssion', instruction:'Choisis la bonne terminaison.', sentence:'La ___ du peintre est très précise.', options:['passion','pacion','passionne'], answer:'passion', explanation:'Le nom « passion » s’écrit avec -ssion.' },
   semaine26: { title:'L’accord du verbe : cas particuliers', instruction:'Choisis la bonne forme du verbe.', sentence:'Les Trois Grâces ___ dans la sculpture.', options:['dansent','danse','danses'], answer:'dansent', explanation:'Le sujet « Les Trois Grâces » est au pluriel : le verbe prend -ent.' }
 };
+
+
+ORTHO_EXERCISES.semaine1.questions = [
+  {sentence:'Les ___ brillent dans le ciel.', options:['ampoules','ampoulent','ampoule'], answer:'ampoules', explanation:'Un nom prend généralement -s au pluriel.'},
+  {sentence:'Les ___ sont accrochées au plafond.', options:['lampe','lampes','lampent'], answer:'lampes', explanation:'« lampe » prend un -s au pluriel.'},
+  {sentence:'Les ___ traversent la rivière.', options:['chevaux','chevals','cheval'], answer:'chevaux', explanation:'Les noms en -al font souvent leur pluriel en -aux.'},
+  {sentence:'Les ___ courent dans le pré.', options:['animal','animaux','animals'], answer:'animaux', explanation:'« animal » devient « animaux ».'},
+  {sentence:'Les ___ sont rangés dans la classe.', options:['journal','journaux','journals'], answer:'journaux', explanation:'« journal » devient « journaux ».'},
+  {sentence:'Les ___ poussent dans le jardin.', options:['choux','chous','chou'], answer:'choux', explanation:'« chou » prend -x au pluriel.'},
+  {sentence:'Les ___ sont délicieux.', options:['gâteaux','gâteaus','gâteau'], answer:'gâteaux', explanation:'Les noms en -eau prennent généralement -x.'},
+  {sentence:'Les ___ sont posés sur la table.', options:['bateaux','bateaus','bateau'], answer:'bateaux', explanation:'« bateau » devient « bateaux ».'},
+  {sentence:'Les ___ sont ouverts ce matin.', options:['magasins','magazin','magasine'], answer:'magasins', explanation:'« magasin » prend -s.'},
+  {sentence:'Les ___ décorent la maison.', options:['vitraux','vitrails','vitrail'], answer:'vitraux', explanation:'« vitrail » devient « vitraux ».'},
+  {sentence:'Les ___ sont nombreux dans le musée.', options:['travails','travaux','travail'], answer:'travaux', explanation:'« travail » devient « travaux ».'},
+  {sentence:'Les ___ sont posés près de la porte.', options:['tapis','tapi','tapiss'], answer:'tapis', explanation:'« tapis » garde la même forme au pluriel.'},
+  {sentence:'Les ___ sont très beaux.', options:['prix','prixes','pri'], answer:'prix', explanation:'« prix » garde la même forme au pluriel.'},
+  {sentence:'Les ___ sont alignés dans la cour.', options:['nez','nes','nezs'], answer:'nez', explanation:'« nez » garde la même forme au pluriel.'},
+  {sentence:'Les ___ visitent le château.', options:['touristes','touriste','touristent'], answer:'touristes', explanation:'« touriste » prend -s.'},
+  {sentence:'Les ___ sont suspendus au plafond.', options:['lustres','lustre','lustrent'], answer:'lustres', explanation:'« lustre » prend -s.'},
+  {sentence:'Les ___ sont plantés dans le parc.', options:['arbres','arbre','arbrent'], answer:'arbres', explanation:'« arbre » prend -s.'},
+  {sentence:'Les ___ de Paris sont célèbres.', options:['monument','monuments','monumentes'], answer:'monuments', explanation:'« monument » prend -s.'},
+  {sentence:'Les ___ sont accrochées aux fenêtres.', options:['rideaux','rideaus','rideau'], answer:'rideaux', explanation:'« rideau » devient « rideaux ».'},
+  {sentence:'Les ___ sont rangés dans les classeurs.', options:['documents','document','documentent'], answer:'documents', explanation:'« document » prend -s.'},
+  {sentence:'Les ___ sont dessinés dans le cahier.', options:['animaux','animalx','animales'], answer:'animaux', explanation:'« animal » devient « animaux ».'},
+  {sentence:'Les ___ sont accrochés au portail.', options:['chevaux','chevals','chevalx'], answer:'chevaux', explanation:'« cheval » devient « chevaux ».'},
+  {sentence:'Les ___ sont posés dans les vitrines.', options:['bijoux','bijous','bijou'], answer:'bijoux', explanation:'« bijou » prend -x.'},
+  {sentence:'Les ___ sont accrochés aux murs.', options:['tableaux','tableaus','tableau'], answer:'tableaux', explanation:'« tableau » devient « tableaux ».'},
+  {sentence:'Les ___ sont organisés pendant la fête.', options:['bal','bals','baux'], answer:'bals', explanation:'« bal » prend généralement -s.'},
+  {sentence:'Les ___ sont installés dans la salle.', options:['chaises','chaise','chaisent'], answer:'chaises', explanation:'« chaise » prend -s.'},
+  {sentence:'Les ___ éclairent la rue.', options:['panneaux','panneaus','panneau'], answer:'panneaux', explanation:'« panneau » devient « panneaux ».'},
+  {sentence:'Les ___ sont rangés dans le cartable.', options:['cahiers','cahier','cahies'], answer:'cahiers', explanation:'« cahier » prend -s.'},
+  {sentence:'Les ___ ont de grandes oreilles.', options:['souris','souries','sourit'], answer:'souris', explanation:'« souris » garde la même forme au pluriel.'},
+  {sentence:'Les ___ nagent dans l’aquarium.', options:['poissons','poison','poisson'], answer:'poissons', explanation:'« poisson » prend -s.'}
+];
+ORTHO_EXERCISES.semaine1.rule = 'Pour former le pluriel, on ajoute souvent -s. Certains noms prennent -x, deviennent -aux ou gardent la même forme : des chevaux, des journaux, des tapis, des prix.';
+Object.values(ORTHO_EXERCISES).forEach(exercise => {
+  if (!exercise.questions) exercise.questions = [{sentence:exercise.sentence, options:exercise.options, answer:exercise.answer, explanation:exercise.explanation}];
+});
