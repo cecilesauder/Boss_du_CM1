@@ -15,6 +15,7 @@ let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
     dicteeStats:   {},  // { "le mot": 0|1|2|3 }
     dicteeWritten: {},  // { "le mot": number of correctly written attempts }
     fluenceStats:  {},  // { "f1": [ { date, seconds, wpm } ] }
+    poetryStats:   { completed: [], points: 0 },
     lessonStats:   {},  // { "g1": { correct, attempts } }
     geometryStats: {correct:0, wrong:0},
     dailyStats:    {},  // { "YYYY-MM-DD": { seconds, points, ... } }
@@ -30,6 +31,8 @@ function getProfile() {
   if (!p.streak)         p.streak = 0;
   if (!p.lastVisitDate)  p.lastVisitDate = null;
   if (!p.fluenceStats)   p.fluenceStats = {};
+  if (!p.poetryStats)    p.poetryStats = { completed: [], points: 0 };
+  if (!Array.isArray(p.poetryStats.completed)) p.poetryStats.completed = [];
   if (!p.lessonStats)    p.lessonStats = {};
   if (!p.geometryStats)  p.geometryStats = {correct:0, wrong:0};
   if (!p.dailyStats)     p.dailyStats = {};
@@ -55,7 +58,8 @@ function todayKey() { return new Date().toISOString().slice(0,10); }
 function dailyRecord(type, points=0) {
   const p = getProfile();
   const key = todayKey();
-  if (!p.dailyStats[key]) p.dailyStats[key] = {seconds:0, points:0, maths:0, fractions:0, dictees:0, fluence:0, lessons:0, orthographe:0};
+  if (!p.dailyStats[key]) p.dailyStats[key] = {seconds:0, points:0, maths:0, fractions:0, dictees:0, fluence:0, lessons:0, orthographe:0, poesie:0};
+  if (!Object.prototype.hasOwnProperty.call(p.dailyStats[key], 'poesie')) p.dailyStats[key].poesie = 0;
   if (type && Object.prototype.hasOwnProperty.call(p.dailyStats[key], type)) p.dailyStats[key][type]++;
   p.dailyStats[key].points += points;
   return p.dailyStats[key];

@@ -23,7 +23,9 @@ function allBadges() {
     {id:'geo_5', title:'Géomètre en herbe 📐', desc:'5 réponses de géométrie', cat:'maths'},
     {id:'geo_20', title:'Géomètre expert 📏', desc:'20 réponses de géométrie', cat:'maths'},
     {id:'lessons_5', title:'Curieux du français 📚', desc:'5 notions de français réussies', cat:'time'},
-    {id:'lessons_15', title:'Expert du français 🎓', desc:'Les 15 notions de français réussies', cat:'time'}
+    {id:'lessons_15', title:'Expert du français 🎓', desc:'Les 15 notions de français réussies', cat:'time'},
+    {id:'poetry_1', title:'Premier poème appris 🎨', desc:'Une activité de poésie terminée', cat:'poesie'},
+    {id:'poetry_4', title:'Poète accompli ✨', desc:'Les quatre activités de poésie terminées', cat:'poesie'}
   ];
 }
 
