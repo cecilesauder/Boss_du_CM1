@@ -19,8 +19,9 @@ function advanceFluenceSentence(event) {
     fluSentenceIndex++;
     renderCurrentFluenceSentence();
   } else {
-    const progress = document.getElementById('fluence-sentence-progress');
-    if (progress) progress.textContent = 'Dernière phrase · Clique encore ou termine la lecture';
+    // La dernière phrase remplace l'ancien bouton « J'ai fini ».
+    // Il n'y a donc plus de validation manuelle permettant de sauter le texte.
+    stopFluenceTimer();
   }
 }
 
@@ -100,6 +101,8 @@ document.getElementById('fluence-text-display')?.addEventListener('keydown', eve
 });
 
 function stopFluenceTimer() {
+  // Évite de comptabiliser deux fois la même lecture en cas de double-clic.
+  if (!fluTimer) return;
   if (fluTimer) { clearInterval(fluTimer); fluTimer=null; }
   let p   = getProfile();
   let wc  = curFluence.wordCount || 0;
