@@ -1,4 +1,5 @@
 let curWeek=null, sessionWords=[], wordIdx=0, mistakes=0;
+let motusWeek=null, motusPool=[], motusTarget=null, motusAttempts=0, motusFinished=false;
 let orthoCurrent = null;
 let orthoQuestionIndex = 0, orthoQuestions = [], orthoCorrect = 0, orthoAnswered = false;
 
@@ -43,6 +44,10 @@ function renderDicteeList() {
                   class="bg-amber-100 text-amber-800 font-bold py-2 px-3 rounded-xl text-xs border border-amber-200 transition active:scale-95">
             📝 Exercice
           </button>
+          <button onclick="startMotus('${w.id}')"
+                  class="bg-rose-100 text-rose-700 font-bold py-2 px-3 rounded-xl text-xs border border-rose-200 transition active:scale-95">
+            🎯 Motus
+          </button>
           <button onclick="startDictee('${w.id}')"
                   class="${done?'bg-emerald-500 hover:bg-emerald-600':'bg-indigo-600 hover:bg-indigo-700'} text-white font-bold py-2 px-3 rounded-xl text-sm shadow transition active:scale-95">
             ${done?'✅':'▶'}
@@ -63,6 +68,7 @@ function renderDicteeList() {
 function startDictee(weekId) {
   setGameActive('dictees');
   hideOrthoExercise();
+  document.getElementById('motus-game-container')?.classList.add('hidden');
   curWeek   = DICTEE_WEEKS.find(w=>w.id===weekId);
   const p = getProfile();
   sessionWords = curWeek.words.filter(word => (p.dicteeStats[word.word] || 0) < 3).sort(() => Math.random() - 0.5);
@@ -78,6 +84,7 @@ function exitDicteeGame() {
   setGameActive(null);
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
   document.getElementById('dictee-game-container').classList.add('hidden');
+  document.getElementById('motus-game-container')?.classList.add('hidden');
   document.getElementById('dictee-weeks-list').classList.remove('hidden');
   renderDicteeList();
 }
@@ -95,6 +102,7 @@ function startOrthoExercise(weekId) {
   const box = document.getElementById('ortho-exercise-container');
   document.getElementById('dictee-weeks-list').classList.add('hidden');
   document.getElementById('dictee-game-container').classList.add('hidden');
+  document.getElementById('motus-game-container')?.classList.add('hidden');
   box.classList.remove('hidden');
   box.innerHTML = `
     <div class="flex items-center justify-between gap-3">
@@ -335,3 +343,164 @@ function advanceToNextWord() {
 // ═══════════════════════════════════════════════════════════════
 //  ████ FLUENCE ████
 // ═══════════════════════════════════════════════════════════════
+
+
+// ═══════════════════════════════════════════════════════════════
+//  ████ MOTUS DES MOTS DE DICTÉE ████
+// ═══════════════════════════════════════════════════════════════
+
+function motusNormalize(value) {
+  return String(value || '').trim().toLocaleLowerCase('fr-FR').replace(/[’]/g, "'");
+}
+
+function motusEscape(value) {
+  return String(value).replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[character]));
+}
+
+/* Compare les lettres comme dans Motus : vert = bien placé, jaune = présent ailleurs. */
+function evaluateMotusGuess(guess, target) {
+  const result = Array.from(guess, (character, index) => ({ character, status: 'wrong', index }));
+  const remaining = {};
+  const isLetter = character => /[a-zà-ÿ]/i.test(character);
+  Array.from(target).forEach((character, index) => {
+    if (isLetter(character) && character !== ' ') remaining[character] = (remaining[character] || 0) + 1;
+    if (!isLetter(character) && guess[index] === character) result[index].status = 'fixed';
+  });
+  result.forEach((cell, index) => {
+    if (cell.status === 'fixed') return;
+    const expected = target[index];
+    if (cell.character === expected && isLetter(cell.character)) {
+      cell.status = 'correct';
+      remaining[cell.character] = Math.max(0, (remaining[cell.character] || 0) - 1);
+    }
+  });
+  result.forEach(cell => {
+    if (cell.status !== 'wrong' || !isLetter(cell.character)) return;
+    if ((remaining[cell.character] || 0) > 0) {
+      cell.status = 'present';
+      remaining[cell.character]--;
+    }
+  });
+  return result;
+}
+
+function startMotus(weekId) {
+  const week = DICTEE_WEEKS.find(item => item.id === weekId);
+  if (!week) return;
+  setGameActive('dictees');
+  motusWeek = week;
+  motusPool = [...week.words].sort(() => Math.random() - 0.5);
+  document.getElementById('dictee-weeks-list').classList.add('hidden');
+  document.getElementById('dictee-game-container').classList.add('hidden');
+  hideOrthoExercise();
+  const box = document.getElementById('motus-game-container');
+  box.classList.remove('hidden');
+  motusNextWord();
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function motusNextWord() {
+  if (!motusPool.length) return finishMotus();
+  motusTarget = motusPool.shift();
+  motusAttempts = 0;
+  motusFinished = false;
+  renderMotus();
+}
+
+function renderMotus() {
+  const box = document.getElementById('motus-game-container');
+  const target = motusNormalize(motusTarget.word);
+  const firstLetter = Array.from(target)[0] || '';
+  box.innerHTML = `
+    <div class="flex justify-between items-center gap-3">
+      <button type="button" onclick="exitMotusGame()" class="text-slate-400 hover:text-slate-700 text-xl font-bold" aria-label="Fermer Motus">✕</button>
+      <span class="text-xs font-bold bg-rose-100 text-rose-700 px-3 py-1.5 rounded-full">🎯 Motus</span>
+    </div>
+    <div class="text-center">
+      <div class="text-xs font-bold text-rose-600">${motusWeek.icon} ${motusWeek.title}</div>
+      <h3 class="text-2xl font-bold text-slate-800 font-heading mt-1">Trouve le mot !</h3>
+      <p class="text-sm text-slate-500 mt-1">Mot ${motusWeek.words.length - motusPool.length}/${motusWeek.words.length} · 6 essais maximum</p>
+    </div>
+    <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3 text-sm text-rose-900">
+      La première lettre est donnée. <strong class="text-lg">${motusEscape(firstLetter.toLocaleUpperCase('fr-FR'))}</strong>
+      <div class="flex flex-wrap gap-2 justify-center mt-2 text-xs font-bold"><span class="motus-legend motus-correct">Bien placée</span><span class="motus-legend motus-present">Présente mais mal placée</span></div>
+    </div>
+    <div id="motus-history" class="space-y-2 min-h-16" aria-live="polite"></div>
+    <form onsubmit="submitMotusGuess(event)" class="space-y-2">
+      <label for="motus-input" class="sr-only">Écris ta proposition</label>
+      <input id="motus-input" type="text" autocomplete="off" spellcheck="false" class="w-full border-2 border-slate-300 rounded-xl px-4 py-3 text-center text-lg font-bold focus:border-rose-500 outline-none" placeholder="Écris le mot…">
+      <button id="motus-submit" type="submit" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 rounded-xl">Proposer</button>
+    </form>
+    <div id="motus-feedback" class="min-h-8 text-sm font-bold" aria-live="polite"></div>
+    <button id="motus-next" type="button" onclick="motusNextWord()" class="hidden w-full bg-indigo-600 text-white font-bold py-3 rounded-xl">Mot suivant ➡️</button>`;
+  document.getElementById('motus-input').focus();
+}
+
+function renderMotusRow(guess, evaluation) {
+  const row = document.createElement('div');
+  row.className = 'motus-row';
+  Array.from(guess).forEach((character, index) => {
+    const cell = document.createElement('span');
+    cell.className = `motus-cell motus-${evaluation[index]?.status || 'wrong'}`;
+    cell.textContent = character === ' ' ? '·' : character.toLocaleUpperCase('fr-FR');
+    cell.setAttribute('aria-label', evaluation[index]?.status || 'absente');
+    row.appendChild(cell);
+  });
+  document.getElementById('motus-history').appendChild(row);
+}
+
+function submitMotusGuess(event) {
+  event.preventDefault();
+  if (motusFinished) return;
+  const input = document.getElementById('motus-input');
+  const guess = motusNormalize(input.value);
+  const target = motusNormalize(motusTarget.word);
+  const feedback = document.getElementById('motus-feedback');
+  if (!guess) return;
+  if (Array.from(guess).length !== Array.from(target).length) {
+    feedback.className = 'min-h-8 text-sm font-bold text-amber-600';
+    feedback.textContent = `Ton essai doit comporter ${Array.from(target).length} caractères, espaces compris.`;
+    return;
+  }
+  motusAttempts++;
+  const evaluation = evaluateMotusGuess(guess, target);
+  renderMotusRow(guess, evaluation);
+  input.value = '';
+  if (guess === target) {
+    motusFinished = true;
+    const profile = getProfile();
+    const earned = motusAttempts === 1 ? 20 : motusAttempts <= 3 ? 15 : 10;
+    profile.points += earned;
+    dailyRecord('dictees', earned);
+    saveData();
+    feedback.className = 'min-h-8 text-sm font-bold text-emerald-600';
+    feedback.textContent = `🎉 Bravo ! Mot trouvé en ${motusAttempts} essai${motusAttempts > 1 ? 's' : ''} (+${earned} points).`;
+    document.getElementById('motus-submit').disabled = true;
+    document.getElementById('motus-next').classList.remove('hidden');
+  } else if (motusAttempts >= 6) {
+    motusFinished = true;
+    feedback.className = 'min-h-8 text-sm font-bold text-rose-600';
+    feedback.textContent = `Le mot était « ${motusTarget.word} ». On continue avec un autre mot !`;
+    document.getElementById('motus-submit').disabled = true;
+    document.getElementById('motus-next').classList.remove('hidden');
+  } else {
+    feedback.className = 'min-h-8 text-sm font-bold text-slate-500';
+    feedback.textContent = `Encore ${6 - motusAttempts} essai${6 - motusAttempts > 1 ? 's' : ''}.`;
+    input.focus();
+  }
+}
+
+function finishMotus() {
+  const feedback = document.getElementById('motus-feedback');
+  if (feedback) feedback.textContent = '🌟 Tous les mots de cette dictée ont été proposés !';
+  const next = document.getElementById('motus-next');
+  if (next) next.classList.add('hidden');
+  showCelebration('🎯', 'Partie de Motus terminée !', `Tu as joué avec les ${motusWeek.words.length} mots de « ${motusWeek.title} ».`, null);
+}
+
+function exitMotusGame() {
+  setGameActive(null);
+  document.getElementById('motus-game-container').classList.add('hidden');
+  document.getElementById('dictee-weeks-list').classList.remove('hidden');
+  renderDicteeList();
+}
