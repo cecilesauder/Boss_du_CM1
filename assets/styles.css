@@ -52,3 +52,7 @@ body { font-family: 'Quicksand', sans-serif; user-select: none; -webkit-user-sel
 .motus-legend{display:inline-flex;align-items:center;padding:.25rem .55rem;border:1px solid;font-size:.7rem}
 .motus-legend.motus-correct{background:#fee2e2;border-color:#fca5a5;color:#b91c1c;border-radius:.35rem}
 .motus-legend.motus-present{background:#fef9c3;border-color:#fde047;color:#854d0e;border-radius:999px}
+.motus-input-grid{display:flex;justify-content:center;gap:.3rem;flex-wrap:wrap;margin:.25rem 0 .5rem}
+.motus-input-cell{width:2.35rem;height:2.7rem;border:2px solid #cbd5e1;border-radius:.35rem;background:#fff;color:#334155;font-weight:900;font-size:1.25rem}
+.motus-input-cell:focus{outline:none;border-color:#f43f5e;box-shadow:0 0 0 3px rgba(244,63,94,.15)}
+.motus-input-cell.motus-input-fixed{background:#fee2e2;border-color:#f87171;color:#b91c1c}

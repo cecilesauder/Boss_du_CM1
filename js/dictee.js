@@ -1,5 +1,5 @@
 let curWeek=null, sessionWords=[], wordIdx=0, mistakes=0;
-let motusWeek=null, motusPool=[], motusTarget=null, motusAttempts=0, motusFinished=false;
+let motusWeek=null, motusPool=[], motusTarget=null, motusAttempts=0, motusFinished=false, motusCurrentGuess='';
 let orthoCurrent = null;
 let orthoQuestionIndex = 0, orthoQuestions = [], orthoCorrect = 0, orthoAnswered = false;
 
@@ -350,7 +350,7 @@ function advanceToNextWord() {
 // ═══════════════════════════════════════════════════════════════
 
 function motusNormalize(value) {
-  return String(value || '').trim().toLocaleLowerCase('fr-FR').replace(/[’]/g, "'");
+  return String(value || '').trim().toLocaleLowerCase('fr-FR').replace(/[’]/g, "'").replace(/^(l'|le |la |les |un |une |des |du |de |d')/i, '').replace(/[^a-zà-ÿ]/gi, '');
 }
 
 function motusEscape(value) {
@@ -411,6 +411,7 @@ function renderMotus() {
   const box = document.getElementById('motus-game-container');
   const target = motusNormalize(motusTarget.word);
   const firstLetter = Array.from(target)[0] || '';
+  motusCurrentGuess = firstLetter;
   box.innerHTML = `
     <div class="flex justify-between items-center gap-3">
       <button type="button" onclick="exitMotusGame()" class="text-slate-400 hover:text-slate-700 text-xl font-bold" aria-label="Fermer Motus">✕</button>
@@ -419,7 +420,7 @@ function renderMotus() {
     <div class="text-center">
       <div class="text-xs font-bold text-rose-600">${motusWeek.icon} ${motusWeek.title}</div>
       <h3 class="text-2xl font-bold text-slate-800 font-heading mt-1">Trouve le mot !</h3>
-      <p class="text-sm text-slate-500 mt-1">Mot ${motusWeek.words.length - motusPool.length}/${motusWeek.words.length} · 6 essais maximum</p>
+      <p class="text-sm text-slate-500 mt-1">Mot ${motusWeek.words.length - motusPool.length}/${motusWeek.words.length} · ${target.length} lettres · 6 essais maximum</p>
     </div>
     <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3 text-sm text-rose-900">
       La première lettre est donnée. <strong class="text-lg">${motusEscape(firstLetter.toLocaleUpperCase('fr-FR'))}</strong>
@@ -428,12 +429,44 @@ function renderMotus() {
     <div id="motus-history" class="space-y-2 min-h-16" aria-live="polite"></div>
     <form onsubmit="submitMotusGuess(event)" class="space-y-2">
       <label for="motus-input" class="sr-only">Écris ta proposition</label>
-      <input id="motus-input" type="text" autocomplete="off" spellcheck="false" class="w-full border-2 border-slate-300 rounded-xl px-4 py-3 text-center text-lg font-bold focus:border-rose-500 outline-none" placeholder="Écris le mot…">
+      <div id="motus-input-grid" class="motus-input-grid" role="group" aria-label="Proposition lettre par lettre"></div>
+      <input id="motus-input" type="text" autocomplete="off" spellcheck="false" maxlength="${target.length}" class="sr-only" aria-hidden="true">
       <button id="motus-submit" type="submit" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 rounded-xl">Proposer</button>
     </form>
     <div id="motus-feedback" class="min-h-8 text-sm font-bold" aria-live="polite"></div>
     <button id="motus-next" type="button" onclick="motusNextWord()" class="hidden w-full bg-indigo-600 text-white font-bold py-3 rounded-xl">Mot suivant ➡️</button>`;
-  document.getElementById('motus-input').focus();
+  document.getElementById('motus-input').addEventListener('input', updateMotusInput);
+  renderMotusInputGrid();
+}
+
+function renderMotusInputGrid() {
+  const grid = document.getElementById('motus-input-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  Array.from(motusNormalize(motusTarget.word)).forEach((character, index) => {
+    const cell = document.createElement('button');
+    cell.type = 'button';
+    cell.className = `motus-input-cell ${index === 0 ? 'motus-input-fixed' : ''}`;
+    cell.textContent = motusCurrentGuess[index]?.toLocaleUpperCase('fr-FR') || '';
+    cell.disabled = index === 0;
+    cell.onclick = () => focusMotusKeyboard();
+    grid.appendChild(cell);
+  });
+  const input = document.getElementById('motus-input');
+  input.value = motusCurrentGuess;
+  focusMotusKeyboard();
+}
+
+function focusMotusKeyboard() {
+  document.getElementById('motus-input')?.focus();
+}
+
+function updateMotusInput(event) {
+  const target = motusNormalize(motusTarget.word);
+  const typed = motusNormalize(event.target.value).slice(1, target.length);
+  motusCurrentGuess = (Array.from(target)[0] || '') + typed;
+  event.target.value = motusCurrentGuess;
+  renderMotusInputGrid();
 }
 
 function renderMotusRow(guess, evaluation) {
@@ -466,6 +499,8 @@ function submitMotusGuess(event) {
   const evaluation = evaluateMotusGuess(guess, target);
   renderMotusRow(guess, evaluation);
   input.value = '';
+  motusCurrentGuess = Array.from(target)[0] || '';
+  renderMotusInputGrid();
   if (guess === target) {
     motusFinished = true;
     const profile = getProfile();

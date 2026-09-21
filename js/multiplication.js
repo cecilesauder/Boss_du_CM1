@@ -2,6 +2,7 @@
 //  ████ MATHS — MULTIPLICATIONS ████
 // ═══════════════════════════════════════════════════════════════
 let curTable = 7, curFact = null, qStart = 0, isMixedMode = false, mathAnswered = false;
+let selectedTables = new Set([7]);
 
 function isFactMastered(table, factor) {
   let p = getProfile();
@@ -28,21 +29,32 @@ function generateMathTableButtons() {
   if (!c) return;
   c.innerHTML = '';
 
-  let allBtn = document.createElement('button');
-  allBtn.className = `col-span-5 p-3 rounded-2xl font-bold flex items-center justify-between gap-2 transition active:scale-95 border-2 ${isMixedMode ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-indigo-50 border-indigo-200 text-indigo-700 hover:border-indigo-400'}`;
-  allBtn.onclick = selectAllTables;
-  allBtn.innerHTML = `<span class="text-left"><span class="block text-base font-heading">🎲 Toutes les tables</span><span class="block text-[10px] opacity-80">Mélange de 1 × 1 à 10 × 10</span></span><span class="text-lg font-heading">${allTablesProgress()}%</span>`;
-  c.appendChild(allBtn);
+  const controls = document.createElement('div');
+  controls.className = 'col-span-5 flex items-center justify-between gap-2 bg-indigo-50 border border-indigo-200 rounded-2xl p-3';
+  controls.innerHTML = `<div class="text-left"><span class="block text-base font-heading text-indigo-800">🎲 Choisis tes tables</span><span class="block text-[10px] text-indigo-600">${selectedTables.size}/10 sélectionnées</span></div><div class="flex gap-2"><button type="button" class="math-select-all bg-white border border-indigo-300 text-indigo-700 rounded-xl px-2 py-1 text-[11px] font-bold">Tout sélectionner</button><button type="button" class="math-select-none bg-white border border-indigo-300 text-indigo-700 rounded-xl px-2 py-1 text-[11px] font-bold">Tout désélectionner</button></div>`;
+  controls.querySelector('.math-select-all').onclick = () => { selectedTables = new Set(Array.from({length:10}, (_,i)=>i+1)); generateMathTableButtons(); };
+  controls.querySelector('.math-select-none').onclick = () => { selectedTables.clear(); generateMathTableButtons(); };
+  c.appendChild(controls);
 
   for (let i = 1; i <= 10; i++) {
     let mastered = isTableMastered(i);
     let pct = tableProgress(i);
     let b = document.createElement('button');
-    b.className = `p-2 rounded-2xl font-bold flex flex-col items-center justify-center gap-0.5 transition active:scale-95 border-2 ${!isMixedMode && curTable === i ? 'bg-indigo-50 border-indigo-400 text-indigo-700' : mastered ? 'bg-emerald-50 border-emerald-400 text-emerald-700' : 'bg-white border-slate-200 text-slate-700 hover:border-indigo-300'}`;
-    b.onclick = () => selectTable(i);
-    b.innerHTML = `<span class="text-[9px] text-slate-400">Table</span><span class="text-xl font-heading font-extrabold">${i}</span><span class="text-[9px]">${mastered ? '⚡ OK' : pct + '%'}</span>`;
+    const checked = selectedTables.has(i);
+    b.className = `p-2 rounded-2xl font-bold flex flex-col items-center justify-center gap-0.5 transition active:scale-95 border-2 ${checked ? 'bg-indigo-50 border-indigo-400 text-indigo-700' : mastered ? 'bg-emerald-50 border-emerald-400 text-emerald-700' : 'bg-white border-slate-200 text-slate-700 hover:border-indigo-300'}`;
+    b.setAttribute('aria-pressed', checked ? 'true' : 'false');
+    b.onclick = () => toggleTableSelection(i);
+    b.innerHTML = `<span class="text-[9px] text-slate-400">${checked ? '✓ Choisie' : 'Table'}</span><span class="text-xl font-heading font-extrabold">${i}</span><span class="text-[9px]">${mastered ? '⚡ OK' : pct + '%'}</span>`;
     c.appendChild(b);
   }
+
+  const launch = document.createElement('button');
+  launch.type = 'button';
+  launch.className = 'col-span-5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-2xl transition active:scale-95 disabled:bg-slate-300 disabled:cursor-not-allowed';
+  launch.disabled = selectedTables.size === 0;
+  launch.textContent = selectedTables.size ? `🚀 Commencer avec ${selectedTables.size} table${selectedTables.size > 1 ? 's' : ''}` : 'Choisis au moins une table';
+  launch.onclick = openSelectedTablesQuiz;
+  c.appendChild(launch);
 }
 
 function tableProgress(t) {
@@ -65,16 +77,26 @@ function openMathQuiz() {
 }
 
 function selectTable(t) {
-  curTable = t;
-  isMixedMode = false;
-  document.getElementById('mastery-table-num').textContent = `de ${t}`;
-  generateMathTableButtons();
-  openMathQuiz();
+  selectedTables = new Set([t]);
+  openSelectedTablesQuiz();
 }
 
 function selectAllTables() {
-  isMixedMode = true;
-  document.getElementById('mastery-table-num').textContent = 'globale';
+  selectedTables = new Set(Array.from({length:10}, (_,i)=>i+1));
+  openSelectedTablesQuiz();
+}
+
+function toggleTableSelection(table) {
+  if (selectedTables.has(table)) selectedTables.delete(table);
+  else selectedTables.add(table);
+  generateMathTableButtons();
+}
+
+function openSelectedTablesQuiz() {
+  if (!selectedTables.size) return;
+  isMixedMode = selectedTables.size > 1;
+  curTable = [...selectedTables][0];
+  document.getElementById('mastery-table-num').textContent = selectedTables.size > 1 ? 'sélectionnées' : `de ${curTable}`;
   generateMathTableButtons();
   openMathQuiz();
 }
@@ -86,24 +108,34 @@ function closeMathQuiz() {
 }
 
 function chooseFact() {
-  if (!isMixedMode) return { a:curTable, b:Math.floor(Math.random() * 10) + 1 };
   const needsPractice = [];
-  for (let a = 1; a <= 10; a++) {
+  const tables = selectedTables.size ? [...selectedTables] : [curTable];
+  for (const a of tables) {
     for (let b = 1; b <= 10; b++) if (!isFactMastered(a, b)) needsPractice.push({a, b});
   }
   if (needsPractice.length) return needsPractice[Math.floor(Math.random() * needsPractice.length)];
-  return { a:Math.floor(Math.random() * 10) + 1, b:Math.floor(Math.random() * 10) + 1 };
+  return null;
 }
 
 function nextQuestion() {
   if (document.getElementById('math-quiz-container').classList.contains('hidden')) return;
   mathAnswered = false;
-  const {a, b} = chooseFact();
+  const fact = chooseFact();
+  if (!fact) {
+    curFact = null;
+    mathAnswered = true;
+    document.getElementById('math-question').textContent = '🎉 Toutes les multiplications choisies sont acquises !';
+    document.getElementById('math-options').innerHTML = '';
+    document.getElementById('speed-feedback').textContent = 'Choisis d’autres tables pour continuer à t’entraîner.';
+    document.getElementById('speed-feedback').className = 'text-sm font-bold text-emerald-600 min-h-[1.5rem]';
+    return;
+  }
+  const {a, b} = fact;
   const ans = a * b;
   curFact = { a, b, ans, key:`${a}x${b}` };
-  document.getElementById('quiz-table-title').textContent = isMixedMode ? 'Toutes les tables 🎲' : `Table de ${a}`;
+  document.getElementById('quiz-table-title').textContent = isMixedMode ? 'Tables sélectionnées 🎲' : `Table de ${a}`;
   document.getElementById('math-question').textContent = `${a} × ${b} = ?`;
-  document.getElementById('speed-feedback').textContent = isMixedMode ? 'Un calcul au hasard : à toi de jouer ! ⚡' : 'Réponds vite ! ⚡';
+  document.getElementById('speed-feedback').textContent = isMixedMode ? 'Un calcul parmi tes tables : à toi de jouer ! ⚡' : 'Réponds vite ! ⚡';
   document.getElementById('speed-feedback').className = 'text-sm font-bold text-slate-400 min-h-[1.5rem]';
 
   let p = getProfile(), stat = p.mathStats[curFact.key] || {fastCount:0,bestTime:null};
