@@ -46,6 +46,8 @@ Le module de multiplication permet de **sélectionner plusieurs tables**, de tou
 
 Les calculs **6 × 7** et **7 × 6** déclenchent une très courte secousse visuelle qui ne bloque pas les clics. Une bonne réponse donnée dans le temps affiche brièvement le GIF associé sans masquer la zone de jeu. Lorsque les tables de 6 et de 7 sont toutes les deux maîtrisées, le badge spécial **Duo 6 × 7** est débloqué avec ce GIF comme visuel.
 
+Le fichier [`VALIDATION_CORRIGES_EXERCICES.md`](VALIDATION_CORRIGES_EXERCICES.md) recense les 780 questions d’orthographe et les 150 questions de grammaire, conjugaison et lexique avec leurs options et leurs réponses actuellement enregistrées. Il contient également une proposition de remplacement pour O4, construite à partir de la fiche photographiée. Ce relevé doit être validé avant toute modification des banques d’exercices.
+
 ## Source des mots de dictée
 
 Les listes de mots ont été remplacées par les listes officielles publiées par l’[École de Meyssiez](https://ecole-meyssiez.web.ac-grenoble.fr/vie-de-la-classe-ce2-cm1-cm2/mots-apprendre-pour-les-dictees-en-lien-avec-lhistoire-de-lart). Les catégories sont conservées : noms, verbes, adjectifs/participes passés et mots invariables.
