@@ -110,7 +110,7 @@ out.push('');
 out.push('- **O4 actuel** : plusieurs questions utilisent des mots ou des réponses qui ne correspondent pas à la règle « s / ss ». La série de remplacement proposée en tête du document corrige ce point.');
 out.push('- **O9, question 4** : « gran__e » doit donner « grande », mais les options actuelles ne proposent pas la lettre `d`.');
 out.push('- **O8, questions 2 à 4** : les phrases « bou__er », « li__e » et « na__t » relèvent respectivement de `g`, `gn` et `î`, et ne peuvent pas être corrigées avec les options actuellement proposées.');
-out.push('- **L3, question 3** : dans « art, artiste, artisan », l’ordre alphabétique attendu est à vérifier, car « artisan » et « artiste » sont inversés dans la réponse actuelle.');
+out.push('- **L1, question 3** : dans « art, artiste, artisan », l’ordre alphabétique attendu est à vérifier, car « artisan » et « artiste » sont inversés dans la réponse actuelle.');
 out.push('- **L4, question 2** : « terrien » et « terrassement » peuvent tous les deux être considérés comme appartenant à la famille de « terre » ; la question doit être reformulée pour n’avoir qu’une seule réponse.');
 out.push('');
 out.push('## Validation attendue');
