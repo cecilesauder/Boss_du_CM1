@@ -19,7 +19,8 @@ Le jeu est publié sur [GitHub Pages](https://cecilesauder.github.io/Boss_du_CM1
 | `js/data/fluence.js` | 26 textes de fluence ; modifier le champ `text` de `FLUENCE_WEEKS` pour remplacer manuellement un texte. |
 | `js/data/poesies.js` + `js/poesie.js` | Poésies à apprendre : puzzle de vers, texte à trous, karaoké pas-à-pas et questions de compréhension. |
 | `js/data/lessons.js` + `js/data/lessons-questions.js` | Leçons de grammaire, conjugaison et lexique avec 10 questions par notion. |
-| `js/multiplication.js` | Quiz des tables, sélection de plusieurs tables et progression des calculs maîtrisés. |
+| `js/multiplication.js` | Quiz des tables, sélection de plusieurs tables, progression et réactions spéciales 6 × 7. |
+| `assets/gifs/table-6-7.gif` | GIF de récompense affiché après une bonne réponse rapide à 6 × 7 ou 7 × 6. |
 | `js/avatar.js` | Avatar non genré, personnalisation, garde-robe et achats avec les points. |
 | `js/*.js` | Logique distincte pour la navigation, les profils, fractions, dictées, fluence, badges et audio. |
 
@@ -42,6 +43,8 @@ Le profil possède également un sélecteur d’icône. L’élève peut choisir
 Les prix de la boutique vont actuellement de 60 à 100 points pour les petits accessoires, expressions et styles, avec quelques éléments intermédiaires à 70–100 points. Cette échelle a été choisie pour qu’une séance d’environ dix minutes d’exercices scolaires permette normalement de débloquer au moins un nouvel élément. Les récompenses sont reliées aux activités de maths, fractions, dictées, orthographe, fluence, leçons, géométrie et poésie ; les achats ne donnent pas de points et ne peuvent jamais faire passer le solde sous zéro.
 
 Le module de multiplication permet de **sélectionner plusieurs tables**, de tout sélectionner ou de tout désélectionner. Chaque calcul validé trois fois en moins de deux secondes est considéré comme acquis et ne revient plus dans les questions de la sélection en cours.
+
+Les calculs **6 × 7** et **7 × 6** déclenchent une très courte secousse visuelle qui ne bloque pas les clics. Une bonne réponse donnée dans le temps affiche brièvement le GIF associé sans masquer la zone de jeu. Lorsque les tables de 6 et de 7 sont toutes les deux maîtrisées, le badge spécial **Duo 6 × 7** est débloqué avec ce GIF comme visuel.
 
 ## Source des mots de dictée
 

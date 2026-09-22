@@ -9,6 +9,7 @@ function allBadges() {
     {id:'streak_7',  title:'1 semaine entière 🏅',    desc:'7 jours de suite !',           cat:'time'},
     // Tables de multiplication (une par table)
     ...[1,2,3,4,5,6,7,8,9,10].map(n=>({id:`table_${n}`, title:`Maître du ${n} ⚡`, desc:`Table de ${n} validée en <2s !`, cat:'maths'})),
+    {id:'tables_6_7', title:'Duo 6 × 7 🤖', desc:'Les tables de 6 et de 7 sont maîtrisées', cat:'maths', image:'assets/gifs/table-6-7.gif'},
     {id:'tables_all', title:'Super maître des tables 🎲', desc:'Toutes les tables de 1 à 10 validées', cat:'maths'},
     // Dictées (un par thème)
     ...DICTEE_WEEKS.map(w=>({id:`week_${w.id}`, title:`Expert : ${w.title} ${w.icon}`, desc:`Tous les mots de « ${w.title} » maîtrisés`, cat:'dictee'})),
@@ -61,7 +62,7 @@ function renderBadgesGrid() {
     let div = document.createElement('div');
     div.className = `p-4 rounded-2xl border flex flex-col items-center text-center gap-1 ${unlocked?'bg-amber-50 border-amber-300':'bg-slate-100 border-slate-200 opacity-50'}`;
     div.innerHTML = `
-      <div class="text-3xl">${unlocked?'🎖️':'🔒'}</div>
+      ${unlocked && b.image ? `<img class="badge-special-gif" src="${b.image}" alt="${b.title}">` : `<div class="text-3xl">${unlocked?'🎖️':'🔒'}</div>`}
       <div class="font-bold text-xs font-heading ${unlocked?'text-amber-800':'text-slate-400'}">${b.title}</div>
       <div class="text-[10px] ${unlocked?'text-amber-600':'text-slate-400'}">${b.desc}</div>
       ${date?`<div class="text-[9px] text-amber-300">${date}</div>`:''}`;

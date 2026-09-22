@@ -4,6 +4,26 @@
 let curTable = 7, curFact = null, qStart = 0, isMixedMode = false, mathAnswered = false;
 let selectedTables = new Set([7]);
 
+// Clin d’œil « six seven » : l’animation reste très courte et ne capture
+// aucun clic grâce à pointer-events:none dans la feuille de styles.
+function triggerSixSevenShake() {
+  const quiz = document.getElementById('math-quiz-container');
+  if (!quiz) return;
+  quiz.classList.remove('math-shake');
+  void quiz.offsetWidth;
+  quiz.classList.add('math-shake');
+  window.setTimeout(() => quiz.classList.remove('math-shake'), 280);
+}
+
+function showMathRewardGif() {
+  const reward = document.getElementById('math-reward-gif');
+  if (reward) {
+    reward.classList.remove('hidden');
+    window.clearTimeout(window.mathRewardTimer);
+    window.mathRewardTimer = window.setTimeout(() => reward.classList.add('hidden'), 1150);
+  }
+}
+
 function isFactMastered(table, factor) {
   let p = getProfile();
   return (p.mathStats[`${table}x${factor}`] || {fastCount:0}).fastCount >= 3;
@@ -135,6 +155,7 @@ function nextQuestion() {
   curFact = { a, b, ans, key:`${a}x${b}` };
   document.getElementById('quiz-table-title').textContent = isMixedMode ? 'Tables sélectionnées 🎲' : `Table de ${a}`;
   document.getElementById('math-question').textContent = `${a} × ${b} = ?`;
+  if ((a === 6 && b === 7) || (a === 7 && b === 6)) triggerSixSevenShake();
   document.getElementById('speed-feedback').textContent = isMixedMode ? 'Un calcul parmi tes tables : à toi de jouer ! ⚡' : 'Réponds vite ! ⚡';
   document.getElementById('speed-feedback').className = 'text-sm font-bold text-slate-400 min-h-[1.5rem]';
 
@@ -174,6 +195,8 @@ function handleMathAnswer(value) {
 
   if (value === curFact.ans) {
     playTone(600, .12);
+    const isSixSeven = (curFact.a === 6 && curFact.b === 7) || (curFact.a === 7 && curFact.b === 6);
+    if (isSixSeven && elapsed <= SPEED_MS) showMathRewardGif();
     stat.totalCorrect++;
     stat.times.push(Math.round(elapsed));
     if (stat.times.length > 10) stat.times.shift();
@@ -197,6 +220,9 @@ function handleMathAnswer(value) {
     generateMathTableButtons();
     if (!isMixedMode && isTableMastered(curTable)) {
       awardBadge(`table_${curTable}`, `Maître du ${curTable} ⚡`, `Table de ${curTable} validée en moins de ${SPEED_MS/1000}s !`, 'maths');
+    }
+    if (isTableMastered(6) && isTableMastered(7)) {
+      awardBadge('tables_6_7', 'Duo 6 × 7 🤖', 'Les tables de 6 et de 7 sont toutes les deux maîtrisées !', 'maths');
     }
     if (isMixedMode && areAllTablesMastered()) {
       awardBadge('tables_all', 'Super maître des tables 🎲', 'Toutes les tables de 1 à 10 sont validées !', 'maths');
