@@ -16,6 +16,7 @@ function closeCelebrationModal() { document.getElementById('celebration-modal').
 // ═══════════════════════════════════════════════════════════════
 function openProfileModal()  { document.getElementById('profile-modal').classList.remove('hidden'); renderProfilesList(); }
 function closeProfileModal() { document.getElementById('profile-modal').classList.add('hidden'); }
+const PROFILE_ICONS = [...AVATARS, '🧑'];
 
 function renderProfilesList() {
   let c = document.getElementById('profiles-list');
@@ -29,7 +30,7 @@ function renderProfilesList() {
     btn.onclick   = () => selectProfile(p.id);
     btn.onkeydown = (event) => { if (event.key === 'Enter' || event.key === ' ') selectProfile(p.id); };
     btn.innerHTML = `
-      <span>${p.avatar} ${p.name}</span>
+      <span class="flex items-center gap-2"><select class="profile-icon-select bg-white border rounded-lg px-1 py-0.5 text-lg" aria-label="Choisir l’icône de ${p.name}">${PROFILE_ICONS.map(icon => `<option value="${icon}" ${p.avatar === icon ? 'selected' : ''}>${icon === '🧑' ? '🧑 Tête de mon avatar' : icon}</option>`).join('')}</select><span>${p.name}</span></span>
       <div class="flex gap-1.5 text-xs">
         <span class="bg-white px-2 py-0.5 rounded-md border">${Math.floor(p.totalSeconds/60)} min</span>
         <span class="bg-yellow-100 px-2 py-0.5 rounded-md text-yellow-800">${p.points} pts</span>
@@ -39,11 +40,24 @@ function renderProfilesList() {
       event.stopPropagation();
       deleteProfile(p.id);
     };
+    btn.querySelector('.profile-icon-select').onchange = (event) => {
+      event.stopPropagation();
+      setProfileIcon(p.id, event.target.value);
+    };
+    btn.querySelector('.profile-icon-select').onclick = event => event.stopPropagation();
     c.appendChild(btn);
   });
 }
 
 function selectProfile(id) { appData.activeProfileId=id; saveData(); closeProfileModal(); switchTab('home'); }
+
+function setProfileIcon(id, icon) {
+  const profile = appData.profiles.find(item => item.id === id);
+  if (!profile) return;
+  profile.avatar = icon;
+  saveData();
+  renderProfilesList();
+}
 
 function deleteProfile(id) {
   if (appData.profiles.length <= 1) {
