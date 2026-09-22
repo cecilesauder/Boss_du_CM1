@@ -1217,7 +1217,55 @@ La fiche photographiée comporte six mots au niveau 1 et cinq phrases au niveau 
 | 9 | Pour décrire le monument, dans une œuvre du musée, dans « une mer de nuages », mer est employé au sens… | 1. propre<br>**2. figuré ✅**<br>3. contraire | **figuré** |
 | 10 | Dans une phrase sur l’artiste, pendant la visite, dans « dévorer un livre », le mot dévorer est au sens… | 1. propre<br>**2. figuré ✅**<br>3. contraire | **figuré** |
 
-## C. Points de vigilance déjà repérés
+## C. Fractions, géométrie, multiplications et poésie
+
+### Fractions
+
+Le jeu des fractions génère une forme parmi cercle, carré et rectangle. La réponse attendue est toujours la fraction `n/d` de la ligne correspondante. Les trois autres propositions sont tirées aléatoirement du même inventaire.
+
+| N° | Fraction représentée | Réponse attendue |
+|---:|---:|---:|
+| 1 | 1/2 parts colorées sur 2 | **1/2** |
+| 2 | 1/3 parts colorées sur 3 | **1/3** |
+| 3 | 2/3 parts colorées sur 3 | **2/3** |
+| 4 | 1/4 parts colorées sur 4 | **1/4** |
+| 5 | 3/4 parts colorées sur 4 | **3/4** |
+| 6 | 1/6 parts colorées sur 6 | **1/6** |
+| 7 | 5/6 parts colorées sur 6 | **5/6** |
+| 8 | 2/6 parts colorées sur 6 | **2/6** |
+| 9 | 4/6 parts colorées sur 6 | **4/6** |
+| 10 | 3/8 parts colorées sur 8 | **3/8** |
+| 11 | 5/8 parts colorées sur 8 | **5/8** |
+| 12 | 1/8 parts colorées sur 8 | **1/8** |
+
+### Géométrie
+
+| N° | Question | Options | Réponse enregistrée |
+|---:|---|---|---|
+| 1 | Un rectangle mesure 6 cm de longueur et 3 cm de largeur. Quel est son périmètre ? | 1. 9 cm<br>**2. 18 cm ✅**<br>3. 36 cm<br>4. 12 cm | **18 cm** |
+| 2 | Combien de côtés possède un hexagone ? | 1. 4<br>2. 5<br>**3. 6 ✅**<br>4. 8 | **6** |
+| 3 | Un angle droit mesure… | 1. 45°<br>**2. 90° ✅**<br>3. 120°<br>4. 180° | **90°** |
+| 4 | Quel instrument utilise-t-on pour mesurer un angle ? | 1. Une règle<br>2. Un compas<br>**3. Un rapporteur ✅**<br>4. Une équerre seule | **Un rapporteur** |
+| 5 | Quel quadrilatère possède quatre côtés égaux et quatre angles droits ? | 1. Un triangle<br>**2. Un carré ✅**<br>3. Un trapèze<br>4. Un losange quelconque | **Un carré** |
+| 6 | Le symétrique d’un point situé à 4 cm d’un axe est situé à… | 1. 2 cm de l’axe<br>**2. 4 cm de l’axe ✅**<br>3. 8 cm de l’axe<br>4. À côté de l’axe | **4 cm de l’axe** |
+| 7 | Un carré a un côté de 5 cm. Quelle est son aire ? | 1. 10 cm²<br>2. 20 cm²<br>**3. 25 cm² ✅**<br>4. 30 cm² | **25 cm²** |
+| 8 | Combien de sommets possède un pavé droit ? | 1. 4<br>2. 6<br>**3. 8 ✅**<br>4. 12 | **8** |
+
+### Multiplications
+
+Les réponses sont calculées par le jeu avec `table × facteur`, pour les tables de 1 à 10 et les facteurs de 1 à 10. Le corrigé mathématique est déterministe. Les choix incorrects sont générés automatiquement à partir de la table en cours.
+
+### Poésie — questions de compréhension
+
+| N° | Question | Options | Réponse enregistrée |
+|---:|---|---|---|
+| 1 | Quel instrument est cité dans la première strophe ? | **1. Une guitare ✅**<br>2. Un violon<br>3. Un tambour | **Une guitare** |
+| 2 | Que peut remplacer un poème ? | **1. Quelques larmes ✅**<br>2. Les devoirs<br>3. Un arc-en-ciel | **Quelques larmes** |
+| 3 | Le poème est décrit comme un voyage… | 1. extérieur<br>**2. intérieur ✅**<br>3. spatial | **intérieur** |
+| 4 | À quoi sert aussi un poème à la fin ? | **1. À dire « Je t’aime » ✅**<br>2. À dormir<br>3. À courir | **À dire « Je t’aime »** |
+| 5 | Avec quoi la vie est-elle comparée ? | **1. Un tour de magicien ✅**<br>2. Une montagne<br>3. Un château | **Un tour de magicien** |
+
+## D. Points de vigilance déjà repérés
 
 - **O4 actuel** : plusieurs questions utilisent des mots ou des réponses qui ne correspondent pas à la règle « s / ss ». La série de remplacement proposée en tête du document corrige ce point.
 - **O9, question 4** : « gran__e » doit donner « grande », mais les options actuelles ne proposent pas la lettre `d`.

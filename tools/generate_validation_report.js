@@ -9,9 +9,13 @@ load('js/data/lessons.js');
 load('js/data/orthographe.js');
 load('js/data/orthographe-questions.js');
 load('js/data/lessons-questions.js');
-vm.runInContext('this.__ORTHO = ORTHO_EXERCISES; this.__LESSONS = FRENCH_LESSONS;', context);
+load('js/fractions.js');
+load('js/geometry.js');
+vm.runInContext('this.__ORTHO = ORTHO_EXERCISES; this.__LESSONS = FRENCH_LESSONS; this.__FRACS = FRAC_POOL; this.__GEOMETRY = GEOMETRY_QUESTIONS;', context);
 const ortho = context.__ORTHO;
 const lessons = Object.values(context.__LESSONS).flat();
+const fractions = context.__FRACS;
+const geometry = context.__GEOMETRY;
 const out = [];
 const esc = value => String(value ?? '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
 const answerLine = (q) => q.options.map((option, i) => option === q.answer ? `**${i+1}. ${esc(option)} ✅**` : `${i+1}. ${esc(option)}`).join('<br>');
@@ -68,7 +72,40 @@ for (const lesson of lessons) {
   (lesson.questions || []).forEach((q, i) => out.push(`| ${i+1} | ${esc(q.prompt)} | ${answerLine(q)} | **${esc(q.answer)}** |`));
   out.push('');
 }
-out.push('## C. Points de vigilance déjà repérés');
+out.push('## C. Fractions, géométrie, multiplications et poésie');
+out.push('');
+out.push('### Fractions');
+out.push('');
+out.push('Le jeu des fractions génère une forme parmi cercle, carré et rectangle. La réponse attendue est toujours la fraction `n/d` de la ligne correspondante. Les trois autres propositions sont tirées aléatoirement du même inventaire.');
+out.push('');
+out.push('| N° | Fraction représentée | Réponse attendue |');
+out.push('|---:|---:|---:|');
+fractions.forEach((f, i) => out.push(`| ${i+1} | ${f.n}/${f.d} parts colorées sur ${f.d} | **${f.n}/${f.d}** |`));
+out.push('');
+out.push('### Géométrie');
+out.push('');
+out.push('| N° | Question | Options | Réponse enregistrée |');
+out.push('|---:|---|---|---|');
+geometry.forEach((q, i) => out.push(`| ${i+1} | ${esc(q.q)} | ${q.options.map((o, j) => o === q.answer ? `**${j+1}. ${esc(o)} ✅**` : `${j+1}. ${esc(o)}`).join('<br>')} | **${esc(q.answer)}** |`));
+out.push('');
+out.push('### Multiplications');
+out.push('');
+out.push('Les réponses sont calculées par le jeu avec `table × facteur`, pour les tables de 1 à 10 et les facteurs de 1 à 10. Le corrigé mathématique est déterministe. Les choix incorrects sont générés automatiquement à partir de la table en cours.');
+out.push('');
+out.push('### Poésie — questions de compréhension');
+out.push('');
+const poetryQuiz = [
+  ['Quel instrument est cité dans la première strophe ?',['Une guitare','Un violon','Un tambour'],'Une guitare'],
+  ['Que peut remplacer un poème ?',['Quelques larmes','Les devoirs','Un arc-en-ciel'],'Quelques larmes'],
+  ['Le poème est décrit comme un voyage…',['extérieur','intérieur','spatial'],'intérieur'],
+  ['À quoi sert aussi un poème à la fin ?',['À dire « Je t’aime »','À dormir','À courir'],'À dire « Je t’aime »'],
+  ['Avec quoi la vie est-elle comparée ?',['Un tour de magicien','Une montagne','Un château'],'Un tour de magicien']
+];
+out.push('| N° | Question | Options | Réponse enregistrée |');
+out.push('|---:|---|---|---|');
+poetryQuiz.forEach((q, i) => out.push(`| ${i+1} | ${esc(q[0])} | ${q[1].map((o, j) => o === q[2] ? `**${j+1}. ${esc(o)} ✅**` : `${j+1}. ${esc(o)}`).join('<br>')} | **${esc(q[2])}** |`));
+out.push('');
+out.push('## D. Points de vigilance déjà repérés');
 out.push('');
 out.push('- **O4 actuel** : plusieurs questions utilisent des mots ou des réponses qui ne correspondent pas à la règle « s / ss ». La série de remplacement proposée en tête du document corrige ce point.');
 out.push('- **O9, question 4** : « gran__e » doit donner « grande », mais les options actuelles ne proposent pas la lettre `d`.');
