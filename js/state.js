@@ -9,6 +9,7 @@ let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
   activeProfileId: "p1",
   profiles: [{
     id: "p1", name: "Élève CM1", avatar: "🦊",
+    avatarData: {skin:'#F2C6A0',height:100,width:100,face:'smile',hair:'short',hairColor:'#3B2416',top:'tshirt',topColor:'#60A5FA',bottom:'shorts',bottomColor:'#34D399',shoes:'sneakers',shoesColor:'#334155',hat:'none',owned:['face-smile','hair-short','hair-bob','top-tshirt','bottom-shorts','shoes-sneakers','hat-none']},
     totalSeconds: 0, points: 0,
     streak: 0, lastVisitDate: null,
     mathStats:     {},  // { "7x8": { fastCount, totalCorrect, bestTime, times[] } }
@@ -38,6 +39,8 @@ function getProfile() {
   if (!p.dailyStats)     p.dailyStats = {};
   if (!p.dicteeWritten)  p.dicteeWritten = {};
   if (!p.fractionStats)  p.fractionStats = { correct:0, wrong:0, series:0, bestSeries:0 };
+  if (!p.avatarData) p.avatarData = {skin:'#F2C6A0',height:100,width:100,face:'smile',hair:'short',hairColor:'#3B2416',top:'tshirt',topColor:'#60A5FA',bottom:'shorts',bottomColor:'#34D399',shoes:'sneakers',shoesColor:'#334155',hat:'none',owned:['face-smile','hair-short','hair-bob','top-tshirt','bottom-shorts','shoes-sneakers','hat-none']};
+  if (!Array.isArray(p.avatarData.owned)) p.avatarData.owned = ['face-smile','hair-short','hair-bob','top-tshirt','bottom-shorts','shoes-sneakers','hat-none'];
   return p;
 }
 

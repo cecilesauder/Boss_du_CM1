@@ -19,7 +19,8 @@ Le jeu est publié sur [GitHub Pages](https://cecilesauder.github.io/Boss_du_CM1
 | `js/data/fluence.js` | 26 textes de fluence ; modifier le champ `text` de `FLUENCE_WEEKS` pour remplacer manuellement un texte. |
 | `js/data/poesies.js` + `js/poesie.js` | Poésies à apprendre : puzzle de vers, texte à trous, karaoké pas-à-pas et questions de compréhension. |
 | `js/data/lessons.js` + `js/data/lessons-questions.js` | Leçons de grammaire, conjugaison et lexique avec 10 questions par notion. |
-| `js/multiplication.js` | Quiz des tables, mode « Toutes les tables » et progression. |
+| `js/multiplication.js` | Quiz des tables, sélection de plusieurs tables et progression des calculs maîtrisés. |
+| `js/avatar.js` | Avatar non genré, personnalisation, garde-robe et achats avec les points. |
 | `js/*.js` | Logique distincte pour la navigation, les profils, fractions, dictées, fluence, badges et audio. |
 
 Les progrès sont enregistrés localement dans le navigateur de chaque élève.
@@ -33,6 +34,10 @@ La page **Leçons** propose quinze activités originales de niveau CM1, réparti
 La rubrique Maths comprend également un module original de **géométrie** avec des exercices sur les périmètres, les angles, les figures, la symétrie et les aires. La galerie de progression conserve un historique quotidien sur sept jours, avec le temps réellement passé dans les jeux et le détail des activités réalisées.
 
 La galerie des badges n’affiche pas de classement entre élèves. Les statistiques des sept derniers jours sont repliées par défaut et apparaissent seulement lorsque l’élève les demande.
+
+La rubrique **Mon avatar** propose une silhouette non genrée personnalisable : taille, largeur, couleur de peau, expressions, cheveux, tee-shirt, bas, chaussures et casquette. Les éléments de base sont disponibles gratuitement, tandis que des expressions, coiffures et vêtements supplémentaires peuvent être débloqués avec les points gagnés dans les activités. Les achats et la garde-robe sont enregistrés localement dans le profil de l’élève.
+
+Le module de multiplication permet de **sélectionner plusieurs tables**, de tout sélectionner ou de tout désélectionner. Chaque calcul validé trois fois en moins de deux secondes est considéré comme acquis et ne revient plus dans les questions de la sélection en cours.
 
 ## Source des mots de dictée
 

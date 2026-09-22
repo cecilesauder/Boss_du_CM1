@@ -116,6 +116,11 @@
                         <span class="text-3xl">🏆</span>
                         <div><div class="font-bold font-heading text-lg">Ma progression</div><div class="text-xs opacity-90">Stats et classement</div></div>
                     </button>
+                    <button onclick="openAvatar()"
+                            class="bg-gradient-to-br from-cyan-400 to-blue-600 text-white p-4 rounded-2xl shadow-md text-left transition transform active:scale-95 flex flex-col justify-between h-28">
+                        <span class="text-3xl">🧢</span>
+                        <div><div class="font-bold font-heading text-lg">Mon avatar</div><div class="text-xs opacity-90">Personnalise-le</div></div>
+                    </button>
                 </div>
             </div>
 
@@ -124,6 +129,26 @@
                 <h3 class="text-lg font-bold text-slate-700 mb-3 font-heading">Parcours des 26 semaines 🗺️</h3>
                 <div id="weekly-roadmap" class="space-y-2"></div>
             </div>
+        </section>
+
+        <!-- ╔══════════════════════════════╗
+             ║  VUE · AVATAR                 ║
+        ╚══════════════════════════════╝ -->
+        <section id="view-avatar" class="hidden space-y-5">
+            <div class="bg-gradient-to-r from-cyan-500 to-blue-600 rounded-3xl p-5 text-white shadow-lg">
+                <div class="flex items-start justify-between gap-3"><div><span class="bg-white/20 text-xs uppercase px-3 py-1 rounded-full font-bold">Créatif et unique</span><h2 class="text-2xl font-bold mt-2 font-heading">🧢 Mon avatar</h2><p class="text-cyan-100 text-sm mt-1">Choisis un style qui te ressemble, sans étiquette.</p></div><button onclick="switchTab('home')" class="text-white/80 text-xl" aria-label="Fermer">✕</button></div>
+            </div>
+            <div class="bg-white rounded-3xl p-4 border border-slate-200 shadow-sm text-center">
+                <div id="avatar-preview" class="min-h-[280px]"></div>
+                <div id="avatar-points" class="inline-flex bg-amber-100 text-amber-800 font-bold text-sm px-3 py-1.5 rounded-full"></div>
+            </div>
+            <div class="bg-white rounded-3xl p-4 border border-slate-200 shadow-sm space-y-4">
+                <h3 class="text-lg font-bold text-slate-800 font-heading">🎨 Silhouette et couleurs</h3>
+                <div class="grid grid-cols-2 gap-3 text-sm"><label class="font-bold text-slate-600">Taille <input id="avatar-height" type="range" min="85" max="115" value="100" oninput="updateAvatarSize('height',this.value)" class="w-full accent-cyan-500"><span id="avatar-height-value" class="text-xs text-slate-400">100%</span></label><label class="font-bold text-slate-600">Largeur <input id="avatar-width" type="range" min="85" max="120" value="100" oninput="updateAvatarSize('width',this.value)" class="w-full accent-cyan-500"><span id="avatar-width-value" class="text-xs text-slate-400">100%</span></label></div>
+                <label class="flex items-center justify-between gap-3 font-bold text-slate-600">Couleur de peau <input id="avatar-skin" type="color" value="#F2C6A0" onchange="updateAvatarColor('skin',this.value)"></label>
+            </div>
+            <div id="avatar-controls" class="bg-white rounded-3xl p-4 border border-slate-200 shadow-sm space-y-4"></div>
+            <div class="bg-white rounded-3xl p-4 border border-slate-200 shadow-sm space-y-3"><div class="flex items-center justify-between"><h3 class="text-lg font-bold text-slate-800 font-heading">🛍️ Boutique</h3><span class="text-xs text-slate-500">Achète avec tes points</span></div><div id="avatar-shop" class="space-y-2"></div></div>
         </section>
 
         <!-- ╔══════════════════════════════╗
@@ -538,6 +563,10 @@
             <h3 class="text-xl font-bold text-slate-800 font-heading text-center">👤 Profils d'Élèves</h3>
             <div id="profiles-list" class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar"></div>
             <div class="border-t pt-3 space-y-2">
+                <button onclick="closeProfileModal(); openAvatar()"
+                        class="w-full bg-cyan-100 text-cyan-800 font-bold py-2.5 rounded-xl text-sm transition active:scale-95">
+                    🧢 Personnaliser mon avatar
+                </button>
                 <input type="text" id="new-profile-name" placeholder="Prénom de l'élève…"
                        class="w-full p-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-indigo-500">
                 <button onclick="createNewProfile()"
@@ -576,8 +605,8 @@
   <script defer src="js/data/orthographe-questions.js?v=20260918c"></script>
   <script defer src="js/data/lessons.js?v=20260918c"></script>
   <script defer src="js/data/lessons-questions.js?v=20260918c"></script>
-  <script defer src="js/state.js?v=20260918c"></script>
-  <script defer src="js/navigation.js?v=20260918c"></script>
+  <script defer src="js/state.js?v=20260922a"></script>
+  <script defer src="js/navigation.js?v=20260922a"></script>
   <script defer src="js/multiplication.js?v=20260918c"></script>
   <script defer src="js/fractions.js?v=20260918c"></script>
   <script defer src="js/geometry.js?v=20260918c"></script>
@@ -587,8 +616,9 @@
   <script defer src="js/poesie.js?v=20260918c"></script>
   <script defer src="js/badges.js?v=20260918c"></script>
   <script defer src="js/statistiques.js?v=20260918c"></script>
-  <script defer src="js/profiles.js?v=20260918c"></script>
+  <script defer src="js/profiles.js?v=20260922a"></script>
   <script defer src="js/audio.js?v=20260918c"></script>
+  <script defer src="js/avatar.js?v=20260922a"></script>
   <script defer src="js/app.js?v=20260918c"></script>
 </body>
 </html>

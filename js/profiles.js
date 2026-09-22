@@ -65,6 +65,7 @@ function createNewProfile() {
   let id = 'p_'+Date.now();
   appData.profiles.push({
     id, name, avatar:AVATARS[Math.floor(Math.random()*AVATARS.length)],
+    avatarData:{skin:'#F2C6A0',height:100,width:100,face:'smile',hair:'short',hairColor:'#3B2416',top:'tshirt',topColor:'#60A5FA',bottom:'shorts',bottomColor:'#34D399',shoes:'sneakers',shoesColor:'#334155',hat:'none',owned:['face-smile','hair-short','hair-bob','top-tshirt','bottom-shorts','shoes-sneakers','hat-none']},
     totalSeconds:0, points:0, streak:0, lastVisitDate:null,
     mathStats:{}, dicteeStats:{}, fluenceStats:{}, poetryStats:{completed:[], points:0},
     fractionStats:{correct:0,wrong:0,series:0,bestSeries:0},

@@ -1,4 +1,4 @@
-const ALL_TABS = ['home','maths','dictee','fluence','lessons','poesie','trophies'];
+const ALL_TABS = ['home','maths','dictee','fluence','lessons','poesie','trophies','avatar'];
 
 function switchTab(tabId) {
   if (typeof setGameActive === 'function') setGameActive(null);
@@ -18,6 +18,7 @@ function switchTab(tabId) {
   if (tabId === 'lessons')  { switchLessonCategory(currentLessonCategory || 'grammaire'); }
   if (tabId === 'poesie')   { document.getElementById('poesie-list')?.classList.remove('hidden'); }
   if (tabId === 'trophies') renderBadgesGrid();
+  if (tabId === 'avatar')    renderAvatar();
 }
 
 // ═══════════════════════════════════════════════════════════════
