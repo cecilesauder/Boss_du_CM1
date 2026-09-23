@@ -585,7 +585,7 @@ const DICTEE_WEEKS = [
         "nature": "invariables"
       },
       {
-        "word": "il) y (a",
+        "word": "il y a",
         "nature": "invariables"
       },
       {

@@ -81,3 +81,7 @@ body { font-family: 'Quicksand', sans-serif; user-select: none; -webkit-user-sel
 .math-shake{animation:math-six-seven-shake .28s ease-in-out}.math-reward-gif{position:absolute;z-index:4;right:.7rem;top:3.2rem;pointer-events:none;animation:math-reward-pop .95s ease-out forwards}.math-reward-gif img{width:76px;height:76px;object-fit:cover;border-radius:14px;box-shadow:0 5px 16px rgba(15,23,42,.2);opacity:.94}@keyframes math-reward-pop{0%{transform:scale(.55) rotate(-8deg);opacity:0}25%{transform:scale(1.05) rotate(4deg);opacity:1}80%{transform:scale(1) rotate(0);opacity:1}100%{transform:scale(.9) translateY(-8px);opacity:0}}.badge-special-gif{width:62px;height:62px;object-fit:cover;border-radius:14px;box-shadow:0 3px 10px rgba(15,23,42,.15)}
 
 #math-quiz-container{position:relative}
+
+
+/* Signalement toujours visible, mais discret et facile à repérer. */
+.bug-report-trigger{position:fixed;right:max(.7rem,calc(50% - 13.5rem));bottom:4.75rem;z-index:45;display:flex;align-items:center;gap:.35rem;background:#dc2626;color:#fff;border:2px solid #991b1b;border-radius:999px;padding:.45rem .7rem;font-size:.68rem;font-weight:900;box-shadow:0 4px 12px rgba(127,29,29,.25);transition:transform .15s,background .15s}.bug-report-trigger:hover{background:#b91c1c;transform:translateY(-1px)}.bug-report-trigger span:first-child{font-size:1.05rem;line-height:1}.bug-report-modal{max-height:calc(100vh - 2rem);overflow-y:auto}.quick-word-option:hover{border-color:#f59e0b;background:#fffbeb}.quick-word-option:disabled{opacity:.72;cursor:not-allowed}

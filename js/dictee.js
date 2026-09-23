@@ -197,6 +197,8 @@ function launchWordCycle() {
   document.getElementById('dictee-nature-feedback').textContent = '';
   document.getElementById('dictee-to-nature').classList.add('hidden');
   document.getElementById('dictee-next-word').classList.add('hidden');
+  document.getElementById('dictee-quick-choice')?.classList.add('hidden');
+  document.getElementById('dictee-quick-options')?.replaceChildren();
   document.querySelector('#dictee-step-input form button[type="submit"]').disabled = false;
   document.querySelectorAll('.grammar-btn').forEach(button => button.disabled = false);
   document.getElementById('dictee-card').classList.remove('flipped');
@@ -272,14 +274,7 @@ function validateWordInput(e) {
   let target = sessionWords[wordIdx].word.toLowerCase().replace(/['']/g,"'");
   let typed  = inp.value.trim().toLowerCase().replace(/['']/g,"'");
   if (typed === target) {
-    playTone(523, .15);
-    const profile = getProfile();
-    profile.dicteeWritten[target] = (profile.dicteeWritten[target] || 0) + 1;
-    saveData();
-    document.getElementById('dictee-input-feedback').className = 'min-h-[2rem] text-sm font-bold text-emerald-600';
-    document.getElementById('dictee-input-feedback').textContent = '✅ Bonne réponse ! Le mot est correctement écrit.';
-    document.getElementById('dictee-to-nature').classList.remove('hidden');
-    document.querySelector('#dictee-step-input form button[type="submit"]').disabled = true;
+    completeWordSpelling(true, '✅ Bonne réponse ! Le mot est correctement écrit.');
   } else {
     mistakes++;
     playTone(200, .2);
@@ -288,6 +283,58 @@ function validateWordInput(e) {
     document.getElementById('dictee-input-feedback').textContent = '❌ Ce n’est pas encore le bon mot. Réessaie !';
     setTimeout(()=>{ inp.classList.remove('border-rose-500','animate-shake'); inp.value=''; }, 500);
   }
+}
+
+/* Le choix rapide entraîne la reconnaissance ; l’écriture reste disponible
+ * pour le rappel actif des lettres et demeure le mode le plus formateur. */
+function showQuickWordChoices() {
+  const current = sessionWords[wordIdx];
+  if (!current || !curWeek) return;
+  const target = current.word;
+  const pool = [...new Set(curWeek.words.map(item => item.word).filter(word => word !== target))];
+  const choices = [target, ...pool.sort(() => Math.random() - 0.5).slice(0, 3)].sort(() => Math.random() - 0.5);
+  const area = document.getElementById('dictee-quick-choice');
+  const options = document.getElementById('dictee-quick-options');
+  if (!area || !options) return;
+  area.classList.remove('hidden');
+  options.replaceChildren();
+  choices.forEach(choice => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'quick-word-option w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 font-bold text-slate-700 transition active:scale-95';
+    button.textContent = choice;
+    button.onclick = () => answerQuickWord(button, choice, target);
+    options.appendChild(button);
+  });
+}
+
+function answerQuickWord(button, choice, target) {
+  if (!document.getElementById('dictee-to-nature')?.classList.contains('hidden')) return;
+  if (choice === target) {
+    button.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-700');
+    completeWordSpelling(false, '✅ Bonne réponse ! Tu as reconnu le mot.');
+  } else {
+    mistakes++;
+    button.disabled = true;
+    button.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-700');
+    const feedback = document.getElementById('dictee-input-feedback');
+    feedback.className = 'min-h-[2rem] text-sm font-bold text-rose-600';
+    feedback.textContent = '❌ Ce n’est pas la bonne orthographe. Essaie encore !';
+  }
+}
+
+function completeWordSpelling(written, message) {
+  playTone(523, .15);
+  const profile = getProfile();
+  const target = sessionWords[wordIdx].word.toLowerCase().replace(/['']/g,"'");
+  if (written) profile.dicteeWritten[target] = (profile.dicteeWritten[target] || 0) + 1;
+  saveData();
+  const feedback = document.getElementById('dictee-input-feedback');
+  feedback.className = 'min-h-[2rem] text-sm font-bold text-emerald-600';
+  feedback.textContent = message;
+  document.getElementById('dictee-to-nature').classList.remove('hidden');
+  document.querySelector('#dictee-step-input form button[type="submit"]').disabled = true;
+  document.querySelectorAll('.quick-word-option').forEach(option => option.disabled = true);
 }
 
 function checkGrammarNature(selected) {

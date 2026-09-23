@@ -48,6 +48,10 @@ Les calculs **6 × 7** et **7 × 6** déclenchent une très courte secousse visu
 
 Le fichier [`VALIDATION_CORRIGES_EXERCICES.md`](VALIDATION_CORRIGES_EXERCICES.md) recense les 780 questions d’orthographe et les 150 questions de grammaire, conjugaison et lexique avec leurs options et leurs réponses actuellement enregistrées. Il contient également une proposition de remplacement pour O4, construite à partir de la fiche photographiée. Ce relevé doit être validé avant toute modification des banques d’exercices.
 
+Un bouton rouge **Signaler un bug** est disponible en permanence au-dessus de la navigation. Le signalement est conservé localement et peut être copié manuellement avec le contexte du thème et du mot concernés ; aucune information n’est envoyée automatiquement.
+
+Dans l’apprentissage des mots de dictée, le mode principal demande toujours d’écrire le mot, car ce rappel actif est le plus exigeant pour mémoriser l’orthographe. Un mode rapide **choisir parmi 4 propositions** est également disponible pour les mots déjà connus ou les révisions accélérées. Il valide ensuite la nature grammaticale comme le mode écrit.
+
 ## Source des mots de dictée
 
 Les listes de mots ont été remplacées par les listes officielles publiées par l’[École de Meyssiez](https://ecole-meyssiez.web.ac-grenoble.fr/vie-de-la-classe-ce2-cm1-cm2/mots-apprendre-pour-les-dictees-en-lien-avec-lhistoire-de-lart). Les catégories sont conservées : noms, verbes, adjectifs/participes passés et mots invariables.

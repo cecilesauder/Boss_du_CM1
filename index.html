@@ -368,6 +368,13 @@
                         </button>
                     </form>
                     <div id="dictee-input-feedback" class="min-h-[2rem] text-sm font-bold"></div>
+                    <button type="button" onclick="showQuickWordChoices()" class="w-full bg-amber-50 text-amber-800 font-bold py-2.5 rounded-xl border border-amber-200 transition active:scale-95">
+                        ⚡ Je connais déjà ce mot : choisir parmi 4 propositions
+                    </button>
+                    <div id="dictee-quick-choice" class="hidden space-y-2 text-left">
+                        <p class="text-xs text-slate-500 font-bold text-center">Choisis le mot correctement écrit :</p>
+                        <div id="dictee-quick-options" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+                    </div>
                     <button id="dictee-to-nature" onclick="showNaturePhase()" class="hidden w-full bg-indigo-600 text-white font-bold py-3 rounded-xl">Continuer : trouver la nature ➡️</button>
                 </div>
 
@@ -557,6 +564,11 @@
         <!-- <button class="flex flex-col items-center text-slate-300 font-bold text-xs cursor-not-allowed"><span class="text-xl">🔒</span><span>Conjugaison</span></button> -->
     </nav>
 
+    <!-- Bouton toujours accessible pour signaler rapidement une erreur. -->
+    <button type="button" class="bug-report-trigger" onclick="openBugReport()" aria-label="Signaler un bug">
+        <span aria-hidden="true">⚠</span><span>Signaler un bug</span>
+    </button>
+
     <!-- ═══════════════════════════════════════════════════════════
          MODAL : GESTION DES PROFILS
     ═══════════════════════════════════════════════════════════ -->
@@ -599,9 +611,27 @@
         </div>
     </div>
 
+    <!-- Les signalements restent sur l’appareil et peuvent être copiés manuellement. -->
+    <div id="bug-report-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+        <form onsubmit="saveBugReport(event)" class="bug-report-modal bg-white rounded-3xl p-5 w-full max-w-sm space-y-3">
+            <div class="flex items-center justify-between gap-3">
+                <h3 class="text-xl font-bold text-slate-800 font-heading">⚠ Signaler un bug</h3>
+                <button type="button" onclick="closeBugReport()" class="text-slate-400 text-xl font-bold" aria-label="Fermer">✕</button>
+            </div>
+            <p class="text-xs text-slate-500">Décris ce qui ne fonctionne pas. Le rapport reste enregistré sur cet appareil.</p>
+            <textarea id="bug-report-details" required rows="4" class="w-full rounded-xl border-2 border-slate-200 p-3 text-sm outline-none focus:border-rose-400" placeholder="Exemple : « il y a » est refusé alors que le mot est correctement écrit."></textarea>
+            <textarea id="bug-report-context" rows="4" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-500" readonly aria-label="Contexte automatique"></textarea>
+            <div class="flex gap-2">
+                <button type="submit" class="flex-1 bg-rose-600 text-white font-bold py-3 rounded-xl">Enregistrer</button>
+                <button id="bug-report-copy" type="button" onclick="copyBugReport()" class="hidden flex-1 bg-slate-700 text-white font-bold py-3 rounded-xl">Copier</button>
+            </div>
+            <p id="bug-report-feedback" class="min-h-[1.25rem] text-xs font-bold text-emerald-600"></p>
+        </form>
+    </div>
+
 </div><!-- /#app -->
   <script defer src="js/data/poesies.js?v=20260918c"></script>
-  <script defer src="js/data/dictees.js?v=20260918c"></script>
+  <script defer src="js/data/dictees.js?v=20260923a"></script>
   <script defer src="js/data/fluence.js?v=20260918c"></script>
   <script defer src="js/data/orthographe.js?v=20260918c"></script>
   <script defer src="js/data/orthographe-questions.js?v=20260918c"></script>
@@ -612,7 +642,7 @@
   <script defer src="js/multiplication.js?v=20260922b"></script>
   <script defer src="js/fractions.js?v=20260918c"></script>
   <script defer src="js/geometry.js?v=20260918c"></script>
-  <script defer src="js/dictee.js?v=20260918c"></script>
+  <script defer src="js/dictee.js?v=20260923a"></script>
   <script defer src="js/fluence.js?v=20260918c"></script>
   <script defer src="js/lessons.js?v=20260918c"></script>
   <script defer src="js/poesie.js?v=20260918c"></script>
@@ -622,5 +652,6 @@
   <script defer src="js/audio.js?v=20260918c"></script>
   <script defer src="js/avatar.js?v=20260922a"></script>
   <script defer src="js/app.js?v=20260918c"></script>
+  <script defer src="js/bug-report.js?v=20260923a"></script>
 </body>
 </html>
