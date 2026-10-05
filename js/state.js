@@ -19,6 +19,7 @@ let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
     poetryStats:   { completed: [], points: 0 },
     lessonStats:   {},  // { "g1": { correct, attempts } }
     geometryStats: {correct:0, wrong:0},
+    hgStats: {points:0, roles:0, castle:0},
     dailyStats:    {},  // { "YYYY-MM-DD": { seconds, points, ... } }
     fractionStats: { correct:0, wrong:0, series:0, bestSeries:0 },
     badges: []
@@ -36,6 +37,7 @@ function getProfile() {
   if (!Array.isArray(p.poetryStats.completed)) p.poetryStats.completed = [];
   if (!p.lessonStats)    p.lessonStats = {};
   if (!p.geometryStats)  p.geometryStats = {correct:0, wrong:0};
+  if (!p.hgStats)        p.hgStats = {points:0, roles:0, castle:0};
   if (!p.dailyStats)     p.dailyStats = {};
   if (!p.dicteeWritten)  p.dicteeWritten = {};
   if (!p.fractionStats)  p.fractionStats = { correct:0, wrong:0, series:0, bestSeries:0 };
@@ -61,8 +63,9 @@ function todayKey() { return new Date().toISOString().slice(0,10); }
 function dailyRecord(type, points=0) {
   const p = getProfile();
   const key = todayKey();
-  if (!p.dailyStats[key]) p.dailyStats[key] = {seconds:0, points:0, maths:0, fractions:0, dictees:0, fluence:0, lessons:0, orthographe:0, poesie:0};
+  if (!p.dailyStats[key]) p.dailyStats[key] = {seconds:0, points:0, maths:0, fractions:0, dictees:0, fluence:0, lessons:0, orthographe:0, poesie:0, histoire:0};
   if (!Object.prototype.hasOwnProperty.call(p.dailyStats[key], 'poesie')) p.dailyStats[key].poesie = 0;
+  if (!Object.prototype.hasOwnProperty.call(p.dailyStats[key], 'histoire')) p.dailyStats[key].histoire = 0;
   if (type && Object.prototype.hasOwnProperty.call(p.dailyStats[key], type)) p.dailyStats[key][type]++;
   p.dailyStats[key].points += points;
   return p.dailyStats[key];

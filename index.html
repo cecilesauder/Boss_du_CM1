@@ -121,6 +121,11 @@
                         <span class="text-3xl">🧢</span>
                         <div><div class="font-bold font-heading text-lg">Mon avatar</div><div class="text-xs opacity-90">Personnalise-le</div></div>
                     </button>
+                    <button onclick="switchTab('histoire')"
+                            class="bg-gradient-to-br from-lime-400 to-green-600 text-white p-4 rounded-2xl shadow-md text-left transition transform active:scale-95 flex flex-col justify-between h-28">
+                        <span class="text-3xl">🏰</span>
+                        <div><div class="font-bold font-heading text-lg">Histoire-Géo</div><div class="text-xs opacity-90">Programme 2026</div></div>
+                    </button>
                 </div>
             </div>
 
@@ -292,6 +297,18 @@
             </div>
         </section>
 
+        <!-- ╔══════════════════════════════════════╗
+             ║  VUE · HISTOIRE-GÉOGRAPHIE CM1 2026 ║
+             ╚══════════════════════════════════════╝ -->
+        <section id="view-histoire" class="hidden space-y-5">
+            <div class="bg-gradient-to-r from-lime-500 to-green-700 rounded-3xl p-5 text-white shadow-lg"><div class="flex items-start justify-between gap-3"><div><span class="bg-white/20 text-xs uppercase px-3 py-1 rounded-full font-bold">Rentrée 2026-2027</span><h2 class="text-2xl font-bold mt-2 font-heading">🏰 Histoire-Géographie</h2><p class="text-lime-100 text-sm mt-1">Comprendre le temps, les sociétés et les espaces du monde.</p></div><button onclick="switchTab('home')" class="text-white/80 text-xl" aria-label="Fermer">✕</button></div></div>
+            <div class="bg-white rounded-2xl p-2 shadow-sm border border-slate-200 grid grid-cols-2 gap-1"><button type="button" class="hg-tab active" data-hg-view="timeline" onclick="switchHGView('timeline')">🕰️ Frise</button><button type="button" class="hg-tab" data-hg-view="roles" onclick="switchHGView('roles')">🧒 Rôles</button><button type="button" class="hg-tab" data-hg-view="castle" onclick="switchHGView('castle')">🏰 Château</button><button type="button" class="hg-tab" data-hg-view="geography" onclick="switchHGView('geography')">🌍 Géographie</button></div>
+            <div id="hg-panel-timeline" class="space-y-4"><div class="bg-white rounded-3xl p-5 shadow-md border border-slate-200 space-y-4"><div><h3 class="text-xl font-bold text-slate-800 font-heading">Les cinq grandes périodes</h3><p class="text-sm text-slate-500">Les repères servent à situer les événements. Au CM1, le programme commence par le Moyen Âge.</p></div><div id="hg-timeline" class="hg-timeline"></div><div id="hg-period-detail" class="bg-lime-50 border border-lime-200 rounded-2xl p-4"></div></div><div class="space-y-3"><h3 class="text-lg font-bold text-slate-700 font-heading">Les thèmes d’histoire du CM1</h3><div id="hg-history-topics" class="space-y-3"></div></div></div>
+            <div id="hg-panel-roles" class="hidden space-y-4"><div class="bg-violet-50 border border-violet-200 rounded-2xl p-4 text-sm text-violet-900"><strong>Mission :</strong> découvre plusieurs vies au Moyen Âge. Compare-les avec la vie et les droits des enfants aujourd’hui : les droits de l’enfant n’étaient pas reconnus de la même façon.</div><div id="hg-role-card" class="bg-white p-5 rounded-3xl shadow-md border border-slate-200"></div></div>
+            <div id="hg-panel-castle" class="hidden space-y-4"><div class="bg-white rounded-3xl p-5 shadow-md border border-slate-200 space-y-4"><div><h3 class="text-xl font-bold text-slate-800 font-heading">Replace le vocabulaire</h3><p class="text-sm text-slate-500">Choisis une étiquette, puis touche la partie correspondante. Sur tablette, il n’est pas nécessaire de faire glisser.</p></div><div id="hg-castle-progress" class="text-xs font-bold text-indigo-600"></div><div id="hg-castle-labels" class="flex flex-wrap gap-2"></div><div class="hg-castle-map" aria-label="Schéma textuel d’un château fort"><div id="hg-castle-zones" class="grid gap-2"></div></div><div id="hg-castle-feedback" class="min-h-8 text-sm font-bold"></div><button type="button" onclick="resetHGCastle()" class="w-full bg-slate-100 text-slate-700 font-bold py-2.5 rounded-xl">Recommencer le château</button></div></div>
+            <div id="hg-panel-geography" class="hidden space-y-4"><div class="bg-white rounded-3xl p-5 shadow-md border border-slate-200"><h3 class="text-xl font-bold text-slate-800 font-heading">La diversité des modes de vie dans le monde</h3><p class="text-sm text-slate-500 mt-1">Les quatre thèmes officiels de géographie du CM1. Les activités détaillées seront ajoutées progressivement.</p></div><div id="hg-geography-topics" class="grid gap-3"></div></div>
+        </section>
+
         <!-- ╔══════════════════════════════╗
              ║  VUE 3 · DICTÉES             ║
              ╚══════════════════════════════╝ -->
@@ -358,6 +375,7 @@
                 <div id="dictee-step-input" class="hidden bg-white p-5 rounded-3xl shadow-md border border-slate-200 space-y-4 text-center">
                     <h3 class="text-lg font-bold text-slate-700 font-heading">Écris le mot caché ✍️ <button type="button" onclick="speakWord()" class="text-indigo-600" aria-label="Réécouter le mot">🔊</button></h3>
                     <div id="dictee-clue-display" class="flex justify-center flex-wrap gap-1 text-2xl font-bold my-2 min-h-[2.5rem]"></div>
+                    <p id="dictee-input-hint" class="text-xs text-slate-500 font-bold min-h-[1.25rem]"></p>
                     <form onsubmit="validateWordInput(event)" class="space-y-3">
                         <input type="text" id="dictee-input"
                                class="w-full py-3 px-4 rounded-xl border-2 border-slate-300 text-center font-bold text-xl outline-none focus:border-indigo-500 transition"
@@ -560,6 +578,7 @@
         <button onclick="switchTab('lessons')"  id="nav-lessons"  class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">📚</span><span>Leçons</span></button>
         <button onclick="switchTab('poesie')"   id="nav-poesie"   class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">🎨</span><span>Poésies</span></button>
         <button onclick="switchTab('trophies')" id="nav-trophies" class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">🏆</span><span>Badges</span></button>
+        <button onclick="switchTab('histoire')" id="nav-histoire" class="flex flex-col items-center text-slate-400 font-bold text-xs"><span class="text-xl">🏰</span><span>Histoire</span></button>
         <!-- À VENIR : conjugaison, grammaire -->
         <!-- <button class="flex flex-col items-center text-slate-300 font-bold text-xs cursor-not-allowed"><span class="text-xl">🔒</span><span>Conjugaison</span></button> -->
     </nav>
@@ -637,6 +656,7 @@
   <script defer src="js/data/orthographe-questions.js?v=20260918c"></script>
   <script defer src="js/data/lessons.js?v=20260918c"></script>
   <script defer src="js/data/lessons-questions.js?v=20260918c"></script>
+  <script defer src="js/data/histoire-geographie.js?v=20261005a"></script>
   <script defer src="js/state.js?v=20260922a"></script>
   <script defer src="js/navigation.js?v=20260922a"></script>
   <script defer src="js/multiplication.js?v=20260922b"></script>
@@ -651,6 +671,7 @@
   <script defer src="js/profiles.js?v=20260922a"></script>
   <script defer src="js/audio.js?v=20260918c"></script>
   <script defer src="js/avatar.js?v=20260922a"></script>
+  <script defer src="js/histoire-geographie.js?v=20261005a"></script>
   <script defer src="js/app.js?v=20260918c"></script>
   <script defer src="js/bug-report.js?v=20260923a"></script>
 </body>

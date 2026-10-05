@@ -1,6 +1,6 @@
 # Boss du CM1
 
-Jeu web de révision pour les élèves de CM1 : tables de multiplication, fractions, dictées et lecture fluence.
+Jeu web de révision pour les élèves de CM1 : tables de multiplication, fractions, dictées, lecture fluence et histoire-géographie.
 
 > 🎮 **[Accéder directement au jeu →](https://cecilesauder.github.io/Boss_du_CM1/)**
 
@@ -22,6 +22,7 @@ Le jeu est publié sur [GitHub Pages](https://cecilesauder.github.io/Boss_du_CM1
 | `js/multiplication.js` | Quiz des tables, sélection de plusieurs tables, progression et réactions spéciales 6 × 7. |
 | `assets/gifs/table-6-7.gif` | GIF de récompense affiché après une bonne réponse rapide à 6 × 7 ou 7 × 6. |
 | `js/avatar.js` | Avatar non genré, personnalisation, garde-robe et achats avec les points. |
+| `js/data/histoire-geographie.js` + `js/histoire-geographie.js` | Frise chronologique, découverte des rôles au Moyen Âge, vocabulaire du château fort et premiers repères de géographie. |
 | `js/*.js` | Logique distincte pour la navigation, les profils, fractions, dictées, fluence, badges et audio. |
 
 Les progrès sont enregistrés localement dans le navigateur de chaque élève.
@@ -59,3 +60,21 @@ Les listes de mots ont été remplacées par les listes officielles publiées pa
 ### Modifier les textes de fluence
 
 Ouvrir `js/data/fluence.js` puis rechercher `const FLUENCE_WEEKS`. Chaque texte se trouve dans le champ `text` de son objet, par exemple `id:"f1"` pour la Tour Eiffel. Remplacer uniquement le contenu de `text` permet de conserver le reste de l’activité. Le comptage des mots est calculé automatiquement par le jeu.
+
+## Histoire-géographie CM1 — rentrée 2026-2027
+
+Le module suit le nouveau programme officiel du cycle 3 publié au **Bulletin officiel n° 22 du 28 mai 2026**. En CM1, les quatre thèmes d’histoire sont la vie quotidienne au Moyen Âge, la monarchie en France, les explorations et conquêtes européennes, puis l’année révolutionnaire 1789. En géographie, le programme porte sur la diversité des modes de vie dans le monde : se nourrir, les inégalités, se déplacer et communiquer avec Internet [1].
+
+La **frise** rappelle les cinq grandes périodes et leurs repères. Elle précise aussi que la Préhistoire et l’Antiquité seront approfondies en 6e, tandis que le CM1 commence directement par le Moyen Âge.
+
+Le jeu **Les rôles du Moyen Âge** fait découvrir plusieurs situations : enfant d’une famille paysanne, seigneur ou dame du château, artisan en ville et membre du clergé. Le lien avec l’EVAR et les droits de l’enfant est formulé avec prudence : les droits de l’enfant tels qu’ils sont reconnus aujourd’hui n’existaient pas de la même façon au Moyen Âge. L’objectif est de comparer les époques, pas de présenter les inégalités anciennes comme acceptables.
+
+Le jeu **Replace le vocabulaire du château fort** fonctionne par sélection puis toucher de la zone. Il est ainsi utilisable sur ordinateur comme sur tablette, sans dépendre d’un glisser-déposer fragile. Les premiers mots sont : donjon, herse, pont-levis, fossés, chemin de ronde et murailles.
+
+La partie géographie présente déjà les quatre thèmes officiels. Les activités de planisphère et de productions graphiques seront ajoutées progressivement dans ce même module.
+
+Les points gagnés dans les activités Histoire-Géographie sont enregistrés dans le profil local et dans les statistiques quotidiennes.
+
+### Références du programme
+
+[1]: https://www.education.gouv.fr/sites/default/files/document/annexe-4-programme-d-histoire-geographie-cycle-3-516779.pdf "Programme officiel d’histoire-géographie du cycle 3 — Bulletin officiel n° 22 du 28 mai 2026"

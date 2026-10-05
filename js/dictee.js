@@ -236,6 +236,8 @@ function showInputPhase() {
   document.getElementById('dictee-session-progress').classList.add('hidden');
 
   let word = sessionWords[wordIdx].word;
+  const hint = document.getElementById('dictee-input-hint');
+  if (hint) hint.textContent = word.trim().includes(' ') ? '💡 Attention : la réponse contient plusieurs mots. N’oublie pas les espaces.' : ' ';
   let clue = document.getElementById('dictee-clue-display');
   clue.innerHTML = '';
 
@@ -291,8 +293,7 @@ function showQuickWordChoices() {
   const current = sessionWords[wordIdx];
   if (!current || !curWeek) return;
   const target = current.word;
-  const pool = [...new Set(curWeek.words.map(item => item.word).filter(word => word !== target))];
-  const choices = [target, ...pool.sort(() => Math.random() - 0.5).slice(0, 3)].sort(() => Math.random() - 0.5);
+  const choices = makeOrthographicChoices(target);
   const area = document.getElementById('dictee-quick-choice');
   const options = document.getElementById('dictee-quick-options');
   if (!area || !options) return;
@@ -306,6 +307,23 @@ function showQuickWordChoices() {
     button.onclick = () => answerQuickWord(button, choice, target);
     options.appendChild(button);
   });
+}
+
+/* Erreurs proches visuellement du mot à apprendre, plutôt que trois mots
+ * sans rapport. Le cas « plus » sert de modèle pour les mots invariables. */
+function makeOrthographicChoices(target) {
+  const normalized = target.toLocaleLowerCase('fr-FR');
+  if (normalized === 'plus') return ['plus', 'plu', 'plut', 'plusse'].sort(() => Math.random() - 0.5);
+  const candidates = [];
+  const last = normalized.split(/\s+/).pop() || normalized;
+  if (last.length > 2) candidates.push(normalized.slice(0, -1));
+  candidates.push(`${normalized}e`);
+  if (/[bcdfghjklmnpqrstvwxz]$/i.test(last)) candidates.push(`${normalized}${last.slice(-1)}`);
+  if (/[éèêàùâîôûç]/i.test(last)) candidates.push(normalized.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
+  candidates.push(normalized.replace(/ph/g, 'f').replace(/ss/g, 's'));
+  const unique = [...new Set([target, ...candidates].filter(Boolean))];
+  while (unique.length < 4) unique.push(`${target}${unique.length}`);
+  return unique.slice(0, 4).sort(() => Math.random() - 0.5);
 }
 
 function answerQuickWord(button, choice, target) {
