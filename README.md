@@ -22,7 +22,7 @@ Le jeu est publié sur [GitHub Pages](https://cecilesauder.github.io/Boss_du_CM1
 | `js/multiplication.js` | Quiz des tables, sélection de plusieurs tables, progression et réactions spéciales 6 × 7. |
 | `assets/gifs/table-6-7.gif` | GIF de récompense affiché après une bonne réponse rapide à 6 × 7 ou 7 × 6. |
 | `js/avatar.js` | Avatar non genré, personnalisation, garde-robe et achats avec les points. |
-| `js/data/histoire-geographie.js` + `js/histoire-geographie.js` | Frise chronologique, découverte des rôles au Moyen Âge, vocabulaire du château fort et premiers repères de géographie. |
+| `js/data/histoire-geographie.js` + `js/histoire-geographie.js` | Données et logique des mini-jeux Histori’Kids : frise, mots-clés, loterie des statuts et quiz. |
 | `js/*.js` | Logique distincte pour la navigation, les profils, fractions, dictées, fluence, badges et audio. |
 
 Les progrès sont enregistrés localement dans le navigateur de chaque élève.
@@ -61,19 +61,18 @@ Les listes de mots ont été remplacées par les listes officielles publiées pa
 
 Ouvrir `js/data/fluence.js` puis rechercher `const FLUENCE_WEEKS`. Chaque texte se trouve dans le champ `text` de son objet, par exemple `id:"f1"` pour la Tour Eiffel. Remplacer uniquement le contenu de `text` permet de conserver le reste de l’activité. Le comptage des mots est calculé automatiquement par le jeu.
 
-## Histoire-géographie CM1 — rentrée 2026-2027
+## Histoire-géographie — Histori’Kids
 
-Le module suit le nouveau programme officiel du cycle 3 publié au **Bulletin officiel n° 22 du 28 mai 2026**. En CM1, les quatre thèmes d’histoire sont la vie quotidienne au Moyen Âge, la monarchie en France, les explorations et conquêtes européennes, puis l’année révolutionnaire 1789. En géographie, le programme porte sur la diversité des modes de vie dans le monde : se nourrir, les inégalités, se déplacer et communiquer avec Internet [1].
+Le module reprend le fichier **HistoriKids – Plateforme de jeux d’Histoire CM1** fourni pour le projet, en conservant la direction artistique colorée de Boss du CM1. Chaque thème propose quatre activités :
 
-La **frise** rappelle les cinq grandes périodes et leurs repères. Elle précise aussi que la Préhistoire et l’Antiquité seront approfondies en 6e, tandis que le CM1 commence directement par le Moyen Âge.
+- **La frise chronologique** : remettre les repères dans le bon ordre à l’aide des flèches ;
+- **Le match des mots-clés** : associer les notions du programme à leurs définitions ;
+- **La loterie des statuts** : découvrir au hasard le rôle, les obligations et les conditions de vie d’une personne de l’époque ;
+- **Le grand quiz** : répondre aux questions et lire l’explication historique après chaque réponse.
 
-Le jeu **Les rôles du Moyen Âge** fait découvrir plusieurs situations : enfant d’une famille paysanne, seigneur ou dame du château, artisan en ville et membre du clergé. Le lien avec l’EVAR et les droits de l’enfant est formulé avec prudence : les droits de l’enfant tels qu’ils sont reconnus aujourd’hui n’existaient pas de la même façon au Moyen Âge. L’objectif est de comparer les époques, pas de présenter les inégalités anciennes comme acceptables.
+Les quatre thèmes intégrés sont la vie quotidienne au Moyen Âge, la monarchie en France, les explorations et conquêtes, puis 1789. Un bouton ouvre également le jeu externe [Tranches de vie au Moyen Âge](https://www.cite-sciences.fr/juniors/moyen-age/index.html), demandé pour approfondir le jeu de rôle.
 
-Le jeu **Replace le vocabulaire du château fort** fonctionne par sélection puis toucher de la zone. Il est ainsi utilisable sur ordinateur comme sur tablette, sans dépendre d’un glisser-déposer fragile. Les premiers mots sont : donjon, herse, pont-levis, fossés, chemin de ronde et murailles.
-
-La partie géographie présente déjà les quatre thèmes officiels. Les activités de planisphère et de productions graphiques seront ajoutées progressivement dans ce même module.
-
-Les points gagnés dans les activités Histoire-Géographie sont enregistrés dans le profil local et dans les statistiques quotidiennes.
+Les récompenses sont reliées au système global : les activités terminées ajoutent leurs points au solde du profil et aux statistiques quotidiennes `histoire`. Les quiz terminés débloquent les quatre badges Histori’Kids dans la galerie des badges. Une même activité ne récompense le profil qu’une seule fois par thème, même si elle peut être rejouée.
 
 ### Références du programme
 

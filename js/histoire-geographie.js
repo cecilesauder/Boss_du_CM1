@@ -1,122 +1,244 @@
 /*
- * Module Histoire-Géographie CM1.
- * Tout est local : progression, réponses et points restent dans le profil.
- * Les interactions sont volontairement simples et utilisables au doigt :
- * on choisit une étiquette puis on touche la zone du château.
+ * Module Histoire-Géographie inspiré du fichier HistoriKids fourni.
+ *
+ * Les quatre mini-jeux sont conservés dans l'application principale :
+ * 1. frise chronologique ;
+ * 2. association mots-clés / définitions ;
+ * 3. loterie des statuts et rôles historiques ;
+ * 4. quiz de validation.
+ *
+ * Les points et les badges passent par le système global de Boss du CM1.
+ * Aucun score n'est envoyé en ligne : tout reste enregistré dans le profil local.
  */
 
-let hgRoleIndex = 0;
-let hgCastleState = {};
-let hgTimelineSelection = 'moyen-age';
+let hgCurrentThemeId = 1;
+let hgCurrentGame = null;
+let hgTimelineItems = [];
+let hgSelectedWordId = null;
+let hgSelectedDefId = null;
+let hgMatchedPairs = 0;
+let hgQuizIndex = 0;
+let hgQuizScore = 0;
+let hgGameRewarded = {};
+
+const HG_GAME_LABELS = {
+  timeline: 'Frise chronologique',
+  keywords: 'Match des mots-clés',
+  simulator: 'Loterie des statuts',
+  quiz: 'Grand quiz de l’historien'
+};
 
 function initHistoireGeographie() {
-  renderHGTimeline();
-  renderHGTopics();
-  renderHGRoles();
-  renderHGCastle();
-  renderHGGeography();
+  renderHGHome();
+  renderHGThemeHub();
+  document.getElementById('hg-screen-home')?.classList.remove('hidden');
+  document.getElementById('hg-screen-theme')?.classList.add('hidden');
+  document.getElementById('hg-screen-game')?.classList.add('hidden');
 }
 
-function switchHGView(view) {
-  ['timeline','roles','castle','geography'].forEach(id => document.getElementById(`hg-panel-${id}`)?.classList.add('hidden'));
-  document.getElementById(`hg-panel-${view}`)?.classList.remove('hidden');
-  document.querySelectorAll('.hg-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.hgView === view));
-  if (view === 'timeline') renderHGTimeline();
-  if (view === 'roles') renderHGRoles();
-  if (view === 'castle') renderHGCastle();
+function hgTheme(themeId) {
+  hgCurrentThemeId = Number(themeId);
+  renderHGThemeHub();
+  document.getElementById('hg-screen-home')?.classList.add('hidden');
+  document.getElementById('hg-screen-theme')?.classList.remove('hidden');
+  document.getElementById('hg-screen-game')?.classList.add('hidden');
 }
 
-function renderHGTimeline() {
-  const line = document.getElementById('hg-timeline');
-  const detail = document.getElementById('hg-period-detail');
-  if (!line || !detail) return;
-  line.innerHTML = HG_PERIODS.map(period => `<button type="button" class="hg-period ${period.id === hgTimelineSelection ? 'selected' : ''}" style="--period-color:${period.color}" onclick="selectHGPeriod('${period.id}')"><strong>${period.label}</strong><span>${period.dates}</span></button>`).join('');
-  const selected = HG_PERIODS.find(period => period.id === hgTimelineSelection) || HG_PERIODS[2];
-  detail.innerHTML = `<div class="flex items-start gap-3"><div class="text-3xl">${selected.id === 'moyen-age' ? '🏰' : selected.id === 'temps-modernes' ? '👑' : selected.id === 'contemporaine' ? '🗝️' : '🪨'}</div><div><h3 class="font-bold text-slate-800">${selected.label}</h3><p class="text-sm text-slate-600 mt-1">${selected.note}</p></div></div>`;
+function hgBackHome() {
+  document.getElementById('hg-screen-home')?.classList.remove('hidden');
+  document.getElementById('hg-screen-theme')?.classList.add('hidden');
+  document.getElementById('hg-screen-game')?.classList.add('hidden');
+  renderHGHome();
 }
 
-function selectHGPeriod(id) { hgTimelineSelection = id; renderHGTimeline(); }
-
-function renderHGTopics() {
-  const box = document.getElementById('hg-history-topics');
-  if (!box) return;
-  box.innerHTML = HG_HISTORY_TOPICS.map(topic => `<article class="hg-topic-card"><div class="text-3xl">${topic.icon}</div><div><h3 class="font-bold text-slate-800">${topic.title}</h3><p class="text-xs font-bold text-indigo-600">${topic.period}</p><p class="text-sm text-slate-600 mt-1">${topic.summary}</p><div class="flex flex-wrap gap-1 mt-2">${topic.keywords.map(word => `<span class="hg-keyword">${word}</span>`).join('')}</div></div></article>`).join('');
+function hgBackTheme() {
+  renderHGThemeHub();
+  document.getElementById('hg-screen-theme')?.classList.remove('hidden');
+  document.getElementById('hg-screen-game')?.classList.add('hidden');
 }
 
-function renderHGRoles() {
-  const role = HG_ROLE_CARDS[hgRoleIndex];
-  const box = document.getElementById('hg-role-card');
-  if (!box) return;
-  box.innerHTML = `<div class="flex items-center justify-between"><span class="text-xs font-bold text-violet-600">Rôle ${hgRoleIndex + 1}/${HG_ROLE_CARDS.length}</span><span class="text-3xl">${role.icon}</span></div><h3 class="text-xl font-bold text-slate-800 mt-2">${role.title}</h3><p class="text-sm text-slate-600 mt-1">${role.description}</p><div class="mt-4 bg-violet-50 border border-violet-200 rounded-2xl p-4"><p class="font-bold text-slate-800">${role.question}</p><div class="grid gap-2 mt-3">${role.options.map((option, index) => `<button type="button" class="hg-role-option" onclick="answerHGRole(${index})">${option}</button>`).join('')}</div><div id="hg-role-feedback" class="min-h-12 mt-3 text-sm font-bold"></div></div>`;
+function renderHGHome() {
+  const box = document.getElementById('hg-theme-cards');
+  if (!box || typeof HG_HISTORIKIDS_THEMES === 'undefined') return;
+  box.innerHTML = Object.values(HG_HISTORIKIDS_THEMES).map(theme => `
+    <button type="button" onclick="hgTheme(${theme.id})" class="hg-theme-card hg-${theme.color}">
+      <span class="hg-theme-icon">${theme.icon}</span>
+      <span class="hg-theme-kicker">Thème ${theme.id} · ${theme.title.match(/\(([^)]+)\)/)?.[1] || ''}</span>
+      <strong>${theme.title.replace(/ \([^)]*\)/, '')}</strong>
+      <span class="hg-theme-description">${theme.question}</span>
+      <span class="hg-theme-footer">4 activités <span>→</span></span>
+    </button>`).join('');
 }
 
-function answerHGRole(index) {
-  const role = HG_ROLE_CARDS[hgRoleIndex];
-  const feedback = document.getElementById('hg-role-feedback');
-  const options = document.querySelectorAll('.hg-role-option');
-  options.forEach(button => button.disabled = true);
-  if (index === role.answer) {
-    feedback.className = 'min-h-12 mt-3 text-sm font-bold text-emerald-600';
-    feedback.innerHTML = `✅ Bonne réponse.<br><span class="font-normal text-slate-600">${role.explanation}</span><button type="button" class="hg-next-button" onclick="nextHGRole()">Rôle suivant ➡️</button>`;
-    recordHGPoint('roles');
-  } else {
-    feedback.className = 'min-h-12 mt-3 text-sm font-bold text-rose-600';
-    feedback.innerHTML = `❌ Ce n’est pas la meilleure réponse. Relis la question et réessaie.`;
-    options.forEach((button, buttonIndex) => { if (buttonIndex !== index) button.disabled = false; });
-  }
+function renderHGThemeHub() {
+  const theme = HG_HISTORIKIDS_THEMES[hgCurrentThemeId];
+  if (!theme) return;
+  const title = document.getElementById('hg-theme-title');
+  const question = document.getElementById('hg-theme-question');
+  const icon = document.getElementById('hg-theme-icon');
+  const progress = document.getElementById('hg-theme-progress');
+  if (title) title.textContent = theme.title;
+  if (question) question.textContent = `« ${theme.question} »`;
+  if (icon) icon.textContent = theme.icon;
+  const completed = getHGCompleted(theme.id);
+  if (progress) progress.textContent = `${completed.length}/4 activités terminées`;
+  document.querySelectorAll('.hg-game-card').forEach(card => {
+    const done = completed.includes(card.dataset.hgGame);
+    card.classList.toggle('done', done);
+    const status = card.querySelector('.hg-game-status');
+    if (status) status.textContent = done ? '✅ Terminé' : 'Lancer le jeu →';
+  });
 }
 
-function nextHGRole() { hgRoleIndex = (hgRoleIndex + 1) % HG_ROLE_CARDS.length; renderHGRoles(); }
-
-function renderHGCastle() {
-  const labels = document.getElementById('hg-castle-labels');
-  const zones = document.getElementById('hg-castle-zones');
-  if (!labels || !zones) return;
-  labels.innerHTML = HG_CASTLE_ZONES.map(zone => `<button type="button" class="hg-label ${hgCastleState[zone.id] === 'placed' ? 'placed' : ''}" onclick="selectHGCastleLabel('${zone.id}')" data-castle-label="${zone.id}">${zone.label}</button>`).join('');
-  zones.innerHTML = HG_CASTLE_ZONES.map(zone => `<button type="button" class="hg-castle-zone ${hgCastleState[zone.id] === 'correct' ? 'correct' : ''}" onclick="placeHGCastleLabel('${zone.id}')"><span>${hgCastleState[zone.id] === 'correct' ? '✅ ' : '⬜ '}${zone.label}</span><small>${hgCastleState[zone.id] === 'correct' ? zone.description : 'Choisis une étiquette puis touche cette zone.'}</small></button>`).join('');
-  const mastered = HG_CASTLE_ZONES.filter(zone => hgCastleState[zone.id] === 'correct').length;
-  document.getElementById('hg-castle-progress').textContent = `${mastered}/${HG_CASTLE_ZONES.length} éléments correctement replacés`;
-  if (mastered === HG_CASTLE_ZONES.length) document.getElementById('hg-castle-feedback').innerHTML = '🎉 Bravo, tu connais le vocabulaire du château fort !';
-}
-
-function selectHGCastleLabel(id) {
-  if (hgCastleState[id] === 'correct') return;
-  document.querySelectorAll('.hg-label').forEach(label => label.classList.remove('selected'));
-  document.querySelector(`[data-castle-label="${id}"]`)?.classList.add('selected');
-  hgCastleState.selected = id;
-}
-
-function placeHGCastleLabel(zoneId) {
-  const selected = hgCastleState.selected;
-  if (!selected || hgCastleState[zoneId] === 'correct') return;
-  const feedback = document.getElementById('hg-castle-feedback');
-  if (selected === zoneId) {
-    hgCastleState[zoneId] = 'correct';
-    delete hgCastleState.selected;
-    recordHGPoint('castle');
-    feedback.className = 'min-h-8 text-sm font-bold text-emerald-600';
-    feedback.textContent = '✅ Bien placé !';
-  } else {
-    feedback.className = 'min-h-8 text-sm font-bold text-rose-600';
-    feedback.textContent = '❌ Cette étiquette ne correspond pas à cette zone. Essaie encore.';
-  }
-  renderHGCastle();
-}
-
-function resetHGCastle() { hgCastleState = {}; renderHGCastle(); document.getElementById('hg-castle-feedback').textContent = ''; }
-
-function renderHGGeography() {
-  const box = document.getElementById('hg-geography-topics');
-  if (!box) return;
-  box.innerHTML = HG_GEOGRAPHY_TOPICS.map(topic => `<article class="hg-geo-card"><span class="text-3xl">${topic.icon}</span><div><h3 class="font-bold text-slate-800">${topic.title}</h3><p class="text-sm text-slate-600 mt-1">${topic.text}</p></div></article>`).join('');
-}
-
-function recordHGPoint(activity) {
+function getHGCompleted(themeId) {
   const p = getProfile();
-  if (!p.hgStats) p.hgStats = { points:0, roles:0, castle:0 };
-  p.hgStats.points++;
-  p.hgStats[activity] = (p.hgStats[activity] || 0) + 1;
-  p.points += 5;
-  if (typeof dailyRecord === 'function') dailyRecord('histoire', 5);
+  const values = p.hgStats?.completed?.[themeId];
+  return Array.isArray(values) ? values : [];
+}
+
+function startHGGame(game) {
+  const theme = HG_HISTORIKIDS_THEMES[hgCurrentThemeId];
+  if (!theme) return;
+  hgCurrentGame = game;
+  document.getElementById('hg-screen-theme')?.classList.add('hidden');
+  document.getElementById('hg-screen-game')?.classList.remove('hidden');
+  document.getElementById('hg-game-title').textContent = HG_GAME_LABELS[game] || 'Activité';
+  document.getElementById('hg-game-subtitle').textContent = theme.title;
+  const score = document.getElementById('hg-game-score');
+  if (score) score.textContent = `${getProfile().points} pts`;
+  const playground = document.getElementById('hg-playground');
+  if (game === 'timeline') renderHGTimeline(theme, playground);
+  if (game === 'keywords') renderHGKeywords(theme, playground);
+  if (game === 'simulator') renderHGSimulator(theme, playground);
+  if (game === 'quiz') renderHGQuiz(theme, playground);
+}
+
+function renderHGTimeline(theme, container) {
+  hgTimelineItems = [...theme.timeline].sort(() => Math.random() - 0.5);
+  container.innerHTML = `<div class="hg-play-inner"><div class="hg-game-intro"><span class="hg-big-icon">⏳</span><h3>Remets les repères dans l’ordre</h3><p>Utilise les flèches pour classer les événements du plus ancien au plus récent.</p></div><div id="hg-timeline-list" class="hg-timeline-list">${renderHGTimelineRows()}</div><div id="hg-timeline-feedback" class="hg-feedback"></div><button type="button" class="hg-primary-button" onclick="checkHGTimeline()">Vérifier ma frise</button></div>`;
+}
+
+function renderHGTimelineRows() {
+  return hgTimelineItems.map((item, index) => `<div class="hg-timeline-row"><div><span class="hg-order-number">${index + 1}</span><strong>${item.text}</strong><small>${item.year}</small></div><span class="hg-row-arrows"><button type="button" ${index === 0 ? 'disabled' : ''} onclick="moveHGTimeline(${index},-1)">⬆️</button><button type="button" ${index === hgTimelineItems.length - 1 ? 'disabled' : ''} onclick="moveHGTimeline(${index},1)">⬇️</button></span></div>`).join('');
+}
+
+function moveHGTimeline(index, direction) {
+  const target = index + direction;
+  if (target < 0 || target >= hgTimelineItems.length) return;
+  [hgTimelineItems[index], hgTimelineItems[target]] = [hgTimelineItems[target], hgTimelineItems[index]];
+  document.getElementById('hg-timeline-list').innerHTML = renderHGTimelineRows();
+}
+
+function checkHGTimeline() {
+  const good = hgTimelineItems.every((item, index) => item.order === index + 1);
+  const feedback = document.getElementById('hg-timeline-feedback');
+  if (good) {
+    feedback.className = 'hg-feedback success';
+    feedback.textContent = '🎉 Bravo ! Frise reconstituée. +15 points';
+    rewardHGGame('timeline', 15);
+  } else {
+    feedback.className = 'hg-feedback error';
+    feedback.textContent = '❌ L’ordre n’est pas encore correct. Observe bien les dates et réessaie.';
+  }
+}
+
+function renderHGKeywords(theme, container) {
+  hgSelectedWordId = null; hgSelectedDefId = null; hgMatchedPairs = 0;
+  const words = [...theme.keywords].sort(() => Math.random() - 0.5);
+  const defs = [...theme.keywords].sort(() => Math.random() - 0.5);
+  container.innerHTML = `<div class="hg-play-inner"><div class="hg-game-intro"><span class="hg-big-icon">🧩</span><h3>Associe chaque mot à sa définition</h3><p>Touche un mot-clé puis la définition correspondante.</p></div><div class="hg-keywords-grid"><div><h4>Mots-clés</h4><div id="hg-words-col">${words.map(item => `<button type="button" class="hg-match-card" id="hg-word-${item.id}" onclick="selectHGWord('${item.id}')">${item.word}</button>`).join('')}</div></div><div><h4>Définitions</h4><div id="hg-defs-col">${defs.map(item => `<button type="button" class="hg-match-card definition" id="hg-def-${item.id}" onclick="selectHGDefinition('${item.id}')">${item.def}</button>`).join('')}</div></div></div><div id="hg-keyword-feedback" class="hg-feedback"></div></div>`;
+}
+
+function selectHGWord(id) { hgSelectedWordId = id; document.querySelectorAll('#hg-words-col .hg-match-card').forEach(el => el.classList.toggle('selected', el.id === `hg-word-${id}`)); checkHGPair(); }
+function selectHGDefinition(id) { hgSelectedDefId = id; document.querySelectorAll('#hg-defs-col .hg-match-card').forEach(el => el.classList.toggle('selected', el.id === `hg-def-${id}`)); checkHGPair(); }
+
+function checkHGPair() {
+  if (!hgSelectedWordId || !hgSelectedDefId) return;
+  const word = document.getElementById(`hg-word-${hgSelectedWordId}`);
+  const def = document.getElementById(`hg-def-${hgSelectedDefId}`);
+  if (hgSelectedWordId === hgSelectedDefId) {
+    word.classList.add('matched'); def.classList.add('matched'); word.disabled = true; def.disabled = true; hgMatchedPairs++;
+    hgSelectedWordId = null; hgSelectedDefId = null;
+    if (hgMatchedPairs === HG_HISTORIKIDS_THEMES[hgCurrentThemeId].keywords.length) {
+      document.getElementById('hg-keyword-feedback').className = 'hg-feedback success';
+      document.getElementById('hg-keyword-feedback').textContent = '🏆 Toutes les associations sont justes. +15 points';
+      rewardHGGame('keywords', 15);
+    }
+  } else {
+    word.classList.add('wrong'); def.classList.add('wrong');
+    setTimeout(() => { word.classList.remove('selected','wrong'); def.classList.remove('selected','wrong'); }, 500);
+    hgSelectedWordId = null; hgSelectedDefId = null;
+  }
+}
+
+function renderHGSimulator(theme, container) {
+  container.innerHTML = `<div class="hg-play-inner hg-simulator"><span class="hg-big-icon">🎲</span><h3>La loterie des statuts</h3><p>Découvre au hasard la vie d’une personne de cette époque : son rôle, ses obligations et ses possibilités.</p><button type="button" class="hg-primary-button" onclick="runHGSimulator()">Lancer la loterie</button><div id="hg-simulator-result" class="hg-simulator-result"></div></div>`;
+}
+
+function runHGSimulator() {
+  const theme = HG_HISTORIKIDS_THEMES[hgCurrentThemeId];
+  const roles = theme.roles || [];
+  const role = roles[Math.floor(Math.random() * roles.length)];
+  document.getElementById('hg-simulator-result').innerHTML = `<div class="hg-role-result"><span class="hg-role-icon">${role.icon}</span><h4>${role.title}</h4><dl><dt>Genre et statut</dt><dd>${role.gender}</dd><dt>Impôts / obligations</dt><dd>${role.taxes}</dd><dt>Droits / pouvoir</dt><dd>${role.power}</dd></dl><p><strong>Ta vie quotidienne :</strong> ${role.story}</p></div>`;
+  rewardHGGame('simulator', 5);
+}
+
+function renderHGQuiz(theme, container) {
+  hgQuizIndex = 0; hgQuizScore = 0; showHGQuizQuestion(theme, container);
+}
+
+function showHGQuizQuestion(theme, container) {
+  const question = theme.quiz[hgQuizIndex];
+  container.innerHTML = `<div class="hg-play-inner"><div class="hg-quiz-top"><span>Question ${hgQuizIndex + 1}/${theme.quiz.length}</span><strong>Score : ${hgQuizScore}</strong></div><div class="hg-progress-track"><span style="width:${(hgQuizIndex / theme.quiz.length) * 100}%"></span></div><h3 class="hg-quiz-question">${question.q}</h3><div id="hg-quiz-options" class="hg-quiz-options">${question.options.map((option, index) => `<button type="button" onclick="submitHGQuiz(${index})">${option}<span>›</span></button>`).join('')}</div><div id="hg-quiz-feedback" class="hg-feedback"></div></div>`;
+}
+
+function submitHGQuiz(index) {
+  const theme = HG_HISTORIKIDS_THEMES[hgCurrentThemeId];
+  const question = theme.quiz[hgQuizIndex];
+  const options = document.querySelectorAll('#hg-quiz-options button');
+  options.forEach(button => button.disabled = true);
+  const feedback = document.getElementById('hg-quiz-feedback');
+  if (index === question.correct) { hgQuizScore += 10; feedback.className = 'hg-feedback success'; feedback.innerHTML = `✅ Bonne réponse ! +10 points<br><small>${question.expl}</small>`; }
+  else { feedback.className = 'hg-feedback error'; feedback.innerHTML = `❌ Pas encore. La bonne idée était : <small>${question.expl}</small>`; }
+  feedback.innerHTML += `<button type="button" class="hg-next-button" onclick="nextHGQuiz()">${hgQuizIndex + 1 < theme.quiz.length ? 'Question suivante →' : 'Voir mon résultat'}</button>`;
+}
+
+function nextHGQuiz() {
+  const theme = HG_HISTORIKIDS_THEMES[hgCurrentThemeId];
+  hgQuizIndex++;
+  if (hgQuizIndex < theme.quiz.length) showHGQuizQuestion(theme, document.getElementById('hg-playground'));
+  else finishHGQuiz(theme);
+}
+
+function finishHGQuiz(theme) {
+  rewardHGGame('quiz', hgQuizScore);
+  const feedback = document.getElementById('hg-playground');
+  feedback.innerHTML = `<div class="hg-play-inner hg-finished"><span class="hg-big-icon">🏆</span><h3>Félicitations, historien !</h3><p>Tu as terminé le quiz sur « ${theme.title} ».</p><strong>Score gagné : ${hgQuizScore} points</strong><p class="hg-badge-line">🏅 Badge du thème débloqué si ce n’était pas déjà fait.</p><button type="button" class="hg-primary-button" onclick="hgBackTheme()">Retour aux activités</button></div>`;
+}
+
+function rewardHGGame(game, points) {
+  const p = getProfile();
+  if (!p.hgStats) p.hgStats = { points:0, completed:{}, games:{} };
+  if (!p.hgStats.completed) p.hgStats.completed = {};
+  if (!p.hgStats.games) p.hgStats.games = {};
+  if (!Array.isArray(p.hgStats.completed[hgCurrentThemeId])) p.hgStats.completed[hgCurrentThemeId] = [];
+  const key = `${hgCurrentThemeId}:${game}`;
+  if (hgGameRewarded[key]) return;
+  hgGameRewarded[key] = true;
+  if (!p.hgStats.completed[hgCurrentThemeId].includes(game)) p.hgStats.completed[hgCurrentThemeId].push(game);
+  p.hgStats.games[key] = (p.hgStats.games[key] || 0) + 1;
+  p.hgStats.points = (p.hgStats.points || 0) + Number(points || 0);
+  p.points += Number(points || 0);
+  if (typeof dailyRecord === 'function') dailyRecord('histoire', Number(points || 0));
   saveData();
+  if (game === 'quiz' && typeof awardBadge === 'function') {
+    const theme = HG_HISTORIKIDS_THEMES[hgCurrentThemeId];
+    awardBadge(`history_${hgCurrentThemeId}`, theme.badgeName, `Quiz du thème « ${theme.title} » terminé`, 'histoire');
+  }
+  const score = document.getElementById('hg-game-score');
+  if (score) score.textContent = `${p.points} pts`;
+}
+
+function openMedievalRoleLink() {
+  window.open('https://www.cite-sciences.fr/juniors/moyen-age/index.html', '_blank', 'noopener');
 }

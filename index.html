@@ -124,7 +124,7 @@
                     <button onclick="switchTab('histoire')"
                             class="bg-gradient-to-br from-lime-400 to-green-600 text-white p-4 rounded-2xl shadow-md text-left transition transform active:scale-95 flex flex-col justify-between h-28">
                         <span class="text-3xl">🏰</span>
-                        <div><div class="font-bold font-heading text-lg">Histoire-Géo</div><div class="text-xs opacity-90">Programme 2026</div></div>
+                        <div><div class="font-bold font-heading text-lg">Histoire-Géo</div><div class="text-xs opacity-90">4 thèmes à explorer</div></div>
                     </button>
                 </div>
             </div>
@@ -298,15 +298,34 @@
         </section>
 
         <!-- ╔══════════════════════════════════════╗
-             ║  VUE · HISTOIRE-GÉOGRAPHIE CM1 2026 ║
+             ║  VUE · HISTOIRE-GÉOGRAPHIE            ║
              ╚══════════════════════════════════════╝ -->
         <section id="view-histoire" class="hidden space-y-5">
-            <div class="bg-gradient-to-r from-lime-500 to-green-700 rounded-3xl p-5 text-white shadow-lg"><div class="flex items-start justify-between gap-3"><div><span class="bg-white/20 text-xs uppercase px-3 py-1 rounded-full font-bold">Rentrée 2026-2027</span><h2 class="text-2xl font-bold mt-2 font-heading">🏰 Histoire-Géographie</h2><p class="text-lime-100 text-sm mt-1">Comprendre le temps, les sociétés et les espaces du monde.</p></div><button onclick="switchTab('home')" class="text-white/80 text-xl" aria-label="Fermer">✕</button></div></div>
-            <div class="bg-white rounded-2xl p-2 shadow-sm border border-slate-200 grid grid-cols-2 gap-1"><button type="button" class="hg-tab active" data-hg-view="timeline" onclick="switchHGView('timeline')">🕰️ Frise</button><button type="button" class="hg-tab" data-hg-view="roles" onclick="switchHGView('roles')">🧒 Rôles</button><button type="button" class="hg-tab" data-hg-view="castle" onclick="switchHGView('castle')">🏰 Château</button><button type="button" class="hg-tab" data-hg-view="geography" onclick="switchHGView('geography')">🌍 Géographie</button></div>
-            <div id="hg-panel-timeline" class="space-y-4"><div class="bg-white rounded-3xl p-5 shadow-md border border-slate-200 space-y-4"><div><h3 class="text-xl font-bold text-slate-800 font-heading">Les cinq grandes périodes</h3><p class="text-sm text-slate-500">Les repères servent à situer les événements. Au CM1, le programme commence par le Moyen Âge.</p></div><div id="hg-timeline" class="hg-timeline"></div><div id="hg-period-detail" class="bg-lime-50 border border-lime-200 rounded-2xl p-4"></div></div><div class="space-y-3"><h3 class="text-lg font-bold text-slate-700 font-heading">Les thèmes d’histoire du CM1</h3><div id="hg-history-topics" class="space-y-3"></div></div></div>
-            <div id="hg-panel-roles" class="hidden space-y-4"><div class="bg-violet-50 border border-violet-200 rounded-2xl p-4 text-sm text-violet-900"><strong>Mission :</strong> découvre plusieurs vies au Moyen Âge. Compare-les avec la vie et les droits des enfants aujourd’hui : les droits de l’enfant n’étaient pas reconnus de la même façon.</div><div id="hg-role-card" class="bg-white p-5 rounded-3xl shadow-md border border-slate-200"></div></div>
-            <div id="hg-panel-castle" class="hidden space-y-4"><div class="bg-white rounded-3xl p-5 shadow-md border border-slate-200 space-y-4"><div><h3 class="text-xl font-bold text-slate-800 font-heading">Replace le vocabulaire</h3><p class="text-sm text-slate-500">Choisis une étiquette, puis touche la partie correspondante. Sur tablette, il n’est pas nécessaire de faire glisser.</p></div><div id="hg-castle-progress" class="text-xs font-bold text-indigo-600"></div><div id="hg-castle-labels" class="flex flex-wrap gap-2"></div><div class="hg-castle-map" aria-label="Schéma textuel d’un château fort"><div id="hg-castle-zones" class="grid gap-2"></div></div><div id="hg-castle-feedback" class="min-h-8 text-sm font-bold"></div><button type="button" onclick="resetHGCastle()" class="w-full bg-slate-100 text-slate-700 font-bold py-2.5 rounded-xl">Recommencer le château</button></div></div>
-            <div id="hg-panel-geography" class="hidden space-y-4"><div class="bg-white rounded-3xl p-5 shadow-md border border-slate-200"><h3 class="text-xl font-bold text-slate-800 font-heading">La diversité des modes de vie dans le monde</h3><p class="text-sm text-slate-500 mt-1">Les quatre thèmes officiels de géographie du CM1. Les activités détaillées seront ajoutées progressivement.</p></div><div id="hg-geography-topics" class="grid gap-3"></div></div>
+            <div class="hg-hero">
+                <div class="flex items-start justify-between gap-3">
+                    <div><span class="hg-hero-label">HISTOIRE EN JOUANT</span><h2 class="text-2xl font-bold mt-2 font-heading">📜 Histori’Kids</h2><p>Explore les quatre thèmes et gagne des points pour ta boutique.</p></div>
+                    <button onclick="switchTab('home')" class="text-white/80 text-xl" aria-label="Fermer">✕</button>
+                </div>
+                <div class="hg-hero-strip"><span>⭐ Les points gagnés ici s’ajoutent à ton total</span><span>🏅 4 badges à débloquer</span></div>
+            </div>
+            <div id="hg-screen-home" class="space-y-4">
+                <div class="hg-section-heading"><div><h3>Choisis ton thème</h3><p>Remets les repères dans l’ordre, associe les mots, découvre un rôle et réponds au quiz.</p></div><button type="button" class="hg-external-button" onclick="openMedievalRoleLink()">🧒 Tranches de vie au Moyen Âge ↗</button></div>
+                <div id="hg-theme-cards" class="hg-theme-grid"></div>
+            </div>
+            <div id="hg-screen-theme" class="hidden space-y-4">
+                <div class="hg-subheader"><button type="button" onclick="hgBackHome()" class="hg-close-button" aria-label="Retour">✕</button><div><span class="hg-small-label">THÈME HISTORIQUE</span><h3 id="hg-theme-title">Titre</h3><p id="hg-theme-question"></p></div><span id="hg-theme-icon" class="text-4xl">🏰</span></div>
+                <div class="hg-progress-card"><span>Progression du thème</span><strong id="hg-theme-progress">0/4 activités terminées</strong></div>
+                <div class="hg-game-grid">
+                    <button type="button" class="hg-game-card" data-hg-game="timeline" onclick="startHGGame('timeline')"><span class="hg-game-icon">⏳</span><strong>1. La frise chronologique</strong><p>Ordonne les événements et les personnages clés.</p><span class="hg-game-status">Lancer le jeu →</span></button>
+                    <button type="button" class="hg-game-card" data-hg-game="keywords" onclick="startHGGame('keywords')"><span class="hg-game-icon">🧩</span><strong>2. Le match des mots-clés</strong><p>Associe chaque mot obligatoire à sa définition.</p><span class="hg-game-status">Lancer le jeu →</span></button>
+                    <button type="button" class="hg-game-card" data-hg-game="simulator" onclick="startHGGame('simulator')"><span class="hg-game-icon">⚖️</span><strong>3. La loterie des statuts</strong><p>Découvre les conditions de vie selon le rôle historique.</p><span class="hg-game-status">Lancer le jeu →</span></button>
+                    <button type="button" class="hg-game-card" data-hg-game="quiz" onclick="startHGGame('quiz')"><span class="hg-game-icon">⭐</span><strong>4. Le grand quiz</strong><p>Réponds aux questions et valide tes connaissances.</p><span class="hg-game-status">Lancer le jeu →</span></button>
+                </div>
+            </div>
+            <div id="hg-screen-game" class="hidden space-y-4">
+                <div class="hg-game-header"><button type="button" onclick="hgBackTheme()" class="hg-close-button" aria-label="Quitter">✕</button><div><h3 id="hg-game-title">Activité</h3><p id="hg-game-subtitle">Thème</p></div><strong id="hg-game-score">0 pts</strong></div>
+                <div id="hg-playground" class="hg-playground"></div>
+            </div>
         </section>
 
         <!-- ╔══════════════════════════════╗

@@ -19,7 +19,7 @@ let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
     poetryStats:   { completed: [], points: 0 },
     lessonStats:   {},  // { "g1": { correct, attempts } }
     geometryStats: {correct:0, wrong:0},
-    hgStats: {points:0, roles:0, castle:0},
+    hgStats: {points:0, completed:{}, games:{}},
     dailyStats:    {},  // { "YYYY-MM-DD": { seconds, points, ... } }
     fractionStats: { correct:0, wrong:0, series:0, bestSeries:0 },
     badges: []
@@ -37,7 +37,9 @@ function getProfile() {
   if (!Array.isArray(p.poetryStats.completed)) p.poetryStats.completed = [];
   if (!p.lessonStats)    p.lessonStats = {};
   if (!p.geometryStats)  p.geometryStats = {correct:0, wrong:0};
-  if (!p.hgStats)        p.hgStats = {points:0, roles:0, castle:0};
+  if (!p.hgStats)        p.hgStats = {points:0, completed:{}, games:{}};
+  if (!p.hgStats.completed || Array.isArray(p.hgStats.completed)) p.hgStats.completed = {};
+  if (!p.hgStats.games)   p.hgStats.games = {};
   if (!p.dailyStats)     p.dailyStats = {};
   if (!p.dicteeWritten)  p.dicteeWritten = {};
   if (!p.fractionStats)  p.fractionStats = { correct:0, wrong:0, series:0, bestSeries:0 };

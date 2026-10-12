@@ -27,6 +27,10 @@ function allBadges() {
     {id:'lessons_15', title:'Expert du français 🎓', desc:'Les 15 notions de français réussies', cat:'time'},
     {id:'poetry_1', title:'Premier poème appris 🎨', desc:'Une activité de poésie terminée', cat:'poesie'},
     {id:'poetry_4', title:'Poète accompli ✨', desc:'Les quatre activités de poésie terminées', cat:'poesie'}
+    ,{id:'history_1', title:'Maître du Moyen Âge 🏰', desc:'Quiz du thème « La vie quotidienne au Moyen Âge » terminé', cat:'histoire'}
+    ,{id:'history_2', title:'Courtisan de Versailles 👑', desc:'Quiz du thème « La monarchie en France » terminé', cat:'histoire'}
+    ,{id:'history_3', title:'Capitaine des océans ⛵', desc:'Quiz du thème « Explorations et conquêtes » terminé', cat:'histoire'}
+    ,{id:'history_4', title:'Citoyen de la Révolution 🏛️', desc:'Quiz du thème « 1789, une année révolutionnaire » terminé', cat:'histoire'}
   ];
 }
 
@@ -86,7 +90,9 @@ function awardBadge(id, title, desc, cat) {
   if (p.badges.some(b=>b.id===id)) return; // Déjà obtenu
   p.badges.push({ id, title, desc, date:new Date().toLocaleDateString('fr-FR') });
   saveData();
-  playFanfare();
+  // L’audio est facultatif : certains profils ou modes peuvent ne pas charger
+  // le module sonore, mais cela ne doit jamais empêcher l’obtention du badge.
+  if (typeof playFanfare === 'function') playFanfare();
   showCelebration('🎖️', 'Nouveau badge !', desc, title);
 }
 
